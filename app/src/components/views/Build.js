@@ -1,18 +1,20 @@
 import React from 'react';
-import { List, Typography } from 'antd';
+import { List } from 'antd';
 
 class Build extends React.Component {
   render() {
-    var packageJson = require('./../../../package.json');
-    var data = [
+    let packageJson = require('./../../../package.json');
+    let data_1 = [
       ['Имя приложения', packageJson.name],
       ['Текущая версия', packageJson.version]
     ];
     return (
-      <div>
+      <div className="app-content-build">
         <List
           bordered
-          dataSource={data}
+          header={<b>Приложение</b>}
+          className="app-content-build-list"
+          dataSource={data_1}
           renderItem={item => (<List.Item>{item[0]}: <b>{item[1]}</b></List.Item>)} />
       </div>
     );
