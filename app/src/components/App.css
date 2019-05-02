@@ -1,0 +1,314 @@
+/* App */
+
+.app {
+  background: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/* vertical equalizer */
+
+.app-vertical_equalizer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.app-vertical_equalizer-table {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  display: table;
+}
+.app-vertical_equalizer-table-cell {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+/* AppMainSidebar */
+
+.app-main-sidebar {
+  position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	width: 300px;
+	background: #f4f5f7;
+	z-index: 3000;
+	transition: 0.2s;
+}
+.app-main-sidebar-panel {
+  display: inline-block;
+  vertical-align: top;
+  width: 64px;
+  height: 100%;
+  background: #191f24;
+	color: #fff;
+}
+.app-main-sidebar-panel-header {
+  height: 90px;
+  padding: 25px 10px;
+}
+.app-main-sidebar-panel-header-avatar {
+  width: 44px;
+  height: 44px;
+  background: rgba(255,255,255,0.10);
+  border-radius: 100%;
+}
+.app-main-sidebar-panel-header-avatar svg {
+  width: 24px;
+  height: 24px;
+  margin: 9px;
+}
+.app-main-sidebar-panel-menu-item {
+  font-size: 14px;
+  margin: 0 10px;
+  border-radius: 100%;
+  width: 44px;
+  height: 44px;
+}
+.app-main-sidebar-panel-menu-item.active {
+  background: rgba(0,0,0,0.03) !important;
+}
+.app-main-sidebar-panel-menu-item:hover {
+  background-color: rgba(0,0,0,0.2);
+}
+.app-main-sidebar-panel-menu-item-link-icon {
+  width: 44px;
+  height: 44px;
+}
+.app-main-sidebar-panel-menu-item-link-icon svg {
+  margin: 13px;
+  width: 18px;
+  height: 18px;
+  fill: #fff;
+}
+.app-main-sidebar-panel-menu-item.active .app-main-sidebar-panel-menu-item-link-icon svg {
+  fill: #333;
+}
+
+.app-main-sidebar-nav {
+  display: inline-block;
+  vertical-align: top;
+  width: 236px;
+  height: 100%;
+  background: #f4f5f7;
+  overflow-y: auto;
+}
+.app-main-sidebar-nav-header {
+  height: 90px;
+  padding: 25px 20px;
+}
+.app-main-sidebar-nav-header-avatar {
+  width: 40px;
+  height: 40px;
+  background: #ccc;
+  border-radius: 5px;
+  float: left;
+}
+.app-main-sidebar-nav-header-title {
+  display: inline-block;
+  vertical-align: top;
+  line-height: 40px;
+  height: 40px;
+  font-size: 18px;
+  margin-left: 12px;
+  font-weight: 600;
+  color: #555;
+}
+.app-main-sidebar-nav-menu-item {
+  font-size: 14px;
+  padding: 0 20px;
+}
+.app-main-sidebar-nav-menu-item.active {
+  background: rgba(0,0,0,0.03) !important;
+}
+.app-main-sidebar-nav-menu-item:hover {
+  background: rgba(0,0,0,0.01);
+}
+.app-main-sidebar-nav-menu-item-link {
+  height: 44px;
+  display: block;
+}
+.app-main-sidebar-nav-menu-item-link-icon {
+  display: inline-block;
+  vertical-align: top;
+  width: 44px;
+  height: 44px;
+}
+.app-main-sidebar-nav-menu-item-link-icon svg {
+  margin: 13px;
+  width: 18px;
+  height: 18px;
+  fill: #777;
+}
+.app-main-sidebar-nav-menu-item.active .app-main-sidebar-nav-menu-item-link-icon svg {
+  fill: #333;
+}
+.app-main-sidebar-nav-menu-item-link-text {
+  display: inline-block;
+  vertical-align: top;
+  line-height: 44px;
+  margin-left: 12px;
+  color: #666;
+}
+.app-main-sidebar-nav-menu-item.active .app-main-sidebar-nav-menu-item-link-text {
+  color: #333;
+}
+
+/* AppMainView */
+
+.app-main-view {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 300px;
+	background: #fff;
+	z-index: 2500;
+	overflow-y: scroll;
+}
+
+.app-main-view-header {
+	height: 90px;
+  padding: 25px 0;
+  border-bottom: solid 1px #e8e8e8;
+  max-width: 1200px;
+  margin: 0 45px;
+}
+.app-main-view-header-title {
+	display: inline-block;
+  vertical-align: top;
+  line-height: 40px;
+  height: 40px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #555;
+}
+.app-main-view-header-btns {
+	display: inline-block;
+  vertical-align: top;
+  float: right;
+  padding: 4px 0;
+}
+.app-main-view-header-btn {
+	margin-left: 12.5px;
+}
+
+.app-main-view-content {
+	padding: 35px 0;
+  max-width: 1200px;
+  margin: 0 45px;
+}
+.app-main-view-content-item {
+	position: relative;
+}
+.app-main-view-content-item:not(:last-child) {
+	margin-bottom: 25px;
+}
+.app-main-view-content-block {
+	border: solid 1px #d9d9d9;
+	border-radius: 5px;
+	padding: 15px 20px;
+}
+.app-main-view-content-item-col {
+	font-size: 15px;
+	line-height: 25px;
+}
+.app-main-view-content-item-col span {
+	color: #999;
+}
+.app-main-view-content-item-col:nth-child(4) {
+	text-align: right;
+}
+.app-main-view-content-item-btns {
+	text-align: right;
+	width: 25%;
+	position: absolute;
+	top: 17.5px;
+	right: 17.5px;
+}
+.app-main-view-content-item-btn {
+	margin-left: 12px;
+}
+
+/* AppAuth */
+
+.app-auth {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #f4f5f7;
+  overflow-y: scroll;
+}
+.app-auth-box {
+  position: relative;
+  background: #fff;
+  border-radius: 8px;
+  max-width: 420px;
+  margin: 50px auto;
+  -moz-box-shadow: 0 0 10px rgba(0,0,0,.15);
+  -webkit-box-shadow: 0 0 10px rgba(0,0,0,.15);
+  box-shadow: 0 0 10px rgba(0,0,0,.15);
+  padding: 40px;
+}
+.app-auth-box-title {
+  width: 100%;
+  font-size: 20px;
+  line-height: 30px;
+  border-bottom: solid 1px #e0e3ea;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  user-select: none;
+}
+.app-auth-box-title-link {
+  float: right;
+  font-size: 14px;
+}
+.app-auth-box-divider {
+  margin: 40px 0;
+  color: #888;
+}
+.app-auth-box-soc_btn {
+  border-color: #F44336;
+}
+.app-auth-box-soc_btn::after {
+  display: none !important;
+}
+.app-auth-box-soc_btn:hover {
+  border-color: #EF5350;
+}
+.app-auth-box-soc_btn:focus {
+  border-color: #E53935;
+}
+
+/* AppForm */
+
+.app-form-btns {
+  padding-top: 15px;
+}
+.app-form-links {
+  padding-top: 10px;
+}
+.app-form-link {
+  line-height: 24px;
+}
+
+/* Views */
+
+/* InformationView */
+
+.app-content-information p {
+  font-size: 15px;
+  line-height: 35px;
+  max-width: 800px;
+}
