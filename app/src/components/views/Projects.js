@@ -4,7 +4,11 @@ import { Link } from 'react-router-dom';
 
 function ProjectItem(props) {
   return (
-    <List.Item actions={[<a>База знаний</a>, <a>Бот</a>, <a>Настройки</a>]}>
+    <List.Item actions={[
+        <Link to={'/projects/'+props.project.id+'/knowledge-base/'}>База знаний</Link>,
+        <Link to={'/projects/'+props.project.id+'/bot/'}>Бот</Link>,
+        <Link to={'/projects/'+props.project.id+'/settings/'}>Настройки</Link>
+      ]}>
       <List.Item.Meta
         title={<Link to={'/projects/'+props.project.id+'/'}><b>{props.project.name}</b></Link>}
         description={<a target="_blank" href={props.project.website_url}>{props.project.website_url_str}</a>} />
@@ -39,6 +43,12 @@ class Projects extends React.Component {
       <div>
         <List
           bordered
+          pagination={{
+            onChange: (page) => {
+              console.log(page);
+            },
+            pageSize: 15,
+          }}
           size="large"
           dataSource={projects}
           renderItem={item => <ProjectItem project={item} />} />

@@ -76,7 +76,7 @@
   height: 44px;
 }
 .app-main-sidebar-panel-menu-item.active {
-  background: rgba(0,0,0,0.03) !important;
+  background: rgba(0,0,0,0.02) !important;
 }
 .app-main-sidebar-panel-menu-item:hover {
   background-color: rgba(0,0,0,0.2);

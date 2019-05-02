@@ -3,6 +3,7 @@ import { NavLink, Switch, Route } from 'react-router-dom';
 import { Avatar, Icon, Button } from 'antd';
 
 import ProjectsView from './views/Projects';
+import ProjectView from './views/Project';
 import AddProjectView from './views/AddProject';
 import AccountView from './views/Account';
 import InformationView from './views/Information';
@@ -33,7 +34,7 @@ function Sidebar() {
         </div>
         <div className="app-main-sidebar-nav-menu">
           <div className="app-main-sidebar-nav-menu-items">
-            <NavLink to="/projects/" className="app-main-sidebar-nav-menu-item">
+            <NavLink exact to="/projects/" className="app-main-sidebar-nav-menu-item">
               <Icon type="bars" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Мои проекты</div>
             </NavLink>
             <NavLink to="/information/" className="app-main-sidebar-nav-menu-item">
@@ -60,7 +61,7 @@ function View() {
       </div>
       <div className="app-main-view-content">
         <Switch>
-          <Route path="/projects/:project_id/" component={ProjectsView} />
+          <Route path="/projects/:project_id/" component={ProjectView} />
           <Route exact path="/projects/" component={ProjectsView} />
           <Route path="/add-service/" component={AddProjectView} />
           <Route path="/information/" component={InformationView} />
