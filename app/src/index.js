@@ -1,15 +1,29 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import reduxThunk from 'redux-thunk';
 import './index.css';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 import reducers from './reducers';
+import axios from 'axios';
+
+const jwtToken = localStorage.getItem('JWT_TOKEN');
+axios.defaults.headers.common['Authorization'] = jwtToken;
 
 ReactDOM.render((
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>
+  <Provider store={createStore(reducers, {
+    auth: {
+      token: jwtToken,
+      isAuthenticated: jwtToken ? true : false
+    }
+  }, applyMiddleware(reduxThunk))}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </Provider>
 ), document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

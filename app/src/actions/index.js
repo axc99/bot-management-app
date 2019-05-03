@@ -29,6 +29,7 @@ export const signUp = data => {
 
 export const signIn = data => {
   return async dispatch => {
+    alert('SIGN IN!');
     try {
       const res = await axios.post('http://localhost:5000/users/signin', data);
 

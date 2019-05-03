@@ -1,36 +1,10 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
-import { Form, Input, Button } from 'antd';
 
-import { setTitle } from './../helpers.js';
-
-class SignInForm extends Component {
-  render() {
-    return (
-      <Form className="app-form">
-        <div className="app-form-fields">
-          <Form.Item>
-            <Input placeholder="Email или логин" size="large" />
-          </Form.Item>
-          <Form.Item>
-            <Input placeholder="Пароль" size="large" />
-          </Form.Item>
-        </div>
-        <div className="app-form-btns">
-          <Form.Item>
-            <Button type="primary" size="large">Войти в аккаунт</Button>
-          </Form.Item>
-        </div>
-        <div className="app-form-links">
-          <Link to="/auth/recovery/" className="app-form-link">Забыли пароль?</Link><br />
-          <a className="app-form-link" href="/">Политика конфеденциальности</a><br />
-          <a className="app-form-link" href="/">Правила использования</a>
-        </div>
-      </Form>
-    )
-  }
-}
+import SignInForm from './AppAuth/SignInForm';
+// import SignUpForm from './AppAuth/SignUpForm';
+// import RecoveryForm from './AppAuth/RecoveryForm';
 
 export default class AppAuth extends Component {
   render() {
@@ -39,22 +13,19 @@ export default class AppAuth extends Component {
     var title, content, Form = null
 
     if (type == 'sign-in') {
-      setTitle('Войти в аккаунт')
-      Form = SignInForm
       content = (
         <div>
-          <div class="app-auth-box-title">
+          <div className="app-auth-box-title">
             Войти в <b>ИС</b>
             <Link to="/auth/sign-up/" className="app-auth-box-title-link">Регистрация</Link>
           </div>
-          <Form />
+          <SignInForm />
         </div>
       )
     } else if (type == 'sign-up') {
-      setTitle('Создать аккаунт')
       content = (
         <div>
-          <div class="app-auth-box-title">
+          <div className="app-auth-box-title">
             Регистрация в <b>ИС</b>
             <Link to="/auth/sign-in/" className="app-auth-box-title-link">Вход</Link>
           </div>
@@ -62,10 +33,9 @@ export default class AppAuth extends Component {
         </div>
       )
     } else if (type == 'recovery') {
-      setTitle('Восстановить аккаунт')
       content = (
         <div>
-          <div class="app-auth-box-title">
+          <div className="app-auth-box-title">
             Восстановление доступа
             <Link to="/auth/sign-in/" className="app-auth-box-title-link">Вход</Link>
           </div>
@@ -73,10 +43,9 @@ export default class AppAuth extends Component {
         </div>
       )
     } else if (type == 'change-password') {
-      setTitle('Сменить пароль')
       content = (
         <div>
-          <div class="app-auth-box-title">
+          <div className="app-auth-box-title">
             Смена пароля
           </div>
           [FORM]

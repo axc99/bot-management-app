@@ -13,3 +13,19 @@ body {
 	min-width: 320px;
 	cursor: default;
 }
+
+/* Ant Design fixex */
+
+.ant-form-item {
+	margin-bottom: 15px;
+}
+.ant-form-item-required {
+	font-size: 15px !important;
+}
+.ant-form-item-with-help {
+	margin-bottom: -6px;
+}
+.ant-form-explain {
+	margin-top: 0;
+	text-align: right;
+}

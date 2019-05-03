@@ -184,7 +184,7 @@
   vertical-align: top;
   line-height: 40px;
   height: 40px;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
   color: #555;
 }
@@ -262,7 +262,7 @@
   font-size: 20px;
   line-height: 30px;
   border-bottom: solid 1px #e0e3ea;
-  margin-bottom: 40px;
+  margin-bottom: 25px;
   padding-bottom: 20px;
   user-select: none;
 }
@@ -290,10 +290,10 @@
 /* AppForm */
 
 .app-form-btns {
-  padding-top: 15px;
+  padding-top: 20px;
 }
 .app-form-links {
-  padding-top: 10px;
+  padding-top: 15px;
 }
 .app-form-link {
   line-height: 24px;

@@ -1,5 +1,6 @@
 import React from 'react';
-import { List, Row, Col } from 'antd';
+import axios from 'axios';
+import { List, Row, Col, Empty } from 'antd';
 import { Link } from 'react-router-dom';
 
 function ProjectItem(props) {
@@ -17,30 +18,28 @@ function ProjectItem(props) {
 }
 
 class Projects extends React.Component {
-  render() {
-    let projects = [
-      {
-        id: 1,
-        name: 'Project name',
-        website_url: 'https://example.com/',
-        website_url_str: 'example.com'
-      },
-      {
-        id: 2,
-        name: 'Project name',
-        website_url: 'https://example.com/',
-        website_url_str: 'example.com'
-      },
-      {
-        id: 3,
-        name: 'Project name',
-        website_url: 'https://example.com/',
-        website_url_str: 'example.com'
-      }
-    ];
 
-    return (
-      <div>
+  state = {
+    projects: []
+  }
+
+  componentDidMount() {
+    axios.get('https://jsonplaceholder.typicode.com/users')
+      .then(res => {
+        const persons = res.data;
+        this.setState({ persons });
+      })
+  }
+
+  render() {
+    if (this.state.projects.length == 0) {
+      return (
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description="У вас пока нет проектов." />
+      );
+    } else {
+      return (
         <List
           bordered
           pagination={{
@@ -50,10 +49,10 @@ class Projects extends React.Component {
             pageSize: 15,
           }}
           size="large"
-          dataSource={projects}
+          dataSource={this.state.projects}
           renderItem={item => <ProjectItem project={item} />} />
-      </div>
-    );
+      );
+    }
   }
 }
 
