@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { Form, Button, Input, Icon } from 'antd';
 
-import * as actions from '../../actions';
+import * as actions from '../../store/actions';
 
 class SignInForm extends Component {
   handleSubmit = (e) => {
@@ -20,7 +20,7 @@ class SignInForm extends Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
-      <Form hideRequiredMark="false" onSubmit={this.handleSubmit} className="app-form">
+      <Form hideRequiredMark="false" onSubmit={this.handleSubmit} layout="vertical" className="app-form">
         <div className="app-form-fields">
           <Form.Item label="E-mail или логин" className="app-form-field">
             {getFieldDecorator('email_or_username', {
@@ -43,9 +43,7 @@ class SignInForm extends Component {
           </Form.Item>
         </div>
         <div className="app-form-links">
-          <Link to="/auth/recovery/" className="app-form-link">Забыли пароль?</Link><br />
-          <a className="app-form-link" href="/">Политика конфеденциальности</a><br />
-          <a className="app-form-link" href="/">Правила использования</a>
+          <Link to="/auth/recovery/" className="app-form-link">Не можете войти?</Link>
         </div>
       </Form>
     )

@@ -9,13 +9,20 @@ class Build extends React.Component {
       ['Текущая версия', packageJson.version]
     ];
     return (
-      <div className="app-content-build">
-        <List
-          bordered
-          header={<b>Приложение</b>}
-          className="app-content-build-list"
-          dataSource={data_1}
-          renderItem={item => (<List.Item>{item[0]}: <b>{item[1]}</b></List.Item>)} />
+      <div>
+        <div className="app-main-view-header">
+          <div className="app-main-view-header-title">Сборка</div>
+        </div>
+        <div className="app-main-view-content">
+          <div className="app-content-build">
+            <List
+              bordered
+              header={<b>Приложение</b>}
+              className="app-content-build-list"
+              dataSource={data_1}
+              renderItem={item => (<List.Item>{item[0]}: <b>{item[1]}</b></List.Item>)} />
+          </div>
+        </div>
       </div>
     );
   }

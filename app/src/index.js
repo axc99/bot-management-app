@@ -7,19 +7,21 @@ import reduxThunk from 'redux-thunk';
 import './index.css';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
-import reducers from './reducers';
+import reducers from './store/reducers';
 import axios from 'axios';
 
 const jwtToken = localStorage.getItem('JWT_TOKEN');
 axios.defaults.headers.common['Authorization'] = jwtToken;
 
+const STORE = createStore(reducers, {
+  auth: {
+    token: jwtToken,
+    isAuthenticated: jwtToken ? true : false
+  }
+}, applyMiddleware(reduxThunk));
+
 ReactDOM.render((
-  <Provider store={createStore(reducers, {
-    auth: {
-      token: jwtToken,
-      isAuthenticated: jwtToken ? true : false
-    }
-  }, applyMiddleware(reduxThunk))}>
+  <Provider store={STORE}>
     <BrowserRouter>
       <App />
     </BrowserRouter>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Switch, Route } from 'react-router-dom';
-import { Avatar, Icon, Button } from 'antd';
+import { Avatar, Icon } from 'antd';
 
 import ProjectsView from './views/Projects';
 import ProjectView from './views/Project';
@@ -53,23 +53,15 @@ function Sidebar() {
 function View() {
   return (
     <div className="app-main-view">
-      <div className="app-main-view-header">
-        <div className="app-main-view-header-title">Проекты</div>
-        <div className="app-main-view-header-btns">
-          <NavLink to="/add-project/"><Button className="app-main-view-header-btn" type="primary" icon="plus">Добавить проект</Button></NavLink>
-        </div>
-      </div>
-      <div className="app-main-view-content">
-        <Switch>
-          <Route path="/projects/:project_id/" component={ProjectView} />
-          <Route exact path="/projects/" component={ProjectsView} />
-          <Route path="/add-project/" component={AddProjectView} />
-          <Route path="/information/" component={InformationView} />
-          <Route path="/build/" component={BuildView} />
-          <Route path="/account/" component={AccountView} />
-          <Route component={Error404View} />
-        </Switch>
-      </div>
+      <Switch>
+        <Route path="/projects/:project_id/" component={ProjectView} />
+        <Route exact path="/projects/" component={ProjectsView} />
+        <Route path="/add-project/" component={AddProjectView} />
+        <Route path="/information/" component={InformationView} />
+        <Route path="/build/" component={BuildView} />
+        <Route path="/account/" component={AccountView} />
+        <Route component={Error404View} />
+      </Switch>
     </div>
   );
 }

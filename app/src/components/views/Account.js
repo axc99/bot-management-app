@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Form, Button, Input, Modal } from 'antd';
+import { Form, Button, Input, Modal, Tabs } from 'antd';
 
 class EditUserForm extends Component {
   handleSubmit = (e) => {}
@@ -40,7 +40,24 @@ class Account extends React.Component {
     EditUserForm = Form.create({ name: 'edit_user' })(EditUserForm);
     return (
       <div>
-        <EditUserForm />
+        <div className="app-main-view-header">
+          <div className="app-main-view-header-title">Мой аккаунт</div>
+        </div>
+        <Tabs
+          className="app-main-view-tabs"
+          defaultActiveKey="1" >
+          <Tabs.TabPane tab="Информация" key="1">
+            <div className="app-main-view-tab-content">
+              <EditUserForm />
+            </div>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Сменить пароль" key="2">
+            222
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Безопасность" key="3">
+            333
+          </Tabs.TabPane>
+        </Tabs>
       </div>
     );
   }

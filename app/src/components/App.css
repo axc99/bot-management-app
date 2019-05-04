@@ -175,7 +175,6 @@
 .app-main-view-header {
 	height: 100px;
   padding: 35px 0 25px;
-  border-bottom: solid 1px #e8e8e8;
   max-width: 1200px;
   margin: 0 45px;
 }
@@ -198,10 +197,19 @@
 	margin-left: 12.5px;
 }
 
+.app-main-view-tabs {
+  margin: 0 45px;
+}
+.app-main-view-tab-content {
+  max-width: 1200px;
+  padding: 25px 0;
+}
+
 .app-main-view-content {
 	padding: 45px 0;
   max-width: 1200px;
   margin: 0 45px;
+  border-top: solid 1px #e8e8e8;
 }
 .app-main-view-content-item {
 	position: relative;
@@ -293,10 +301,10 @@
   max-width: 400px;
 }
 .app-form-btns {
-  padding-top: 30px;
+  padding-top: 15px;
 }
 .app-form-links {
-  padding-top: 25px;
+  padding-top: 10px;
 }
 .app-form-link {
   line-height: 24px;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Form, Button, Input, Modal } from 'antd';
+import { Form, Button, Input, Modal, Icon, Tooltip } from 'antd';
 
 class AddProjectForm extends Component {
   handleSubmit = (e) => {
@@ -46,14 +46,20 @@ class AddProjectForm extends Component {
             {getFieldDecorator('name', {
               rules: [ { required: true, message: 'Заполните это поле.' } ],
             })(
-              <Input autofocus="true" name="name" size="large" />
+              <Input
+                autofocus="true"
+                name="name"
+                size="large" />
             )}
           </Form.Item>
           <Form.Item label="Ссылка на сайт" className="app-form-field">
             {getFieldDecorator('website_url', {
               rules: [ { required: true, message: 'Заполните это поле.' } ],
             })(
-              <Input autofocus="true" name="website_url" size="large" placeholder="https://..." />
+              <Input
+                name="website_url"
+                size="large"
+                placeholder="https://..." />
             )}
           </Form.Item>
         </div>
