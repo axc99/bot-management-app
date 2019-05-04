@@ -5,9 +5,9 @@ import { Avatar, Icon, Button } from 'antd';
 import ProjectsView from './views/Projects';
 import ProjectView from './views/Project';
 import AddProjectView from './views/AddProject';
-import AccountView from './views/Account';
 import InformationView from './views/Information';
 import BuildView from './views/Build';
+import AccountView from './views/Account';
 import Error404View from './views/Error404';
 
 function Sidebar() {
@@ -63,9 +63,10 @@ function View() {
         <Switch>
           <Route path="/projects/:project_id/" component={ProjectView} />
           <Route exact path="/projects/" component={ProjectsView} />
-          <Route path="/add-service/" component={AddProjectView} />
+          <Route path="/add-project/" component={AddProjectView} />
           <Route path="/information/" component={InformationView} />
           <Route path="/build/" component={BuildView} />
+          <Route path="/account/" component={AccountView} />
           <Route component={Error404View} />
         </Switch>
       </div>
