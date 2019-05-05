@@ -3,7 +3,7 @@ import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 
 import SignInForm from './AppAuth/SignInForm';
-// import SignUpForm from './AppAuth/SignUpForm';
+import SignUpForm from './AppAuth/SignUpForm';
 // import RecoveryForm from './AppAuth/RecoveryForm';
 
 export default class AppAuth extends Component {
@@ -19,7 +19,7 @@ export default class AppAuth extends Component {
             Войти в <b>ИС</b>
             <Link to="/auth/sign-up/" className="app-auth-box-title-link">Регистрация</Link>
           </div>
-          <SignInForm />
+          <SignInForm history={this.props.history} />
         </div>
       )
     } else if (type == 'sign-up') {
@@ -29,7 +29,7 @@ export default class AppAuth extends Component {
             Регистрация в <b>ИС</b>
             <Link to="/auth/sign-in/" className="app-auth-box-title-link">Вход</Link>
           </div>
-          [FORM]
+          <SignUpForm history={this.props.history} />
         </div>
       )
     } else if (type == 'recovery') {

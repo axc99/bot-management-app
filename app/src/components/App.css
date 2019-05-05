@@ -263,7 +263,7 @@
   -moz-box-shadow: 0 0 10px rgba(0,0,0,.15);
   -webkit-box-shadow: 0 0 10px rgba(0,0,0,.15);
   box-shadow: 0 0 10px rgba(0,0,0,.15);
-  padding: 40px;
+  padding: 40px 40px 45px;
 }
 .app-auth-box-title {
   width: 100%;
@@ -300,14 +300,26 @@
 .app-form-field {
   max-width: 400px;
 }
-.app-form-btns {
-  padding-top: 15px;
-}
-.app-form-links {
+.app-form-agreement {
   padding-top: 10px;
 }
+.app-form-btns {
+  padding-top: 15px;
+  margin-bottom: -20px;
+}
+.app-form-btn {
+  margin: 0 20px 20px 0;
+}
+.app-form-links {
+  padding-top: 30px;
+  margin-bottom: -7px;
+}
 .app-form-link {
+  color: #999;
   line-height: 24px;
+}
+.app-form-link:hover {
+  color: #aaa;
 }
 
 /* Views */

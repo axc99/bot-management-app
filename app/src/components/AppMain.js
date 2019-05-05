@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink, Switch, Route } from 'react-router-dom';
 import { Avatar, Icon } from 'antd';
+import { connect } from 'react-redux';
 
 import ProjectsView from './views/Projects';
 import ProjectView from './views/Project';
@@ -10,45 +11,68 @@ import BuildView from './views/Build';
 import AccountView from './views/Account';
 import Error404View from './views/Error404';
 
-function Sidebar() {
-  return (
-    <div className="app-main-sidebar">
-      <div className="app-main-sidebar-panel">
-        <div className="app-main-sidebar-panel-header">
-          <Avatar className="app-main-sidebar-panel-header-avatar" size="medium" icon="user" />
+import * as actions from '../store/actions';
+
+class Sidebar extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.signOut = this.signOut.bind(this);
+  }
+
+  signOut() {
+    this.props.signOut();
+  }
+
+  render() {
+    return (
+      <div className="app-main-sidebar">
+        <div className="app-main-sidebar-panel">
+          <div className="app-main-sidebar-panel-header">
+            <Avatar className="app-main-sidebar-panel-header-avatar" size="medium" icon="user" />
+          </div>
+          <div className="app-main-sidebar-panel-menu">
+            <div className="app-main-sidebar-panel-menu-items">
+              <NavLink to="/account/" title="Открыть аккаунт" className="app-main-sidebar-panel-menu-item">
+                <Icon type="setting" className="app-main-sidebar-panel-menu-item-icon" />
+              </NavLink>
+              <a onClick={this.signOut} href="#" title="Выйти из приложения" className="app-main-sidebar-panel-menu-item">
+                <Icon type="export" className="app-main-sidebar-panel-menu-item-icon" />
+              </a>
+            </div>
+          </div>
         </div>
-        <div className="app-main-sidebar-panel-menu">
-          <div className="app-main-sidebar-panel-menu-items">
-            <NavLink to="/account/" title="Открыть аккаунт" className="app-main-sidebar-panel-menu-item">
-              <Icon type="setting" className="app-main-sidebar-panel-menu-item-icon" />
-            </NavLink>
-            <NavLink to="/request/sign-out/" title="Выйти из приложения" className="app-main-sidebar-panel-menu-item">
-              <Icon type="export" className="app-main-sidebar-panel-menu-item-icon" />
-            </NavLink>
+        <div className="app-main-sidebar-nav">
+          <div className="app-main-sidebar-nav-header">
+            <div className="app-main-sidebar-nav-header-title">Инф. система</div>
+          </div>
+          <div className="app-main-sidebar-nav-menu">
+            <div className="app-main-sidebar-nav-menu-items">
+              <NavLink exact to="/projects/" className="app-main-sidebar-nav-menu-item">
+                <Icon type="bars" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Мои проекты</div>
+              </NavLink>
+              <NavLink to="/information/" className="app-main-sidebar-nav-menu-item">
+                <Icon type="info-circle" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Информация</div>
+              </NavLink>
+              <NavLink to="/build/" className="app-main-sidebar-nav-menu-item">
+                <Icon type="code" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Сборка</div>
+              </NavLink>
+            </div>
           </div>
         </div>
       </div>
-      <div className="app-main-sidebar-nav">
-        <div className="app-main-sidebar-nav-header">
-          <div className="app-main-sidebar-nav-header-title">Инф. система</div>
-        </div>
-        <div className="app-main-sidebar-nav-menu">
-          <div className="app-main-sidebar-nav-menu-items">
-            <NavLink exact to="/projects/" className="app-main-sidebar-nav-menu-item">
-              <Icon type="bars" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Мои проекты</div>
-            </NavLink>
-            <NavLink to="/information/" className="app-main-sidebar-nav-menu-item">
-              <Icon type="info-circle" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Информация</div>
-            </NavLink>
-            <NavLink to="/build/" className="app-main-sidebar-nav-menu-item">
-              <Icon type="code" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Сборка</div>
-            </NavLink>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+    );
+
+  }
 }
+
+function mapStateToProps(state) {
+  return {
+    isAuth: state.auth.isAuthenticated
+  };
+}
+
+Sidebar = connect(mapStateToProps, actions)(Sidebar);
 
 function View() {
   return (

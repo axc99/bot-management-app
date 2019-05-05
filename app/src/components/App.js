@@ -6,12 +6,14 @@ import './App.css';
 import Auth from './AppAuth';
 import Main from './AppMain';
 
+import authGuard from './HOCs/authGuard';
+
 function App() {
   return (
     <div className="app">
       <Switch>
         <Route path="/auth/:type/" component={Auth} />
-        <Route component={Main} />
+        <Route component={authGuard(Main)} />
       </Switch>
     </div>
   );

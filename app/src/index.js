@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { createStore, applyMiddleware } from 'redux';
+import { syncHistoryWithStore } from 'react-router-redux';
 import { Provider } from 'react-redux';
 import reduxThunk from 'redux-thunk';
 import './index.css';
@@ -13,15 +14,17 @@ import axios from 'axios';
 const jwtToken = localStorage.getItem('JWT_TOKEN');
 axios.defaults.headers.common['Authorization'] = jwtToken;
 
-const STORE = createStore(reducers, {
+const store = createStore(reducers, {
   auth: {
     token: jwtToken,
     isAuthenticated: jwtToken ? true : false
   }
 }, applyMiddleware(reduxThunk));
 
+// const history = syncHistoryWithStore(browserHistory, store)
+
 ReactDOM.render((
-  <Provider store={STORE}>
+  <Provider store={store}>
     <BrowserRouter>
       <App />
     </BrowserRouter>
