@@ -36,9 +36,9 @@ class Sidebar extends React.Component {
               <NavLink to="/account/" title="Открыть аккаунт" className="app-main-sidebar-panel-menu-item">
                 <Icon type="setting" className="app-main-sidebar-panel-menu-item-icon" />
               </NavLink>
-              <a onClick={this.signOut} href="#" title="Выйти из приложения" className="app-main-sidebar-panel-menu-item">
+              <div onClick={this.signOut} title="Выйти из приложения" className="app-main-sidebar-panel-menu-item">
                 <Icon type="export" className="app-main-sidebar-panel-menu-item-icon" />
-              </a>
+              </div>
             </div>
           </div>
         </div>

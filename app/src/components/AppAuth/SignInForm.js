@@ -48,7 +48,7 @@ class SignInForm extends Component {
               {getFieldDecorator('password', {
                 rules: [ { required: true, message: 'Укажите пароль' } ],
               })(
-                <Input className="app-form-field-input" name="password" htmlType="password" size="large" />
+                <Input className="app-form-field-input" name="password" type="password" size="large" />
               )}
             </Form.Item>
           </div>

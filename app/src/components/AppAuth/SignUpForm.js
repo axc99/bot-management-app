@@ -3,7 +3,7 @@ import { browserHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { Form, Button, Input, Icon, Checkbox } from 'antd';
+import { Form, Button, Input, Icon, Checkbox, Modal } from 'antd';
 
 import * as actions from '../../store/actions';
 
@@ -11,7 +11,7 @@ class SignUpForm extends Component {
 
   async send(data) {
 
-    await this.props.signIn(data);
+    await this.props.signUp(data);
 
     if (this.props.errorMessage) {
       Modal.error({
@@ -19,7 +19,11 @@ class SignUpForm extends Component {
         content: this.props.errorMessage
       });
     } else {
-      this.props.history.push('/projects/');
+      Modal.success({
+        title: (<b>Подтвердите вашу почту</b>),
+        content: 'Для продолжения регистрации, Вам необходимо перейти по ссылке, которая была отправленна вам на почту... FIX'
+      });
+      this.props.history.push('/auth/sign-in/');
     };
 
   }
@@ -29,6 +33,15 @@ class SignUpForm extends Component {
     this.props.form.validateFields((err, data) => {
       if (!err) this.send(data);
     });
+  }
+
+  compareToFirstPassword = (rule, value, callback) => {
+    const form = this.props.form;
+    if (value && value !== form.getFieldValue('password')) {
+      callback('Пароль и его подтверждение должны совпадать.');
+    } else {
+      callback();
+    }
   }
 
   render() {
@@ -52,7 +65,10 @@ class SignUpForm extends Component {
           </Form.Item>
           <Form.Item label="Пароль ещё раз" className="app-form-field">
             {getFieldDecorator('confirm_password', {
-              rules: [ { required: true, message: 'Укажите пароль ещё раз' } ],
+              rules: [
+                { required: true, message: 'Укажите пароль ещё раз' },
+                { validator: this.compareToFirstPassword }
+              ],
             })(
               <Input className="app-form-field-input" name="confirm_password" type="password" size="large" />
             )}
@@ -60,9 +76,9 @@ class SignUpForm extends Component {
           <Form.Item className="app-form-agreement">
             {getFieldDecorator('agreement', {
               valuePropName: 'checked',
-              rules: [ { required: true, message: 'Ознакомтесь с правилами пользования.' } ]
+              rules: [ { required: true, message: 'Примите правила пользования.' } ]
             })(
-              <Checkbox>Я ознакомился с <a href="#">привилами пользования</a></Checkbox>
+              <Checkbox>Я принимаю <a href="#">привилами пользования</a></Checkbox>
             )}
           </Form.Item>
         </div>
