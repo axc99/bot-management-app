@@ -4,15 +4,17 @@ import { Link } from 'react-router-dom';
 
 import SignInForm from './AppAuth/SignInForm';
 import SignUpForm from './AppAuth/SignUpForm';
-// import RecoveryForm from './AppAuth/RecoveryForm';
+import RecoveryForm from './AppAuth/RecoveryForm';
+
+import { setTitle } from '../helpers';
 
 export default class AppAuth extends Component {
   render() {
-
-    var type = this.props.match.params.type
-    var title, content, Form = null
+    var type = this.props.match.params.type;
+    var title, content, Form = null;
 
     if (type == 'sign-in') {
+      setTitle('Войти в аккаунт');
       content = (
         <div>
           <div className="app-auth-box-title">
@@ -21,8 +23,9 @@ export default class AppAuth extends Component {
           </div>
           <SignInForm history={this.props.history} />
         </div>
-      )
+      );
     } else if (type == 'sign-up') {
+      setTitle('Создать аккаунт');
       content = (
         <div>
           <div className="app-auth-box-title">
@@ -31,8 +34,9 @@ export default class AppAuth extends Component {
           </div>
           <SignUpForm history={this.props.history} />
         </div>
-      )
+      );
     } else if (type == 'recovery') {
+      setTitle('Восстановить доступ');
       content = (
         <div>
           <div className="app-auth-box-title">
@@ -50,9 +54,9 @@ export default class AppAuth extends Component {
           </div>
           [FORM]
         </div>
-      )
+      );
     } else {
-      content = <Redirect to="/auth/sign-in/" />
+      content = (<Redirect to="/auth/sign-in/" />);
     }
 
     return (

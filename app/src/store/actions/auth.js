@@ -4,8 +4,7 @@ import {
   AUTH_SIGN_OUT,
   AUTH_SIGN_IN,
   AUTH_ERROR,
-  PROJECT_SET,
-  PROJECT_UNSET
+  USER_SET
 } from './types';
 
 export const signUp = data => {
@@ -74,6 +73,14 @@ export const signIn = data => {
         localStorage.setItem('JWT_TOKEN', resData.result.token);
         axios.defaults.headers.common['Authorization'] = resData.result.token;
 
+        dispatch({
+          type: USER_SET,
+          payload: {
+            _id: resData.result.user._id,
+            username: resData.result.user.username
+          }
+        });
+
       };
     };
 
@@ -88,31 +95,6 @@ export const signOut = () => {
 
     dispatch({
       type: AUTH_SIGN_OUT,
-      payload: ''
-    });
-
-  };
-}
-
-export const set = data => {
-  return dispatch => {
-
-    dispatch({
-      type: PROJECT_SET,
-      payload: {
-        id: data.id,
-        name: data.name
-      }
-    });
-
-  };
-}
-
-export const unset = () => {
-  return dispatch => {
-
-    dispatch({
-      type: PROJECT_UNSET,
       payload: ''
     });
 

@@ -5,32 +5,26 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { Form, Button, Input, Icon, Modal } from 'antd';
 
-import * as actions from '../../store/actions';
+import * as authActions from '../../store/actions/auth';
 
 class SignInForm extends Component {
-
   async send(data) {
-
     await this.props.signIn(data);
-
-    if (this.props.errorMessage) {
+    if (this.props.errorMessage || !this.props.isAuthenticated) {
       Modal.error({
         title: 'Ошибка',
-        content: this.props.errorMessage
+        content: this.props.errorMessage ? this.props.errorMessage : 'Ошибка при отправке запроса.'
       });
-    } else {
+    } else if (this.props.isAuthenticated) {
       this.props.history.push('/projects/');
     };
-
   }
-
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, data) => {
       if (!err) this.send(data);
     });
   }
-
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -72,5 +66,5 @@ function mapStateToProps(state) {
 }
 
 export default compose(
-  connect(mapStateToProps, actions)
+  connect(mapStateToProps, authActions)
 )(Form.create({ name: 'sign_in' })(SignInForm));

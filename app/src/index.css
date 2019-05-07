@@ -63,3 +63,7 @@ body {
 .ant-form-explain {
 	margin-top: 0;
 }
+
+.ant-list-item-meta-avatar {
+	margin-top: 8px;
+}

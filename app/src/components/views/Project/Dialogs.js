@@ -1,24 +1,23 @@
 import React from 'react';
 import axios from 'axios';
-import { List, Row, Col, Empty, Modal, Button, Form, Input, Radio } from 'antd';
+import { List, Row, Col, Empty, Modal, Button, Form, Input, Radio, Avatar } from 'antd';
 import { Link } from 'react-router-dom';
 
-function ProjectItem(props) {
+function DialogItem(props) {
   return (
     <List.Item actions={[
-        <Link to={'/projects/'+props.project._id+'/leads/'}>Заявки</Link>,
-        <Link to={'/projects/'+props.project._id+'/answers/'}>База знаний</Link>,
-        <Link to={'/projects/'+props.project._id+'/integrations/'}>Интеграции</Link>,
-        <Link to={'/projects/'+props.project._id+'/settings/'}>Настройки</Link>
+        <Link to={'/projects/'+props.project._id+'/leads/'}>Открыть</Link>,
+        <Link to={'/projects/'+props.project._id+'/answers/'}>Удалить</Link>
       ]}>
       <List.Item.Meta
-        title={<Link to={'/projects/'+props.project._id+'/leads/'}><b>{props.project.name}</b></Link>}
-        description={<a target="_blank" href={props.project.website_url}>{props.project.website_url_str}</a>} />
+          avatar={<Avatar size="medium" icon="user" />}
+          title={<b>Ivanov</b>}
+          description="Ant Design, a design language for background applications, is refined by Ant UED Team" />
     </List.Item>
   )
 }
 
-const AddProjectForm = Form.create({ name: 'add_project' })(
+const AddLeadForm = Form.create({ name: 'add_project' })(
   class extends React.Component {
     render() {
       const {
@@ -58,7 +57,7 @@ const AddProjectForm = Form.create({ name: 'add_project' })(
   }
 )
 
-class Projects extends React.Component {
+class Dialogs extends React.Component {
 
   state = {
     visible: false,
@@ -123,30 +122,24 @@ class Projects extends React.Component {
           bordered
           hideOnSinglePage={true}
           loading={!this.state.projects ? true : false}
-          /*pagination={{
-            onChange: (page) => {
-              console.log(page);
-            },
-            pageSize: 100
-          }}*/
           size="large"
           dataSource={this.state.projects ? this.state.projects : []}
-          renderItem={item => <ProjectItem project={item} />} />
+          renderItem={item => <DialogItem project={item} />} />
       );
     };
 
     return (
       <div>
         <div className="app-main-view-header">
-          <div className="app-main-view-header-title">Проекты</div>
+          <div className="app-main-view-header-title">Диалоги</div>
           <div className="app-main-view-header-btns">
-            <Button onClick={this.showModal} className="app-main-view-header-btn" type="primary" icon="plus">Создать проект</Button>
+            <Button onClick={this.showModal} className="app-main-view-header-btn" type="primary" icon="plus">Добавить диалог</Button>
           </div>
         </div>
         <div className="app-main-view-content">
           {content}
         </div>
-        <AddProjectForm
+        <AddLeadForm
           wrappedComponentRef={this.saveFormRef}
           visible={this.state.visible}
           onCancel={this.handleCancel}
@@ -156,4 +149,4 @@ class Projects extends React.Component {
   }
 }
 
-export default Projects;
+export default Dialogs;

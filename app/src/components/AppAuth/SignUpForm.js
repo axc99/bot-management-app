@@ -5,36 +5,30 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { Form, Button, Input, Icon, Checkbox, Modal } from 'antd';
 
-import * as actions from '../../store/actions';
+import * as authActions from '../../store/actions/auth';
 
 class SignUpForm extends Component {
-
   async send(data) {
-
     await this.props.signUp(data);
-
-    if (this.props.errorMessage) {
+    if (this.props.errorMessage || !this.props.isAuthenticated) {
       Modal.error({
         title: 'Ошибка',
-        content: this.props.errorMessage
+        content: this.props.errorMessage ? this.props.errorMessage : 'Ошибка при отправке запроса.'
       });
-    } else {
+    } else if (this.props.isAuthenticated) {
       Modal.success({
         title: (<b>Подтвердите вашу почту</b>),
         content: 'Для продолжения регистрации, Вам необходимо перейти по ссылке, которая была отправленна вам на почту... FIX'
       });
       this.props.history.push('/auth/sign-in/');
     };
-
   }
-
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, data) => {
       if (!err) this.send(data);
     });
   }
-
   compareToFirstPassword = (rule, value, callback) => {
     const form = this.props.form;
     if (value && value !== form.getFieldValue('password')) {
@@ -100,5 +94,5 @@ function mapStateToProps(state) {
 }
 
 export default compose(
-  connect(mapStateToProps, actions)
+  connect(mapStateToProps, authActions)
 )(Form.create({ name: 'sign_up' })(SignUpForm));
