@@ -1,21 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'redux';
 import { Form, Button, Input, Modal, Tabs } from 'antd';
 
 import * as userActions from '../../../store/actions/user';
 
 class EditForm extends React.Component {
   async send(data) {
-    await this.props.signIn(data);
-    if (this.props.errorMessage) {
-      Modal.error({
-        title: 'Ошибка',
-        content: this.props.errorMessage
-      });
-    } else if (this.props.isAuthenticated) {
-      this.props.history.push('/projects/');
-    };
+    // ...
   }
   handleSubmit = (e) => {
     e.preventDefault();
@@ -40,16 +31,16 @@ class EditForm extends React.Component {
           </Form.Item>
           <Form.Item label="Фамилия" className="app-form-field">
             {getFieldDecorator('last_name', {
-              rules: [ { required: true, message: 'Заполните это поле.' } ],
+              rules: [ { message: 'Заполните это поле.' } ],
             })(
-              <Input autofocus="true" autofocus="true" name="last_name" size="large" />
+              <Input name="last_name" size="large" />
             )}
           </Form.Item>
           <Form.Item label="Имя" className="app-form-field">
             {getFieldDecorator('first_name', {
-              rules: [ { required: true, message: 'Заполните это поле.' } ],
+              rules: [ { message: 'Заполните это поле.' } ],
             })(
-              <Input autofocus="true" name="first_name" size="large" />
+              <Input name="first_name" size="large" />
             )}
           </Form.Item>
         </div>
@@ -63,11 +54,10 @@ class EditForm extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    _id: state.user._id,
-    username: state.user.username
+    user: {
+      id: state.user.id
+    }
   }
 }
 
-export default compose(
-  connect(mapStateToProps, userActions)
-)(Form.create({ name: 'edit_user' })(EditForm));
+export default connect(mapStateToProps, userActions)(Form.create({ name: 'edit_user' })(EditForm));

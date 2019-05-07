@@ -1,12 +1,16 @@
 import React from 'react';
 import axios from 'axios';
-import { List, Row, Col, Empty, Modal, Button, Form, Input, Radio } from 'antd';
+import { List, Empty, Button, Modal } from 'antd';
 import { Link } from 'react-router-dom';
+
+import AddProjectForm from './Projects/AddProjectForm.js';
+
+import { setTitle } from '../../helpers';
 
 function ProjectItem(props) {
   return (
     <List.Item actions={[
-        <Link to={'/projects/'+props.project._id+'/leads/'}>Заявки</Link>,
+        <Link to={'/projects/'+props.project._id+'/leads/'}>Лиды</Link>,
         <Link to={'/projects/'+props.project._id+'/answers/'}>База знаний</Link>,
         <Link to={'/projects/'+props.project._id+'/integrations/'}>Интеграции</Link>,
         <Link to={'/projects/'+props.project._id+'/settings/'}>Настройки</Link>
@@ -18,58 +22,16 @@ function ProjectItem(props) {
   )
 }
 
-const AddProjectForm = Form.create({ name: 'add_project' })(
-  class extends React.Component {
-    render() {
-      const {
-        visible, onCancel, onCreate, form,
-      } = this.props;
-      const { getFieldDecorator } = form;
-      return (
-        <Modal
-          width={400}
-          visible={visible}
-          title={(<b>Создать новый проект</b>)}
-          okText="Создать проект"
-          cancelText="Отмена"
-          onOk={onCreate}
-          onCancel={onCancel} >
-          <Form hideRequiredMark="false" className="app-form" layout="vertical">
-            <div className="app-form-fields">
-              <Form.Item label="Название проекта" className="app-form-field">
-                {getFieldDecorator('name', {
-                  rules: [ { required: true, message: 'Заполните это поле.' } ],
-                })(
-                  <Input autofocus="true" name="name" size="large" />
-                )}
-              </Form.Item>
-              <Form.Item label="Ссылка на сайт" className="app-form-field">
-                {getFieldDecorator('website_url', {
-                  rules: [ { required: true, message: 'Заполните это поле.' } ],
-                })(
-                  <Input autofocus="true" name="website_url" size="large" placeholder="https://..." />
-                )}
-              </Form.Item>
-            </div>
-          </Form>
-        </Modal>
-      );
-    }
-  }
-)
-
 class Projects extends React.Component {
-
   state = {
-    visible: false,
+    // Отображение добавления проекта
+    addProjectVisible: false,
     projects: null
   }
-
   componentDidMount() {
+    setTitle('Проекты');
     axios.get('http://localhost./app-api/projects/', {}, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      headers: { 'Content-Type': 'application/json' }
     }).then(
       res => {
         const projects = res.data.projects;
@@ -82,32 +44,25 @@ class Projects extends React.Component {
       }
     )
   }
-
-  showModal = () => {
-    this.setState({ visible: true });
+  // Открыть добавление
+  openAddProject = (type) => {
+    this.setState({ addProjectVisible: true });
   }
-
-  handleCancel = () => {
-    this.setState({ visible: false });
+  // Обработать закрытие добавления
+  handleCancelAddProject = (type) => {
+    this.setState({ addProjectVisible: false });
   }
-
-  handleCreate = () => {
+  // Добавить проект
+  addProject = () => {
     const form = this.formRef.props.form;
     form.validateFields((err, values) => {
-      if (err) {
-        return;
-      }
-
-      console.log('Received values of form: ', values);
-      form.resetFields();
-      this.setState({ visible: false });
+      if (err) return;
+      // ...
     });
   }
-
   saveFormRef = (formRef) => {
     this.formRef = formRef;
   }
-
   render() {
     let content;
 
@@ -140,7 +95,7 @@ class Projects extends React.Component {
         <div className="app-main-view-header">
           <div className="app-main-view-header-title">Проекты</div>
           <div className="app-main-view-header-btns">
-            <Button onClick={this.showModal} className="app-main-view-header-btn" type="primary" icon="plus">Создать проект</Button>
+            <Button onClick={this.openAddProject} className="app-main-view-header-btn" type="primary" icon="plus">Создать проект</Button>
           </div>
         </div>
         <div className="app-main-view-content">
@@ -148,9 +103,9 @@ class Projects extends React.Component {
         </div>
         <AddProjectForm
           wrappedComponentRef={this.saveFormRef}
-          visible={this.state.visible}
-          onCancel={this.handleCancel}
-          onCreate={this.handleCreate} />
+          visible={this.state.addProjectVisible}
+          onCancel={this.handleCancelAddProject}
+          addProject={this.addProject} />
       </div>
     );
   }

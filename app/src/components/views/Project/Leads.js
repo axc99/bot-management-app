@@ -3,6 +3,10 @@ import axios from 'axios';
 import { List, Row, Col, Empty, Modal, Button, Form, Input, Radio, Avatar } from 'antd';
 import { Link } from 'react-router-dom';
 
+import AddLeadForm from './Leads/AddLeadForm.js';
+
+import { setTitle } from '../../../helpers';
+
 function LeadItem(props) {
   return (
     <List.Item actions={[
@@ -17,46 +21,6 @@ function LeadItem(props) {
   )
 }
 
-const AddLeadForm = Form.create({ name: 'add_project' })(
-  class extends React.Component {
-    render() {
-      const {
-        visible, onCancel, onCreate, form,
-      } = this.props;
-      const { getFieldDecorator } = form;
-      return (
-        <Modal
-          width={400}
-          visible={visible}
-          title={(<b>Создать новый проект</b>)}
-          okText="Создать проект"
-          cancelText="Отмена"
-          onOk={onCreate}
-          onCancel={onCancel} >
-          <Form hideRequiredMark="false" className="app-form" layout="vertical">
-            <div className="app-form-fields">
-              <Form.Item label="Название проекта" className="app-form-field">
-                {getFieldDecorator('name', {
-                  rules: [ { required: true, message: 'Заполните это поле.' } ],
-                })(
-                  <Input autofocus="true" name="name" size="large" />
-                )}
-              </Form.Item>
-              <Form.Item label="Ссылка на сайт" className="app-form-field">
-                {getFieldDecorator('website_url', {
-                  rules: [ { required: true, message: 'Заполните это поле.' } ],
-                })(
-                  <Input autofocus="true" name="website_url" size="large" placeholder="https://..." />
-                )}
-              </Form.Item>
-            </div>
-          </Form>
-        </Modal>
-      );
-    }
-  }
-)
-
 class Leads extends React.Component {
 
   state = {
@@ -65,6 +29,7 @@ class Leads extends React.Component {
   }
 
   componentDidMount() {
+    setTitle('Лиды');
     axios.get('http://localhost./app-api/projects/', {}, {
       headers: {
         'Content-Type': 'application/json'

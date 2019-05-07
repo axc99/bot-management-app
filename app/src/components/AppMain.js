@@ -8,6 +8,7 @@ import Project from './views/Project';
 import ProjectsView from './views/Projects';
 import AddProjectView from './views/AddProject';
 import InformationView from './views/Information';
+import LogsView from './views/Logs';
 import BuildView from './views/Build';
 import AccountView from './views/Account';
 import Error404View from './views/Error404';
@@ -47,7 +48,7 @@ class Sidebar extends React.Component {
                       <Icon type="arrow-left" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Все проекты</div>
                     </NavLink>
                     <NavLink to={`/projects/${this.props._id}/leads/`} className="app-main-sidebar-nav-menu-item">
-                      <Icon type="idcard" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Заявки</div>
+                      <Icon type="idcard" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Лиды</div>
                     </NavLink>
                     <NavLink to={`/projects/${this.props._id}/dialogs/`} className="app-main-sidebar-nav-menu-item">
                       <Icon type="message" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Диалоги</div>
@@ -118,6 +119,7 @@ class View extends React.Component {
           <Route exact path="/projects/" component={ProjectsView} />
           <Route path="/add-project/" component={AddProjectView} />
           <Route path="/information/" component={InformationView} />
+          <Route path="/logs/" component={LogsView} />
           <Route path="/build/" component={BuildView} />
           <Route path="/account/" component={AccountView} />
           <Route component={Error404View} />

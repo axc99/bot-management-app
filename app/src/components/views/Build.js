@@ -1,7 +1,12 @@
 import React from 'react';
 import { List } from 'antd';
 
+import { setTitle } from '../../helpers';
+
 class Build extends React.Component {
+  componentDidMount() {
+    setTitle('Сборка');
+  }
   render() {
     let packageJson = require('./../../../package.json');
     let data_1 = [
