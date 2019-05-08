@@ -16,8 +16,8 @@ class SignUpForm extends Component {
       });
     } else if (this.props.isAuthenticated) {
       Modal.success({
-        title: (<b>Подтвердите вашу почту</b>),
-        content: 'Для продолжения регистрации, Вам необходимо перейти по ссылке, которая была отправленна вам на почту... FIX'
+        title: (<b>Аккаунт создан</b>),
+        content: 'Письмо с ссылкой для подтверждения почты было отправлено на вашу почту (<b>' + data.email + '</b>). Если письма нет - проверьте папку «спам».'
       });
       this.props.history.push('/auth/sign-in/');
     };
@@ -34,9 +34,8 @@ class SignUpForm extends Component {
       callback('Пароль и его подтверждение должны совпадать.');
     } else {
       callback();
-    }
+    };
   }
-
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -44,14 +43,14 @@ class SignUpForm extends Component {
         <div className="app-form-fields">
           <Form.Item label="E-mail" className="app-form-field">
             {getFieldDecorator('email', {
-              rules: [ { required: true, message: 'Укажите email' } ],
+              rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
             })(
-              <Input autofocus="true" name="email" size="large" />
+              <Input autoFocus={true} name="email" size="large" />
             )}
           </Form.Item>
           <Form.Item label="Пароль" className="app-form-field">
             {getFieldDecorator('password', {
-              rules: [ { required: true, message: 'Укажите пароль' } ],
+              rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
             })(
               <Input className="app-form-field-input" name="password" type="password" size="large" />
             )}
@@ -59,7 +58,7 @@ class SignUpForm extends Component {
           <Form.Item label="Пароль ещё раз" className="app-form-field">
             {getFieldDecorator('confirm_password', {
               rules: [
-                { required: true, message: 'Укажите пароль ещё раз' },
+                { required: true, message: 'Поле обязательно для заполнения.' },
                 { validator: this.compareToFirstPassword }
               ],
             })(
@@ -71,7 +70,7 @@ class SignUpForm extends Component {
               valuePropName: 'checked',
               rules: [ { required: true, message: 'Примите правила пользования.' } ]
             })(
-              <Checkbox>Я принимаю <a href="#">привилами пользования</a></Checkbox>
+              <Checkbox>Я принимаю <a href="#">привила пользования</a></Checkbox>
             )}
           </Form.Item>
         </div>

@@ -32,14 +32,14 @@ class SignInForm extends Component {
           <div className="app-form-fields">
             <Form.Item label="E-mail или логин" className="app-form-field">
               {getFieldDecorator('emailOrUsername', {
-                rules: [ { required: true, message: 'Укажите email или логин' } ],
+                rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
               })(
-                <Input autofocus="true" size="large" />
+                <Input autoFocus={true} size="large" />
               )}
             </Form.Item>
             <Form.Item label="Пароль" className="app-form-field">
               {getFieldDecorator('password', {
-                rules: [ { required: true, message: 'Укажите пароль' } ],
+                rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
               })(
                 <Input className="app-form-field-input" type="password" size="large" />
               )}

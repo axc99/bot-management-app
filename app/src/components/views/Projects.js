@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import AddProjectForm from './Projects/AddProjectForm.js';
 
 import { setTitle } from '../../helpers';
+import config from '../../config';
 
 function ProjectItem(props) {
   return (
@@ -17,7 +18,7 @@ function ProjectItem(props) {
       ]}>
       <List.Item.Meta
         title={<Link to={'/projects/'+props.project._id+'/leads/'}><b>{props.project.name}</b></Link>}
-        description={<a target="_blank" href={props.project.website_url}>{props.project.website_url_str}</a>} />
+        description={<a target="_blank" href={props.project.websiteUrl}>{props.project.websiteUrlStr}</a>} />
     </List.Item>
   )
 }
@@ -29,17 +30,13 @@ class Projects extends React.Component {
   }
   componentDidMount() {
     setTitle('Проекты');
-    axios.get('http://localhost./app-api/projects/', {}, {
-      headers: { 'Content-Type': 'application/json' }
-    }).then(
+    axios.get(config.serverUrl + 'app-api/projects/', {}).then(
       res => {
         const projects = res.data.projects;
         this.setState({ projects });
       },
       err => {
-        Modal.error({
-          title: (<b>Ошибка при загрузке</b>)
-        });
+        Modal.error({ title: (<b>Ошибка при загрузке</b>) });
       }
     );
   }
@@ -54,9 +51,21 @@ class Projects extends React.Component {
   // Добавить проект
   addProject = () => {
     const form = this.formRef.props.form;
-    form.validateFields((err, values) => {
+    form.validateFields((err, data) => {
       if (err) return;
-      // ...
+      else {
+        axios.post(config.serverUrl + 'app-api/projects/', {
+          project: data
+        }).then(
+          res => {
+            const project = res.data.project;
+            alert('project!');
+          },
+          err => {
+            Modal.error({ title: (<b>Ошибка при отправке</b>) });
+          }
+        );
+      };
     });
   }
   saveFormRef = (formRef) => {

@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
 
-import EditProjectForm from './Settings/EditProjectForm';
+// import EditProjectForm from './Settings/EditProjectForm';
 
 import { setTitle } from '../../../helpers';
 
 class Settings extends React.Component {
   componentDidMount() {
-    setTitle('Настройка проекта');
+    setTitle('Поведение бота');
   }
   render() {
     return (
       <div>
         <div className="app-main-view-header">
-          <div className="app-main-view-header-title">Настройка проекта</div>
+          <div className="app-main-view-header-title">Поведение бота</div>
         </div>
         <div className="app-main-view-content">
-          <EditProjectForm />
+          [FORM]
         </div>
       </div>
     );

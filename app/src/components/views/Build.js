@@ -5,7 +5,7 @@ import { setTitle } from '../../helpers';
 
 class Build extends React.Component {
   componentDidMount() {
-    setTitle('Сборка');
+    setTitle('Приложение');
   }
   render() {
     let packageJson = require('./../../../package.json');
@@ -16,13 +16,12 @@ class Build extends React.Component {
     return (
       <div>
         <div className="app-main-view-header">
-          <div className="app-main-view-header-title">Сборка</div>
+          <div className="app-main-view-header-title">Приложение</div>
         </div>
         <div className="app-main-view-content">
           <div className="app-content-build">
             <List
               bordered
-              header={<b>Приложение</b>}
               className="app-content-build-list"
               dataSource={data_1}
               renderItem={item => (<List.Item>{item[0]}: <b>{item[1]}</b></List.Item>)} />

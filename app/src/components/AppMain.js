@@ -6,7 +6,6 @@ import { compose } from 'redux';
 
 import Project from './views/Project';
 import ProjectsView from './views/Projects';
-import AddProjectView from './views/AddProject';
 import InformationView from './views/Information';
 import LogsView from './views/Logs';
 import BuildView from './views/Build';
@@ -37,7 +36,7 @@ class Sidebar extends React.Component {
         </div>
         <div className="app-main-sidebar-nav">
           {
-            this.props._id ? (
+            this.props.id ? (
               <div>
                 <div className="app-main-sidebar-nav-header">
                   <div className="app-main-sidebar-nav-header-title">Проект</div>
@@ -47,22 +46,22 @@ class Sidebar extends React.Component {
                     <NavLink exact to="/projects/" className="app-main-sidebar-nav-menu-item">
                       <Icon type="arrow-left" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Все проекты</div>
                     </NavLink>
-                    <NavLink to={`/projects/${this.props._id}/leads/`} className="app-main-sidebar-nav-menu-item">
+                    <NavLink to={`/projects/${this.props.id}/leads/`} className="app-main-sidebar-nav-menu-item">
                       <Icon type="idcard" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Лиды</div>
                     </NavLink>
-                    <NavLink to={`/projects/${this.props._id}/dialogs/`} className="app-main-sidebar-nav-menu-item">
+                    <NavLink to={`/projects/${this.props.id}/dialogs/`} className="app-main-sidebar-nav-menu-item">
                       <Icon type="message" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Диалоги</div>
                     </NavLink>
-                    <NavLink to={`/projects/${this.props._id}/answers/`} className="app-main-sidebar-nav-menu-item">
+                    <NavLink to={`/projects/${this.props.id}/answers/`} className="app-main-sidebar-nav-menu-item">
                       <Icon type="read" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">База знаний</div>
                     </NavLink>
-                    <NavLink to={`/projects/${this.props._id}/bot/`} className="app-main-sidebar-nav-menu-item">
-                      <Icon type="cluster" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Поведение</div>
+                    <NavLink to={`/projects/${this.props.id}/bot/`} className="app-main-sidebar-nav-menu-item">
+                      <Icon type="experiment" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Поведение бота</div>
                     </NavLink>
-                    <NavLink to={`/projects/${this.props._id}/integrations/`} className="app-main-sidebar-nav-menu-item">
+                    <NavLink to={`/projects/${this.props.id}/integrations/`} className="app-main-sidebar-nav-menu-item">
                       <Icon type="swap" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Интеграции</div>
                     </NavLink>
-                    <NavLink to={`/projects/${this.props._id}/settings/`} className="app-main-sidebar-nav-menu-item">
+                    <NavLink to={`/projects/${this.props.id}/settings/`} className="app-main-sidebar-nav-menu-item">
                       <Icon type="setting" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Настройки</div>
                     </NavLink>
                   </div>
@@ -85,8 +84,11 @@ class Sidebar extends React.Component {
                       <Icon type="flag" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Лог действий</div>
                     </NavLink>
                     <NavLink to="/build/" className="app-main-sidebar-nav-menu-item">
-                      <Icon type="code" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Сборка</div>
+                      <Icon type="code" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Приложение</div>
                     </NavLink>
+                    <a target="_blank" href="https://github.com/kovert99/bot-management-app" className="app-main-sidebar-nav-menu-item">
+                      <Icon type="github" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">GitHub</div>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -102,7 +104,7 @@ class Sidebar extends React.Component {
 function mapStateToProps(state) {
   return {
     isAuth: state.auth.isAuthenticated,
-    _id: state.project._id
+    id: state.project.id
   };
 }
 Sidebar = compose(
@@ -115,9 +117,8 @@ class View extends React.Component {
     return (
       <div className="app-main-view">
         <Switch>
-          <Route path="/projects/:project_id/" component={Project} />
+          <Route path="/projects/:projectId/" component={Project} />
           <Route exact path="/projects/" component={ProjectsView} />
-          <Route path="/add-project/" component={AddProjectView} />
           <Route path="/information/" component={InformationView} />
           <Route path="/logs/" component={LogsView} />
           <Route path="/build/" component={BuildView} />

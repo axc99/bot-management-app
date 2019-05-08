@@ -13,6 +13,7 @@ import axios from 'axios';
 
 const jwtToken = localStorage.getItem('JWT_TOKEN');
 axios.defaults.headers.common['Authorization'] = jwtToken;
+axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 const store = createStore(reducers, {
   auth: {

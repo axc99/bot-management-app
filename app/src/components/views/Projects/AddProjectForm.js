@@ -27,7 +27,7 @@ class AddProjectForm extends React.Component {
               )}
             </Form.Item>
             <Form.Item label="Ссылка на сайт" className="app-form-field">
-              {getFieldDecorator('website_url', {
+              {getFieldDecorator('websiteUrl', {
                 rules: [ { required: true, message: 'Заполните это поле.' } ],
               })(
                 <Input autofocus="true" size="large" placeholder="https://..." />
@@ -38,9 +38,9 @@ class AddProjectForm extends React.Component {
                 rules: [ { required: true, message: 'Заполните это поле.' } ],
               })(
                 <Select size="large" placeholder="Выберите из списка">
-                  <Select.Option value="red">...</Select.Option>
-                  <Select.Option value="green">...</Select.Option>
-                  <Select.Option value="blue">...</Select.Option>
+                  <Select.Option value="0">...</Select.Option>
+                  <Select.Option value="1">...</Select.Option>
+                  <Select.Option value="2">...</Select.Option>
                 </Select>
               )}
             </Form.Item>

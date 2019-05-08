@@ -7,7 +7,7 @@ export const set = data => {
     dispatch({
       type: PROJECT_SET,
       payload: {
-        _id: data._id
+        id: data.id
       }
     });
 
