@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { compose } from 'redux';
 import { Form, Button, Input, Icon, Modal } from 'antd';
 
 import * as authActions from '../../store/actions/auth';
@@ -32,17 +31,17 @@ class SignInForm extends Component {
         <Form hideRequiredMark="false" onSubmit={this.handleSubmit} layout="vertical" className="app-form">
           <div className="app-form-fields">
             <Form.Item label="E-mail или логин" className="app-form-field">
-              {getFieldDecorator('email_or_username', {
+              {getFieldDecorator('emailOrUsername', {
                 rules: [ { required: true, message: 'Укажите email или логин' } ],
               })(
-                <Input autofocus="true" name="email_or_username" size="large" />
+                <Input autofocus="true" size="large" />
               )}
             </Form.Item>
             <Form.Item label="Пароль" className="app-form-field">
               {getFieldDecorator('password', {
                 rules: [ { required: true, message: 'Укажите пароль' } ],
               })(
-                <Input className="app-form-field-input" name="password" type="password" size="large" />
+                <Input className="app-form-field-input" type="password" size="large" />
               )}
             </Form.Item>
           </div>
@@ -65,6 +64,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default compose(
-  connect(mapStateToProps, authActions)
-)(Form.create({ name: 'sign_in' })(SignInForm));
+export default connect(mapStateToProps, authActions)(Form.create({ name: 'signIn' })(SignInForm));

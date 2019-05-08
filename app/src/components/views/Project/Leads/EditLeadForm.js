@@ -38,20 +38,20 @@ class NamesField extends React.Component {
   }
 }
 
-class AddLeadForm extends React.Component {
+class EditLeadForm extends React.Component {
   render() {
     const {
-      visible, onCancel, addLead, form
+      visible, onCancel, editLead, form
     } = this.props;
     const { getFieldDecorator } = form;
     return (
       <Modal
         width={600}
         visible={visible}
-        title={(<b>Добавить лид</b>)}
-        okText="Добавить"
+        title={(<b>Лид #{this.props.leadId}</b>)}
+        okText="Сохранить"
         cancelText="Отмена"
-        onOk={addLead}
+        onOk={editLead}
         onCancel={onCancel} >
         <Form hideRequiredMark="false" className="app-form" layout="vertical">
           <div className="app-form-fields">
@@ -63,4 +63,4 @@ class AddLeadForm extends React.Component {
   }
 }
 
-export default Form.create({ name: 'add_lead' })(AddLeadForm);
+export default Form.create({ name: 'edit_lead' })(EditLeadForm);

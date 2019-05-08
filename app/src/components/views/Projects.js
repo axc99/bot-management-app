@@ -24,7 +24,6 @@ function ProjectItem(props) {
 
 class Projects extends React.Component {
   state = {
-    // Отображение добавления проекта
     addProjectVisible: false,
     projects: null
   }
@@ -42,14 +41,14 @@ class Projects extends React.Component {
           title: (<b>Ошибка при загрузке</b>)
         });
       }
-    )
+    );
   }
-  // Открыть добавление
-  openAddProject = (type) => {
+  // Открыть: добавление проекта
+  openAddProject = () => {
     this.setState({ addProjectVisible: true });
   }
-  // Обработать закрытие добавления
-  handleCancelAddProject = (type) => {
+  // Обработать закрытие: добавление проекта
+  handleCancelAddProject = () => {
     this.setState({ addProjectVisible: false });
   }
   // Добавить проект

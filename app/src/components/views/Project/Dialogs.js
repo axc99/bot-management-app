@@ -3,128 +3,59 @@ import axios from 'axios';
 import { List, Row, Col, Empty, Modal, Button, Form, Input, Radio, Avatar } from 'antd';
 import { Link } from 'react-router-dom';
 
-function DialogItem(props) {
-  return (
-    <List.Item actions={[
-        <Link to={'/projects/'+props.project._id+'/leads/'}>Открыть</Link>,
-        <Link to={'/projects/'+props.project._id+'/answers/'}>Удалить</Link>
-      ]}>
-      <List.Item.Meta
-          avatar={<Avatar size="medium" icon="user" />}
-          title={<b>Ivanov</b>}
-          description="Ant Design, a design language for background applications, is refined by Ant UED Team" />
-    </List.Item>
-  )
+import { setTitle } from '../../../helpers';
+
+class DialogItem extends React.Component {
+  render() {
+    return (
+      <List.Item>
+        <List.Item.Meta
+            avatar={<Avatar size="medium" icon="user" />}
+            title={<b>{this.props.dialog.fullName ? this.props.dialog.fullName : 'Без имени'}</b>}
+            description={this.props.dialog.contacts ? this.props.dialog.contacts : 'Пустой диалог'} />
+      </List.Item>
+    )
+  }
 }
 
-const AddLeadForm = Form.create({ name: 'add_project' })(
-  class extends React.Component {
-    render() {
-      const {
-        visible, onCancel, onCreate, form,
-      } = this.props;
-      const { getFieldDecorator } = form;
-      return (
-        <Modal
-          width={400}
-          visible={visible}
-          title={(<b>Создать новый проект</b>)}
-          okText="Создать проект"
-          cancelText="Отмена"
-          onOk={onCreate}
-          onCancel={onCancel} >
-          <Form hideRequiredMark="false" className="app-form" layout="vertical">
-            <div className="app-form-fields">
-              <Form.Item label="Название проекта" className="app-form-field">
-                {getFieldDecorator('name', {
-                  rules: [ { required: true, message: 'Заполните это поле.' } ],
-                })(
-                  <Input autofocus="true" name="name" size="large" />
-                )}
-              </Form.Item>
-              <Form.Item label="Ссылка на сайт" className="app-form-field">
-                {getFieldDecorator('website_url', {
-                  rules: [ { required: true, message: 'Заполните это поле.' } ],
-                })(
-                  <Input autofocus="true" name="website_url" size="large" placeholder="https://..." />
-                )}
-              </Form.Item>
-            </div>
-          </Form>
-        </Modal>
-      );
-    }
-  }
-)
-
 class Dialogs extends React.Component {
-
   state = {
-    visible: false,
-    projects: null
+    dialogs: null
   }
-
   componentDidMount() {
-    axios.get('http://localhost./app-api/projects/', {}, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
+    setTitle('Диалоги');
+    axios.get('http://localhost./app-api/projects/123/dialogs/', {}, {
+      headers: { 'Content-Type': 'application/json' }
     }).then(
       res => {
-        const projects = res.data.projects;
-        this.setState({ projects });
+        const dialogs = res.data.dialogs;
+        this.setState({ dialogs });
       },
       err => {
         Modal.error({
           title: (<b>Ошибка при загрузке</b>)
         });
       }
-    )
+    );
   }
-
-  showModal = () => {
-    this.setState({ visible: true });
-  }
-
-  handleCancel = () => {
-    this.setState({ visible: false });
-  }
-
-  handleCreate = () => {
-    const form = this.formRef.props.form;
-    form.validateFields((err, values) => {
-      if (err) {
-        return;
-      }
-
-      console.log('Received values of form: ', values);
-      form.resetFields();
-      this.setState({ visible: false });
-    });
-  }
-
-  saveFormRef = (formRef) => {
-    this.formRef = formRef;
-  }
-
   render() {
     let content;
 
-    if (this.state.projects !== null && this.state.projects.length == 0) {
+    if (this.state.dialogs !== null && this.state.dialogs.length == 0) {
       content = (
         <Empty
           image={Empty.PRESENTED_IMAGE_SIMPLE}
-          description="У вас пока нет проектов." />
+          description="В проекте пока нет диалогов." />
       );
     } else {
       content = (
         <List
           bordered
           hideOnSinglePage={true}
-          loading={!this.state.projects ? true : false}
+          loading={!this.state.leads ? true : false}
           size="large"
-          dataSource={this.state.projects ? this.state.projects : []}
-          renderItem={item => <DialogItem project={item} />} />
+          dataSource={this.state.dialogs ? this.state.dialogs : []}
+          renderItem={item => <DialogItem dialog={item} openEditDialog={this.openEditDialog} />} />
       );
     };
 
@@ -132,18 +63,10 @@ class Dialogs extends React.Component {
       <div>
         <div className="app-main-view-header">
           <div className="app-main-view-header-title">Диалоги</div>
-          <div className="app-main-view-header-btns">
-            <Button onClick={this.showModal} className="app-main-view-header-btn" type="primary" icon="plus">Добавить диалог</Button>
-          </div>
         </div>
         <div className="app-main-view-content">
           {content}
         </div>
-        <AddLeadForm
-          wrappedComponentRef={this.saveFormRef}
-          visible={this.state.visible}
-          onCancel={this.handleCancel}
-          onCreate={this.handleCreate} />
       </div>
     );
   }

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { browserHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { compose } from 'redux';
 import { Form, Button, Input, Icon, Checkbox, Modal } from 'antd';
 
 import * as authActions from '../../store/actions/auth';
@@ -93,6 +92,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default compose(
-  connect(mapStateToProps, authActions)
-)(Form.create({ name: 'sign_up' })(SignUpForm));
+export default connect(mapStateToProps, authActions)(Form.create({ name: 'signUp' })(SignUpForm));

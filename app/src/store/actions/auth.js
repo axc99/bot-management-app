@@ -12,7 +12,7 @@ export const signUp = data => {
 
     const res = await axios.post('http://localhost./app-api/rpc/', {
       jsonrpc: '2.0',
-      method: 'sign_up',
+      method: 'signUp',
       params: {
         email: data.email,
         password: data.password
@@ -43,9 +43,9 @@ export const signIn = data => {
 
     const res = await axios.post('http://localhost./app-api/rpc/', {
       jsonrpc: '2.0',
-      method: 'sign_in',
+      method: 'signIn',
       params: {
-        email_or_username: data.email_or_username,
+        emailOrUsername: data.emailOrUsername,
         password: data.password
       },
       id: 1
@@ -66,17 +66,17 @@ export const signIn = data => {
       } else if (resData.result) {
 
         dispatch({
-          type: AUTH_SIGN_UP,
-          payload: resData.result.token
+          type: AUTH_SIGN_IN,
+          payload: resData.result.accessToken
         });
 
-        localStorage.setItem('JWT_TOKEN', resData.result.token);
-        axios.defaults.headers.common['Authorization'] = resData.result.token;
+        localStorage.setItem('JWT_TOKEN', resData.result.accessToken);
+        axios.defaults.headers.common['Authorization'] = resData.result.accessToken;
 
         dispatch({
           type: USER_SET,
           payload: {
-            _id: resData.result.user._id,
+            id: resData.result.user.id,
             username: resData.result.user.username
           }
         });
