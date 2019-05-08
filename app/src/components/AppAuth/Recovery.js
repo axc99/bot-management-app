@@ -40,7 +40,7 @@ class RecoveryUserForm extends Component {
         } else if (resData.result) {
           Modal.success({
             title: (<b>Письмо отправлено</b>),
-            content: 'На указанную почту было отправлено письмо с ссылкой для подтверждения аккаунта. Если письма нет - проверьте папку «спам».'
+            content: 'Письмо с ссылкой для смены пароля было отправлено на ваш email. Если письма нет - проверьте папку «спам».'
           });
           this.props.history.push('/auth/sign-in/');
         };
