@@ -5,7 +5,7 @@ export default (OriginalComponent) => {
   class MixedComponent extends Component {
 
     checkAuth() {
-      if (!this.props.isAuth && !this.props.jwtToken) {
+      if (!this.props.user.isAuthenticated) {
         this.props.history.push('/auth/sign-in/');
       }
     }
@@ -25,8 +25,7 @@ export default (OriginalComponent) => {
 
   function mapStateToProps(state) {
     return {
-      isAuth: state.auth.isAuthenticated,
-      jwtToken: state.auth.token
+      user: state.user
     }
   }
 

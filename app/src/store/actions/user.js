@@ -1,16 +1,36 @@
 import axios from 'axios';
-import { USER_SET } from './types';
+import { SET_USER, UNSET_USER } from './types';
 
-export const set = data => {
+export const setUser = data => {
   return dispatch => {
-
+    localStorage.setItem('USER_ID', data.id);
+    localStorage.setItem('ACCESS_TOKEN', data.session.accessToken);
+    axios.defaults.headers.common['Authorization'] = data.session.accessToken;
     dispatch({
-      type: USER_SET,
+      type: SET_USER,
       payload: {
-        id: data.id,
-        username: data.username
+        isAuthenticated: true,
+        user: {
+          id: data.id,
+          username: data.username,
+          session: data.session
+        }
       }
     });
+  };
+}
 
+export const unsetUser = data => {
+  return dispatch => {
+    localStorage.removeItem('USER_ID');
+    localStorage.removeItem('ACCESS_TOKEN');
+    axios.defaults.headers.common['Authorization'] = '';
+    dispatch({
+      type: UNSET_USER,
+      payload: {
+        isAuthenticated: false,
+        user: null
+      }
+    });
   };
 }

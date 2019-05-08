@@ -11,14 +11,18 @@ import * as serviceWorker from './serviceWorker';
 import reducers from './store/reducers';
 import axios from 'axios';
 
-const jwtToken = localStorage.getItem('JWT_TOKEN');
-axios.defaults.headers.common['Authorization'] = jwtToken;
+const userId = localStorage.getItem('USER_ID');
+const accessToken = localStorage.getItem('ACCESS_TOKEN');
+axios.defaults.headers.common['Authorization'] = accessToken;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 const store = createStore(reducers, {
-  auth: {
-    token: jwtToken,
-    isAuthenticated: jwtToken ? true : false
+  user: {
+    isAuthenticated: (userId && accessToken) ? true : false,
+    id: userId,
+    session: {
+      accessToken: accessToken
+    }
   }
 }, applyMiddleware(reduxThunk));
 

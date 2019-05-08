@@ -1,30 +1,18 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 
-import SignInForm from './AppAuth/SignInForm';
-import SignUpForm from './AppAuth/SignUpForm';
-import RecoveryForm from './AppAuth/RecoveryForm';
-
-import { setTitle } from '../helpers';
+import SignIn from './AppAuth/SignIn';
+import SignUp from './AppAuth/SignUp';
+import Recovery from './AppAuth/Recovery';
 
 export default class AppAuth extends Component {
   render() {
     var type = this.props.match.params.type;
     var title, content, Form = null;
 
-    if (type == 'sign-in') {
-      setTitle('Войти в аккаунт');
-      content = (
-        <div>
-          <div className="app-auth-box-title">
-            Войти в <b>ИС</b>
-            <Link to="/auth/sign-up/" className="app-auth-box-title-link">Регистрация</Link>
-          </div>
-          <SignInForm history={this.props.history} />
-        </div>
-      );
-    } else if (type == 'sign-up') {
+    /*if (type == 'sign-up') {
       setTitle('Создать аккаунт');
       content = (
         <div>
@@ -57,7 +45,7 @@ export default class AppAuth extends Component {
       );
     } else {
       content = (<Redirect to="/auth/sign-in/" />);
-    }
+    }*/
 
     return (
       <div className="app-auth">
@@ -67,7 +55,11 @@ export default class AppAuth extends Component {
         <div className="app-vertical_equalizer-table-cell">
 
           <div className="app-auth-box">
-            {content}
+            <Switch>
+              <Route path="/auth/sign-in/" component={SignIn} />
+              <Route path="/auth/sign-up/" component={SignUp} />
+              <Route path="/auth/recovery/" component={Recovery} />
+            </Switch>
           </div>
 
         </div>

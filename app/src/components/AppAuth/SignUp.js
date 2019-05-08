@@ -1,26 +1,56 @@
 import React, { Component } from 'react';
-import { browserHistory } from 'react-router';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Form, Button, Input, Icon, Checkbox, Modal } from 'antd';
 
-import * as authActions from '../../store/actions/auth';
+import { setTitle } from '../../helpers';
+import config from '../../config';
 
 class SignUpForm extends Component {
+  state = {
+    loading: false
+  }
+  showLoading() {
+    this.setState({ loading: true });
+  }
+  hideLoading() {
+    setTimeout(() => {
+      this.setState({ loading: false });
+    }, 500);
+  }
   async send(data) {
-    await this.props.signUp(data);
-    if (this.props.errorMessage || !this.props.isAuthenticated) {
-      Modal.error({
-        title: 'Ошибка',
-        content: this.props.errorMessage ? this.props.errorMessage : 'Ошибка при отправке запроса.'
-      });
-    } else if (this.props.isAuthenticated) {
-      Modal.success({
-        title: (<b>Аккаунт создан</b>),
-        content: 'Письмо с ссылкой для подтверждения почты было отправлено на вашу почту (<b>' + data.email + '</b>). Если письма нет - проверьте папку «спам».'
-      });
-      this.props.history.push('/auth/sign-in/');
-    };
+    this.showLoading();
+    axios.post(
+      config.serverUrl + 'app-api/rpc/', {
+        jsonrpc: '2.0',
+        method: 'signUp',
+        params: {
+          email: data.email,
+          password: data.password
+        },
+        id: 1
+      })
+      .then((res) => {
+        const resData = res.data;
+        if (resData.error) {
+          Modal.error({
+            title: (<b>Ошибка при регистрации</b>),
+            content: resData.error.message
+          });
+        } else if (resData.result) {
+          Modal.success({
+            title: (<b>Аккаунт создан</b>),
+            content: 'На указанную почту было отправлено письмо с ссылкой для подтверждения аккаунта. Если письма нет - проверьте папку «спам».'
+          });
+          this.props.history.push('/auth/sign-in/');
+        };
+      })
+      .catch((err) => {
+        console.log('Error', err);
+        Modal.error({ title: (<b>Ошибка при отправке запроса</b>) });
+      })
+      .finally(() => this.hideLoading());
   }
   handleSubmit = (e) => {
     e.preventDefault();
@@ -45,24 +75,24 @@ class SignUpForm extends Component {
             {getFieldDecorator('email', {
               rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
             })(
-              <Input autoFocus={true} name="email" size="large" />
+              <Input autoFocus={true} size="large" />
             )}
           </Form.Item>
           <Form.Item label="Пароль" className="app-form-field">
             {getFieldDecorator('password', {
               rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
             })(
-              <Input className="app-form-field-input" name="password" type="password" size="large" />
+              <Input className="app-form-field-input" type="password" size="large" />
             )}
           </Form.Item>
           <Form.Item label="Пароль ещё раз" className="app-form-field">
-            {getFieldDecorator('confirm_password', {
+            {getFieldDecorator('confirmPassword', {
               rules: [
                 { required: true, message: 'Поле обязательно для заполнения.' },
                 { validator: this.compareToFirstPassword }
               ],
             })(
-              <Input className="app-form-field-input" name="confirm_password" type="password" size="large" />
+              <Input className="app-form-field-input" type="password" size="large" />
             )}
           </Form.Item>
           <Form.Item className="app-form-agreement">
@@ -82,13 +112,21 @@ class SignUpForm extends Component {
   }
 }
 
-function mapStateToProps(state) {
+SignUpForm = Form.create({ name: 'signUp' })(SignUpForm);
 
-  console.log(state);
-  return {
-    location: state.router.location,
-    isAuthenticated: state.auth.isAuthenticated
+export default class SignUp extends React.Component {
+  componentDidMount() {
+    setTitle('Создать аккаунт');
+  }
+  render() {
+    return (
+      <div>
+        <div className="app-auth-box-title">
+          Регистрация в <b>ИС</b>
+          <Link to="/auth/sign-in/" className="app-auth-box-title-link">Вход</Link>
+        </div>
+        <SignUpForm history={this.props.history} />
+      </div>
+    );
   }
 }
-
-export default connect(mapStateToProps, authActions)(Form.create({ name: 'signUp' })(SignUpForm));

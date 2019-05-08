@@ -1,15 +1,26 @@
 import axios from 'axios';
-import { PROJECT_SET } from './types';
+import { SET_PROJECT, UNSET_PROJECT } from './types';
 
-export const set = data => {
+export const setProject = data => {
   return dispatch => {
-
     dispatch({
-      type: PROJECT_SET,
+      type: SET_PROJECT,
       payload: {
-        id: data.id
+        project: {
+          id: data.id
+        }
       }
     });
+  };
+}
 
+export const unsetProject = data => {
+  return dispatch => {
+    dispatch({
+      type: UNSET_PROJECT,
+      payload: {
+        project: null
+      }
+    });
   };
 }

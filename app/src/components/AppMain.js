@@ -13,7 +13,7 @@ import AccountView from './views/Account';
 import Error404View from './views/Error404';
 
 import * as projectActions from '../store/actions/project';
-import * as authActions from '../store/actions/auth';
+import * as userActions from '../store/actions/user';
 
 class Sidebar extends React.Component {
   render() {
@@ -28,7 +28,7 @@ class Sidebar extends React.Component {
               <NavLink to="/account/" title="Открыть аккаунт" className="app-main-sidebar-panel-menu-item">
                 <Icon type="setting" className="app-main-sidebar-panel-menu-item-icon" />
               </NavLink>
-              <div onClick={this.props.signOut} title="Выйти из приложения" className="app-main-sidebar-panel-menu-item">
+              <div onClick={this.props.unsetUser} title="Выйти из приложения" className="app-main-sidebar-panel-menu-item">
                 <Icon type="export" className="app-main-sidebar-panel-menu-item-icon" />
               </div>
             </div>
@@ -103,16 +103,15 @@ class Sidebar extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    isAuth: state.auth.isAuthenticated,
-    id: state.project.id
+    user: state.user,
+    project: state.project
   };
 }
 Sidebar = compose(
-  connect(mapStateToProps, authActions)
+  connect(mapStateToProps, userActions)
 )(Sidebar);
 
 class View extends React.Component {
-
   render() {
     return (
       <div className="app-main-view">
