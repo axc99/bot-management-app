@@ -11,13 +11,13 @@ import config from '../../config';
 function ProjectItem(props) {
   return (
     <List.Item actions={[
-        <Link to={'/projects/'+props.project._id+'/leads/'}>Лиды</Link>,
-        <Link to={'/projects/'+props.project._id+'/answers/'}>База знаний</Link>,
-        <Link to={'/projects/'+props.project._id+'/integrations/'}>Интеграции</Link>,
-        <Link to={'/projects/'+props.project._id+'/settings/'}>Настройки</Link>
+        <Link to={'/projects/'+props.project.id+'/leads/'}>Лиды</Link>,
+        <Link to={'/projects/'+props.project.id+'/answers/'}>База знаний</Link>,
+        <Link to={'/projects/'+props.project.id+'/bot/'}>Бот</Link>,
+        <Link to={'/projects/'+props.project.id+'/settings/'}>Настройки</Link>
       ]}>
       <List.Item.Meta
-        title={<Link to={'/projects/'+props.project._id+'/leads/'}><b>{props.project.name}</b></Link>}
+        title={<Link to={'/projects/'+props.project.id+'/leads/'}><b>{props.project.name}</b></Link>}
         description={<a target="_blank" href={props.project.websiteUrl}>{props.project.websiteUrlStr}</a>} />
     </List.Item>
   )
@@ -59,7 +59,11 @@ class Projects extends React.Component {
         }).then(
           res => {
             const project = res.data.project;
-            alert('project!');
+            this.props.history.push('/projects/' + project.id + '/leads/');
+            Modal.success({
+              title: (<b>Проект создан</b>),
+              content: '...'
+            });
           },
           err => {
             Modal.error({ title: (<b>Ошибка при отправке</b>) });
