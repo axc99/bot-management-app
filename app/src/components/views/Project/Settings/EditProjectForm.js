@@ -1,11 +1,39 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
-import { Form, Button, Input, Select } from 'antd';
+import axios from 'axios';
+import { Modal, Spin, Form, Button, Input, Select } from 'antd';
+
+import config from '../../../../config';
 
 class EditProjectForm extends React.Component {
+  state = {
+    sending: false
+  }
+  showSending() {
+    this.setState({ sending: true });
+  }
+  hideSending() {
+    setTimeout(() => {
+      this.setState({ sending: false });
+    }, 500);
+  }
   async send(data) {
-    // ...
+    this.showSending();
+    axios.patch(
+      config.serverUrl + 'app-api/projects/' + this.props.project.id + '/', {
+        project: data
+      })
+      .then((res) => {
+        if (res.data.project) {
+          Modal.success({
+            title: (<b>Изменения сохранены</b>)
+          });
+        };
+      })
+      .catch((err) => {
+        console.log('Error', err);
+        Modal.error({ title: (<b>Ошибка при отправке запроса</b>) });
+      })
+      .finally(() => this.hideSending());
   }
   handleSubmit = (e) => {
     e.preventDefault();
@@ -17,39 +45,41 @@ class EditProjectForm extends React.Component {
     const { getFieldDecorator } = this.props.form;
     return (
       <Form hideRequiredMark="false" onSubmit={this.handleSubmit} layout="vertical" className="app-form">
-        <div className="app-form-fields">
-          <Form.Item label="Название проекта" className="app-form-field">
-            {getFieldDecorator('name', {
-              rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
-            })(
-              <Input size="large" />
-            )}
-          </Form.Item>
-          <Form.Item label="Ссылка на сайт" className="app-form-field">
-            {getFieldDecorator('websiteUrl', {
-              rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
-            })(
-              <Input size="large" placeholder="https://" />
-            )}
-          </Form.Item>
-          <Form.Item label="Тематика проекта" className="app-form-field">
-            {getFieldDecorator('subject', {
-              rules: [ { required: true, message: 'Заполните это поле.' } ],
-            })(
-              <Select size="large" placeholder="Выберите из списка">
-                <Select.Option value="0">...</Select.Option>
-                <Select.Option value="1">...</Select.Option>
-                <Select.Option value="2">...</Select.Option>
-              </Select>
-            )}
-          </Form.Item>
-        </div>
-        <div className="app-form-btns">
-          <Button className="app-form-btn" type="primary" htmlType="submit" size="large">Сохранить</Button>
-        </div>
+        <Spin spinning={!this.props.project} size="large">
+          <div className="app-form-fields">
+            <Form.Item label="Название проекта" className="app-form-field">
+              {getFieldDecorator('name', {
+                rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
+              })(
+                <Input size="large" />
+              )}
+            </Form.Item>
+            <Form.Item label="Ссылка на сайт" className="app-form-field">
+              {getFieldDecorator('websiteUrl', {
+                rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
+              })(
+                <Input size="large" placeholder="https://" />
+              )}
+            </Form.Item>
+          </div>
+          <div className="app-form-btns">
+            <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit" size="large">Сохранить</Button>
+          </div>
+        </Spin>
       </Form>
     )
   }
 }
 
-export default Form.create({ name: 'editProject' })(EditProjectForm);
+function mapPropsToFields(props) {
+  return props.project ? {
+    name: Form.createFormField({
+      value: props.project.name
+    }),
+    websiteUrl: Form.createFormField({
+      value: props.project.websiteUrl
+    }),
+  } : {};
+}
+
+export default Form.create({ name: 'editProject', mapPropsToFields })(EditProjectForm);

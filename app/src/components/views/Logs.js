@@ -4,8 +4,12 @@ import { Timeline } from 'antd';
 import { setTitle } from '../../helpers';
 
 class Logs extends React.Component {
+  state = {
+    loading: true
+  }
   componentDidMount() {
     setTitle('Лог действий');
+    // ...
   }
   render() {
     return (
@@ -15,25 +19,7 @@ class Logs extends React.Component {
         </div>
         <div className="app-main-view-content">
           <div className="app-content-logs">
-            <Timeline>
-              <Timeline.Item>
-                <b>Добавлен проект</b> <br />
-                5 минут назад
-              </Timeline.Item>
-              <Timeline.Item>
-                <b>Добавлен проект</b> <br />
-                5 минут назад
-              </Timeline.Item>
-              <Timeline.Item>
-                <b>Добавлен проект</b> <br />
-                5 минут назад
-              </Timeline.Item>
-              <Timeline.Item>
-                <b>Добавлен проект</b> <br />
-                5 минут назад
-              </Timeline.Item>
-              <Timeline.Item>...</Timeline.Item>
-            </Timeline>
+            <Timeline pending={this.state.loading ? 'Загрузка...' : false}></Timeline>
           </div>
         </div>
       </div>

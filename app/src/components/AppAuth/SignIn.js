@@ -11,18 +11,18 @@ import config from '../../config';
 
 class SignInForm extends Component {
   state = {
-    loading: false
+    sending: false
   }
-  showLoading() {
-    this.setState({ loading: true });
+  showSending() {
+    this.setState({ sending: true });
   }
-  hideLoading() {
+  hideSending() {
     setTimeout(() => {
-      this.setState({ loading: false });
+      this.setState({ sending: false });
     }, 500);
   }
   async send(data) {
-    this.showLoading();
+    this.showSending();
     axios.post(
       config.serverUrl + 'app-api/rpc/', {
         jsonrpc: '2.0',
@@ -54,7 +54,7 @@ class SignInForm extends Component {
         console.log('Error', err);
         Modal.error({ title: (<b>Ошибка при отправке запроса</b>) });
       })
-      .finally(() => this.hideLoading());
+      .finally(() => this.hideSending());
   }
   handleSubmit = (e) => {
     e.preventDefault();
@@ -84,7 +84,7 @@ class SignInForm extends Component {
             </Form.Item>
           </div>
           <div className="app-form-btns">
-            <Button loading={this.state.loading} className="app-form-btn" type="primary" htmlType="submit" size="large">Войти в аккаунт</Button>
+            <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit" size="large">Войти в аккаунт</Button>
           </div>
           <div className="app-form-links">
             <Link to="/auth/recovery/" className="app-form-link">Забыли пароль?</Link>

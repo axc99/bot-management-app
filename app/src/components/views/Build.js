@@ -19,10 +19,10 @@ class Build extends React.Component {
           <div className="app-main-view-header-title">Приложение</div>
         </div>
         <div className="app-main-view-content">
-          <div className="app-content-build">
+          <div className="app-build">
             <List
               bordered
-              className="app-content-build-list"
+              className="app-build-list"
               dataSource={data_1}
               renderItem={item => (<List.Item>{item[0]}: <b>{item[1]}</b></List.Item>)} />
           </div>

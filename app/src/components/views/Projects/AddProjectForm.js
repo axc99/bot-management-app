@@ -2,21 +2,59 @@ import React from 'react';
 import axios from 'axios';
 import { Form, Input, Select, Modal } from 'antd';
 
+import config from '../../../config';
+
 class AddProjectForm extends React.Component {
+  state = {
+    sending: false
+  }
+  showSending() {
+    this.setState({ sending: true });
+  }
+  hideSending() {
+    setTimeout(() => {
+      this.setState({ sending: false });
+    }, 500);
+  }
+  async send(data) {
+    this.showSending();
+    axios.post(
+      config.serverUrl + 'app-api/projects/', {
+        project: data
+      })
+      .then((res) => {
+        const project = res.data.project;
+        if (project) {
+          Modal.success({
+            title: (<b>Проект создан</b>),
+            content: '...'
+          });
+        };
+      })
+      .catch((err) => {
+        console.log('Error', err);
+        Modal.error({ title: (<b>Ошибка при отправке запроса</b>) });
+      })
+      .finally(() => this.hideSending());
+  }
+  onOk = (e) => {
+    e.preventDefault();
+    this.props.form.validateFields((err, data) => {
+      if (!err) this.send(data);
+    });
+  }
   render() {
-    const {
-      visible, onCancel, addProject, form
-    } = this.props;
-    const { getFieldDecorator } = form;
+    const { getFieldDecorator } = this.props.form;
     return (
       <Modal
         width={400}
-        visible={visible}
+        visible={this.props.visible}
         title={(<b>Создать проект</b>)}
-        okText="Создать проект"
+        okText="Создать"
         cancelText="Отмена"
-        onOk={addProject}
-        onCancel={onCancel} >
+        onOk={this.onOk}
+        confirmLoading={this.state.sending}
+        onCancel={this.props.onCancel} >
         <Form hideRequiredMark="false" className="app-form" layout="vertical">
           <div className="app-form-fields">
             <Form.Item label="Название проекта" className="app-form-field">
@@ -31,17 +69,6 @@ class AddProjectForm extends React.Component {
                 rules: [ { required: true, message: 'Заполните это поле.' } ],
               })(
                 <Input autofocus="true" size="large" placeholder="https://..." />
-              )}
-            </Form.Item>
-            <Form.Item label="Тематика проекта" className="app-form-field">
-              {getFieldDecorator('subject', {
-                rules: [ { required: true, message: 'Заполните это поле.' } ],
-              })(
-                <Select size="large" placeholder="Выберите из списка">
-                  <Select.Option value="0">...</Select.Option>
-                  <Select.Option value="1">...</Select.Option>
-                  <Select.Option value="2">...</Select.Option>
-                </Select>
               )}
             </Form.Item>
           </div>

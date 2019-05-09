@@ -1,12 +1,40 @@
 import React from 'react';
+import axios from 'axios';
 import { connect } from 'react-redux';
-import { Form, Button, Input, Modal, Tabs } from 'antd';
+import { Spin, Form, Button, Input, Modal, Tabs } from 'antd';
 
-import * as userActions from '../../../store/actions/user';
+import config from '../../../config';
 
 class EditForm extends React.Component {
+  state = {
+    sending: false
+  }
+  showSending() {
+    this.setState({ sending: true });
+  }
+  hideSending() {
+    setTimeout(() => {
+      this.setState({ sending: false });
+    }, 500);
+  }
   async send(data) {
-    // ...
+    this.showSending();
+    axios.patch(
+      config.serverUrl + 'app-api/users/' + this.props.user.id + '/', {
+        user: data
+      })
+      .then((res) => {
+        if (res.data.user) {
+          Modal.success({
+            title: (<b>Изменения сохранены</b>)
+          });
+        };
+      })
+      .catch((err) => {
+        console.log('Error', err);
+        Modal.error({ title: (<b>Ошибка при отправке запроса</b>) });
+      })
+      .finally(() => this.hideSending());
   }
   handleSubmit = (e) => {
     e.preventDefault();
@@ -18,46 +46,57 @@ class EditForm extends React.Component {
     const { getFieldDecorator } = this.props.form;
     return (
       <Form hideRequiredMark="false" onSubmit={this.handleSubmit} layout="vertical" className="app-form">
-        <div className="app-form-fields">
-          <Form.Item label="Логин" className="app-form-field">
-            {getFieldDecorator('username')(
-              <Input disabled="true" name="username" size="large" />
-            )}
-          </Form.Item>
-          <Form.Item label="E-mail" className="app-form-field">
-            {getFieldDecorator('email')(
-              <Input disabled="true" name="email" size="large" />
-            )}
-          </Form.Item>
-          <Form.Item label="Фамилия" className="app-form-field">
-            {getFieldDecorator('last_name', {
-              rules: [ { message: 'Заполните это поле.' } ],
-            })(
-              <Input name="last_name" size="large" />
-            )}
-          </Form.Item>
-          <Form.Item label="Имя" className="app-form-field">
-            {getFieldDecorator('first_name', {
-              rules: [ { message: 'Заполните это поле.' } ],
-            })(
-              <Input name="first_name" size="large" />
-            )}
-          </Form.Item>
-        </div>
-        <div className="app-form-btns">
-          <Button className="app-form-btn" type="primary" htmlType="submit" size="large">Сохранить</Button>
-        </div>
+        <Spin spinning={!this.props.user} size="large">
+          <div className="app-form-fields">
+            <Form.Item label="Логин" className="app-form-field">
+              {getFieldDecorator('username')(
+                <Input disabled="true" size="large" />
+              )}
+            </Form.Item>
+            <Form.Item label="E-mail" className="app-form-field">
+              {getFieldDecorator('email')(
+                <Input disabled="true" size="large" />
+              )}
+            </Form.Item>
+            <Form.Item label="Фамилия" className="app-form-field">
+              {getFieldDecorator('lastName', {
+                rules: [ { message: 'Заполните это поле.' } ],
+              })(
+                <Input size="large" />
+              )}
+            </Form.Item>
+            <Form.Item label="Имя" className="app-form-field">
+              {getFieldDecorator('firstName', {
+                rules: [ { message: 'Заполните это поле.' } ],
+              })(
+                <Input size="large" />
+              )}
+            </Form.Item>
+          </div>
+          <div className="app-form-btns">
+            <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit" size="large">Сохранить</Button>
+          </div>
+        </Spin>
       </Form>
     )
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    user: {
-      id: state.user.id
-    }
-  }
+function mapPropsToFields(props) {
+  return props.user ? {
+    username: Form.createFormField({
+      value: props.user.username
+    }),
+    email: Form.createFormField({
+      value: props.user.email
+    }),
+    firstName: Form.createFormField({
+      value: props.user.firstName
+    }),
+    lastName: Form.createFormField({
+      value: props.user.lastName
+    })
+  } : {};
 }
 
-export default connect(mapStateToProps, userActions)(Form.create({ name: 'edit_user' })(EditForm));
+export default Form.create({ name: 'edit_user', mapPropsToFields })(EditForm);

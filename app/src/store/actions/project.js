@@ -6,9 +6,7 @@ export const setProject = data => {
     dispatch({
       type: SET_PROJECT,
       payload: {
-        project: {
-          id: data.id
-        }
+        id: data.id
       }
     });
   };
@@ -18,9 +16,7 @@ export const unsetProject = data => {
   return dispatch => {
     dispatch({
       type: UNSET_PROJECT,
-      payload: {
-        project: null
-      }
+      payload: {}
     });
   };
 }

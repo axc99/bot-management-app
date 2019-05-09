@@ -12,7 +12,8 @@ function App() {
   return (
     <div className="app">
       <Switch>
-        <Route path="/auth/:type/" component={Auth} />
+        <Route path="/auth/" component={Auth} />
+        <Route exact path='/' render={() => { return <Redirect to="/auth/sign-in/" /> }} />
         <Route component={accessGuard(Main)} />
       </Switch>
     </div>

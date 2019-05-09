@@ -1,14 +1,28 @@
 import React, { Component } from 'react';
-import { Form, Button, Input, Modal, Tabs, Timeline } from 'antd';
+import axios from 'axios';
+import { connect } from 'react-redux';
+import { List, Form, Button, Input, Modal, Tabs, Timeline } from 'antd';
 
 import EditUserForm from './Account/EditUserForm';
 import ChangeUserPasswordForm from './Account/ChangeUserPasswordForm';
 
 import { setTitle } from '../../helpers';
+import config from '../../config';
 
 class Account extends React.Component {
+  state = {
+    user: null
+  }
   componentDidMount() {
     setTitle('Мой аккаунт');
+    axios.get(config.serverUrl + 'app-api/users/' + this.props.user.id + '/')
+      .then((res) => {
+        console.log('res.data', res.data);
+        this.setState({ user: res.data.user });
+      })
+      .catch((err) => {
+        console.log('Error', err);
+      });
   }
   render() {
     return (
@@ -21,23 +35,12 @@ class Account extends React.Component {
           defaultActiveKey="1" >
           <Tabs.TabPane tab="Информация" key="1">
             <div className="app-main-view-tab-content">
-              <EditUserForm />
+              <EditUserForm user={this.state.user} />
             </div>
           </Tabs.TabPane>
           <Tabs.TabPane tab="Сменить пароль" key="2">
             <div className="app-main-view-tab-content">
-              <ChangeUserPasswordForm />
-            </div>
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="Безопасность" key="3">
-            <div className="app-main-view-tab-content">
-            <Timeline>
-              <Timeline.Item>Create a services site 2015-09-01</Timeline.Item>
-              <Timeline.Item>Solve initial network problems 2015-09-01</Timeline.Item>
-              <Timeline.Item>Technical testing 2015-09-01</Timeline.Item>
-              <Timeline.Item>Network problems being solved 2015-09-01</Timeline.Item>
-              <Timeline.Item>...</Timeline.Item>
-            </Timeline>
+              <ChangeUserPasswordForm user={this.state.user} />
             </div>
           </Tabs.TabPane>
         </Tabs>
@@ -46,4 +49,10 @@ class Account extends React.Component {
   }
 }
 
-export default Account;
+function mapStateToProps(state) {
+  return {
+    user: state.user
+  }
+}
+
+export default connect(mapStateToProps)(Account);

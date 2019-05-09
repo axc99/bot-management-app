@@ -48,33 +48,6 @@ class Projects extends React.Component {
   handleCancelAddProject = () => {
     this.setState({ addProjectVisible: false });
   }
-  // Добавить проект
-  addProject = () => {
-    const form = this.formRef.props.form;
-    form.validateFields((err, data) => {
-      if (err) return;
-      else {
-        axios.post(config.serverUrl + 'app-api/projects/', {
-          project: data
-        }).then(
-          res => {
-            const project = res.data.project;
-            this.props.history.push('/projects/' + project.id + '/leads/');
-            Modal.success({
-              title: (<b>Проект создан</b>),
-              content: '...'
-            });
-          },
-          err => {
-            Modal.error({ title: (<b>Ошибка при отправке</b>) });
-          }
-        );
-      };
-    });
-  }
-  saveFormRef = (formRef) => {
-    this.formRef = formRef;
-  }
   render() {
     let content;
 
@@ -101,7 +74,6 @@ class Projects extends React.Component {
           renderItem={item => <ProjectItem project={item} />} />
       );
     };
-
     return (
       <div>
         <div className="app-main-view-header">
@@ -114,10 +86,8 @@ class Projects extends React.Component {
           {content}
         </div>
         <AddProjectForm
-          wrappedComponentRef={this.saveFormRef}
           visible={this.state.addProjectVisible}
-          onCancel={this.handleCancelAddProject}
-          addProject={this.addProject} />
+          onCancel={this.handleCancelAddProject} />
       </div>
     );
   }

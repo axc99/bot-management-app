@@ -9,18 +9,18 @@ import config from '../../config';
 
 class SignUpForm extends Component {
   state = {
-    loading: false
+    sending: false
   }
-  showLoading() {
-    this.setState({ loading: true });
+  showSending() {
+    this.setState({ sending: true });
   }
-  hideLoading() {
+  hideSending() {
     setTimeout(() => {
-      this.setState({ loading: false });
+      this.setState({ sending: false });
     }, 500);
   }
   async send(data) {
-    this.showLoading();
+    this.showSending();
     axios.post(
       config.serverUrl + 'app-api/rpc/', {
         jsonrpc: '2.0',
@@ -50,7 +50,7 @@ class SignUpForm extends Component {
         console.log('Error', err);
         Modal.error({ title: (<b>Ошибка при отправке запроса</b>) });
       })
-      .finally(() => this.hideLoading());
+      .finally(() => this.hideSending());
   }
   handleSubmit = (e) => {
     e.preventDefault();
@@ -90,7 +90,7 @@ class SignUpForm extends Component {
               rules: [
                 { required: true, message: 'Поле обязательно для заполнения.' },
                 { validator: this.compareToFirstPassword }
-              ],
+              ]
             })(
               <Input className="app-form-field-input" type="password" size="large" />
             )}
@@ -105,7 +105,7 @@ class SignUpForm extends Component {
           </Form.Item>
         </div>
         <div className="app-form-btns">
-          <Button className="app-form-btn" type="primary" htmlType="submit" size="large">Создать аккаунт</Button>
+          <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit" size="large">Создать аккаунт</Button>
         </div>
       </Form>
     )

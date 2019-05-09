@@ -203,6 +203,7 @@
 }
 .app-main-view-tab-content {
   max-width: 1200px;
+  min-height: 100px;
   padding: 25px 0;
 }
 
@@ -211,6 +212,7 @@
   max-width: 1200px;
   margin: 0 45px;
   border-top: solid 1px #e8e8e8;
+  min-height: 100px;
 }
 .app-main-view-content-item {
 	position: relative;
@@ -327,7 +329,7 @@
 
 /* InformationView */
 
-.app-content-information p {
+.app-information p {
   font-size: 15px;
   line-height: 35px;
   max-width: 800px;
@@ -335,6 +337,6 @@
 
 /* BuildView */
 
-.app-content-build-list {
+.app-build-list {
   max-width: 600px;
 }

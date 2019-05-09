@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'redux';
 import { Switch, Route } from 'react-router-dom';
 
 import Leads from './Project/Leads';
@@ -14,14 +13,12 @@ import * as projectActions from '../../store/actions/project';
 
 class Project extends React.Component {
   componentWillMount() {
-    this.props.set({
+    this.props.setProject({
       id: this.props.match.params.projectId
     });
   }
   componentWillUnmount() {
-    this.props.set({
-      id: null
-    });
+    this.props.unsetProject();
   }
   render() {
     return (
@@ -41,11 +38,8 @@ class Project extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    id: state.project.id,
-    name: state.project.name
+    project: state.project
   }
 }
 
-export default compose(
-  connect(mapStateToProps, projectActions)
-)(Project);
+export default connect(mapStateToProps, projectActions)(Project);
