@@ -4,7 +4,7 @@ import { Form, Input, Select, Modal } from 'antd';
 
 import config from '../../../config';
 
-class AddProjectForm extends React.Component {
+class AddProjectModal extends React.Component {
   state = {
     sending: false
   }
@@ -29,6 +29,7 @@ class AddProjectForm extends React.Component {
             title: (<b>Проект создан</b>),
             content: '...'
           });
+          this.props.close();
         };
       })
       .catch((err) => {
@@ -54,7 +55,7 @@ class AddProjectForm extends React.Component {
         cancelText="Отмена"
         onOk={this.onOk}
         confirmLoading={this.state.sending}
-        onCancel={this.props.onCancel} >
+        onCancel={this.props.close} >
         <Form hideRequiredMark="false" className="app-form" layout="vertical">
           <div className="app-form-fields">
             <Form.Item label="Название проекта" className="app-form-field">
@@ -78,4 +79,4 @@ class AddProjectForm extends React.Component {
   }
 }
 
-export default Form.create({ name: 'add_project' })(AddProjectForm);
+export default Form.create({ name: 'add_project' })(AddProjectModal);

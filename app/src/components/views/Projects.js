@@ -3,7 +3,7 @@ import axios from 'axios';
 import { List, Empty, Button, Modal } from 'antd';
 import { Link } from 'react-router-dom';
 
-import AddProjectForm from './Projects/AddProjectForm.js';
+import AddProjectModal from './Projects/AddProjectModal.js';
 
 import { setTitle } from '../../helpers';
 import config from '../../config';
@@ -25,12 +25,12 @@ function ProjectItem(props) {
 
 class Projects extends React.Component {
   state = {
-    addProjectVisible: false,
+    addModalVisible: false,
     projects: null
   }
   componentDidMount() {
     setTitle('Проекты');
-    axios.get(config.serverUrl + 'app-api/projects/', {}).then(
+    axios.get(config.serverUrl + 'app-api/projects/').then(
       res => {
         const projects = res.data.projects;
         this.setState({ projects });
@@ -41,16 +41,15 @@ class Projects extends React.Component {
     );
   }
   // Открыть: добавление проекта
-  openAddProject = () => {
-    this.setState({ addProjectVisible: true });
+  openModal = () => {
+    this.setState({ addModalVisible: true });
   }
   // Обработать закрытие: добавление проекта
-  handleCancelAddProject = () => {
-    this.setState({ addProjectVisible: false });
+  closeModal = () => {
+    this.setState({ addModalVisible: false });
   }
   render() {
     let content;
-
     if (this.state.projects !== null && this.state.projects.length == 0) {
       content = (
         <Empty
@@ -79,15 +78,15 @@ class Projects extends React.Component {
         <div className="app-main-view-header">
           <div className="app-main-view-header-title">Проекты</div>
           <div className="app-main-view-header-btns">
-            <Button onClick={this.openAddProject} className="app-main-view-header-btn" type="primary" icon="plus">Создать проект</Button>
+            <Button onClick={this.openModal} className="app-main-view-header-btn" type="primary" icon="plus">Создать проект</Button>
           </div>
         </div>
         <div className="app-main-view-content">
           {content}
         </div>
-        <AddProjectForm
-          visible={this.state.addProjectVisible}
-          onCancel={this.handleCancelAddProject} />
+        <AddProjectModal
+          visible={this.state.addModalVisible}
+          close={this.closeModal} />
       </div>
     );
   }

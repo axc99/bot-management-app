@@ -1,16 +1,21 @@
 import React from 'react';
 import axios from 'axios';
-import { List, Row, Col, Empty, Modal, Button, Form, Input, Radio, Avatar } from 'antd';
+import { connect } from 'react-redux';
+import { Drawer, List, Empty, Modal, Button, Avatar } from 'antd';
 import { Link } from 'react-router-dom';
 
 import { setTitle } from '../../../helpers';
+import config from '../../../config';
 
 class DialogItem extends React.Component {
   render() {
     return (
-      <List.Item>
+      <List.Item actions={[
+          <a target="_blank" href={this.props.dialog._service.url}><Button><b>{this.props.dialog._service.typeStr}</b></Button></a>,
+          <Button>Открыть</Button>
+        ]}>
         <List.Item.Meta
-            avatar={<Avatar size="medium" icon="user" />}
+            avatar={<Avatar size="large" icon="user" />}
             title={<b>{this.props.dialog.fullName ? this.props.dialog.fullName : 'Без имени'}</b>}
             description={this.props.dialog.contacts ? this.props.dialog.contacts : 'Пустой диалог'} />
       </List.Item>
@@ -20,27 +25,25 @@ class DialogItem extends React.Component {
 
 class Dialogs extends React.Component {
   state = {
-    dialogs: null
+    dialogTotalCount: 0,
+    dialogs: null,
+    page: 0
   }
   componentDidMount() {
     setTitle('Диалоги');
-    axios.get('http://localhost./app-api/projects/123/dialogs/', {}, {
-      headers: { 'Content-Type': 'application/json' }
-    }).then(
-      res => {
+    axios.get(config.serverUrl + 'app-api/projects/' + this.props.project.id + '/dialogs/')
+      .then((res) => {
         const dialogs = res.data.dialogs;
-        this.setState({ dialogs });
-      },
-      err => {
-        Modal.error({
-          title: (<b>Ошибка при загрузке</b>)
-        });
-      }
-    );
+        const dialogTotalCount = res.data.dialogTotalCount;
+        this.setState({ dialogs, dialogTotalCount });
+      })
+      .catch((err) => {
+        console.log('Error', err);
+        Modal.error({ title: (<b>Ошибка при загрузке</b>) });
+      });
   }
   render() {
     let content;
-
     if (this.state.dialogs !== null && this.state.dialogs.length == 0) {
       content = (
         <Empty
@@ -51,8 +54,24 @@ class Dialogs extends React.Component {
       content = (
         <List
           bordered
-          hideOnSinglePage={true}
-          loading={!this.state.leads ? true : false}
+          loading={!this.state.dialogs ? true : false}
+          pagination={this.state.dialogs && (this.state.dialogTotalCount > this.state.dialogs.length) ? {
+            size: 'large',
+            pageSize: 50,
+            total: this.state.dialogTotalCount,
+            onChange: (page, pageSize) => {
+              axios.get(config.serverUrl + 'app-api/projects/' + this.props.project.id + '/dialogs/?offset=' + (Math.abs(page-1) * 3))
+                .then((res) => {
+                  const dialogs = res.data.dialogs;
+                  const dialogTotalCount = res.data.dialogTotalCount;
+                  this.setState({ dialogs, dialogTotalCount });
+                })
+                .catch((err) => {
+                  console.log('Error', err);
+                  Modal.error({ title: (<b>Ошибка при загрузке</b>) });
+                });
+            }
+          } : false}
           size="large"
           dataSource={this.state.dialogs ? this.state.dialogs : []}
           renderItem={item => <DialogItem dialog={item} openEditDialog={this.openEditDialog} />} />
@@ -72,4 +91,10 @@ class Dialogs extends React.Component {
   }
 }
 
-export default Dialogs;
+function mapStateToProps(state) {
+  return {
+    project: state.project
+  }
+}
+
+export default connect(mapStateToProps)(Dialogs);
