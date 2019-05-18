@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Form, Button, Input, Icon, Modal } from 'antd';
+import { Form, Button, Input, Modal } from 'antd';
 
 import * as userActions from '../../store/actions/user';
 
@@ -10,6 +10,9 @@ import { setTitle } from '../../helpers';
 import config from '../../config';
 
 class SignInForm extends Component {
+  constructor(props) {
+    super(props);
+  }
   state = {
     sending: false
   }
@@ -51,8 +54,7 @@ class SignInForm extends Component {
         };
       })
       .catch((err) => {
-        console.log('Error', err);
-        Modal.error({ title: (<b>Ошибка при отправке запроса</b>) });
+        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
       })
       .finally(() => this.hideSending());
   }
@@ -63,20 +65,20 @@ class SignInForm extends Component {
     });
   }
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const form = this.props.form;
     return (
       <div>
         <Form hideRequiredMark="false" onSubmit={this.handleSubmit} layout="vertical" className="app-form">
           <div className="app-form-fields">
             <Form.Item label="E-mail или логин" className="app-form-field">
-              {getFieldDecorator('emailOrUsername', {
+              {form.getFieldDecorator('emailOrUsername', {
                 rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
               })(
                 <Input autoFocus={true} size="large" />
               )}
             </Form.Item>
             <Form.Item label="Пароль" className="app-form-field">
-              {getFieldDecorator('password', {
+              {form.getFieldDecorator('password', {
                 rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
               })(
                 <Input className="app-form-field-input" type="password" size="large" />
@@ -101,7 +103,16 @@ function mapStateToProps(state) {
   }
 }
 
-SignInForm = connect(mapStateToProps, userActions)(Form.create({ name: 'signIn' })(SignInForm));
+function mapPropsToFields(props) {
+  return {
+    emailOrUsername: Form.createFormField({
+      value: new URLSearchParams(window.location.search).get('email')
+    })
+  }
+}
+
+SignInForm = connect(mapStateToProps, userActions
+)(Form.create({ name: 'signIn', mapPropsToFields })(SignInForm));
 
 export default class SignIn extends React.Component {
   componentDidMount() {

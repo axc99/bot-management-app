@@ -7,7 +7,6 @@ import { compose } from 'redux';
 import Project from './views/Project';
 import ProjectsView from './views/Projects';
 import InformationView from './views/Information';
-import LogsView from './views/Logs';
 import BuildView from './views/Build';
 import AccountView from './views/Account';
 import Error404View from './views/Error404';
@@ -20,7 +19,9 @@ class Sidebar extends React.Component {
       <div className="app-main-sidebar">
         <div className="app-main-sidebar-panel">
           <div className="app-main-sidebar-panel-header">
-            <Avatar className="app-main-sidebar-panel-header-avatar" size="medium" icon="user" />
+            <div className="app-main-sidebar-panel-header-user">
+              <Avatar className="app-main-sidebar-panel-header-user-avatar" size="medium" icon="user" />
+            </div>
           </div>
           <div className="app-main-sidebar-panel-menu">
             <div className="app-main-sidebar-panel-menu-items">
@@ -83,9 +84,6 @@ class Sidebar extends React.Component {
                     <NavLink to="/information/" className="app-main-sidebar-nav-menu-item">
                       <Icon type="info-circle" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Информация</div>
                     </NavLink>
-                    <NavLink to="/logs/" className="app-main-sidebar-nav-menu-item">
-                      <Icon type="flag" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Лог действий</div>
-                    </NavLink>
                     <NavLink to="/build/" className="app-main-sidebar-nav-menu-item">
                       <Icon type="code" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Приложение</div>
                     </NavLink>
@@ -122,7 +120,6 @@ class View extends React.Component {
           <Route path="/projects/:projectId/" component={Project} />
           <Route exact path="/projects/" component={ProjectsView} />
           <Route path="/information/" component={InformationView} />
-          <Route path="/logs/" component={LogsView} />
           <Route path="/build/" component={BuildView} />
           <Route path="/account/" component={AccountView} />
           <Route component={Error404View} />

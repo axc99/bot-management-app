@@ -1,14 +1,14 @@
 import React from 'react';
 import axios from 'axios';
-import { Divider, Drawer, Form, Input, Modal, Button, Spin } from 'antd';
+import { Divider, Drawer, Form, Input, Select, Modal, Button, Spin } from 'antd';
 
 import PersonFields from './PersonFields';
 import ContactFields from './ContactFields';
-
 import config from '../../../../config';
 
-class EditLeadForm extends React.Component {
+class EditLeadDrawer extends React.Component {
   state = {
+    lead: null,
     sending: false
   }
   showSending() {
@@ -20,10 +20,9 @@ class EditLeadForm extends React.Component {
     }, 500);
   }
   async send(data) {
-    console.log('this.props', this.props);
     this.showSending();
     axios.patch(
-      config.serverUrl + 'app-api/projects/' + this.props.projectId + '/leads/' + this.props.lead.id + '/', {
+      config.serverUrl + 'app-api/projects/' + this.props.projectId + '/leads/' + this.state.lead.id + '/', {
         lead: data
       })
       .then((res) => {
@@ -31,6 +30,7 @@ class EditLeadForm extends React.Component {
         if (lead) {
           this.props.list.updateOne(lead.id, lead);
           this.props.close();
+          this.props.form.resetFields();
         };
       })
       .catch((err) => {
@@ -45,63 +45,65 @@ class EditLeadForm extends React.Component {
       if (!err) this.send(data);
     });
   }
-  render() {
-    const form = this.props.form;
-    return (
-      <Form hideRequiredMark="false" onSubmit={this.handleSubmit} className="app-form" layout="vertical">
-        <div className="app-form-fields">
-          <PersonFields getFieldDecorator={form.getFieldDecorator} />
-          <ContactFields getFieldDecorator={form.getFieldDecorator} />
-        </div>
-        <div className="app-form-btns">
-          <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit" size="large">Сохранить</Button>
-        </div>
-      </Form>
-    )
-  }
-}
-
-function mapPropsToFields(props) {
-  return props.lead ? {
-    firstName: Form.createFormField({ value: props.lead.firstName }),
-    lastName: Form.createFormField({ value: props.lead.lastName })
-  } : {};
-}
-
-EditLeadForm = Form.create({ name: 'editLead', mapPropsToFields })(EditLeadForm);
-
-class EditLeadDrawer extends React.Component {
-  state = {
-    lead: null
-  }
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.leadId !== this.props.leadId) {
-      const leadId = this.props.leadId;
+    const form = this.props.form;
+    const leadId = this.props.leadId;
+    if (prevProps.leadId !== leadId) {
       if (leadId) {
         axios.get(config.serverUrl + 'app-api/projects/' + this.props.projectId + '/leads/' + leadId + '/')
           .then((res) => {
-            this.setState({ lead: res.data.lead });
+            const lead = res.data.lead;
+            this.setState({ lead });
+            form.setFields({
+              lastName: { value: lead.lastName },
+              firstName: { value: lead.firstName },
+              patronymic: { value: lead.patronymic },
+              birthTimestamp: { value: lead.birthTimestamp },
+              residence: { value: lead.residence }
+            });
           })
           .catch((err) => {
-            console.log('Error', err);
+            Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
           });
       };
     };
   }
   render() {
+    const form = this.props.form;
+    const lead = this.state.lead;
     return (
       <Drawer
-          title={(<b>Лид #{this.props.leadId}</b>)}
           width="600"
           placement="right"
           onClose={this.props.close}
-          visible={this.props.visible} >
-          <Spin spinning={!this.state.lead} size="large">
-            <EditLeadForm {...this.props} lead={this.state.lead} />
+          visible={this.props.visible}
+          title={(<b>Лид {lead ? '#' + lead.id : ''}</b>)} >
+          <Spin spinning={!lead} size="large">
+            <Form hideRequiredMark="false" onSubmit={this.handleSubmit} className="app-form" layout="vertical">
+              <div className="app-form-fields">
+                <PersonFields getFieldDecorator={form.getFieldDecorator} />
+                <Divider className="app-form-fields-divider" />
+                <ContactFields getFieldDecorator={form.getFieldDecorator} />
+              </div>
+              <div className="app-form-btns">
+                <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit">Сохранить</Button>
+                {form.getFieldDecorator('status', {
+                    initialValue: '0'
+                })(
+                  <Select className="app-form-btn" defaultValue="0" style={{ width: 160 }}>
+                    <Select.Option value="0">Без статуса</Select.Option>
+                    <Select.Option value="1">Не обработан</Select.Option>
+                    <Select.Option value="2">В обработке</Select.Option>
+                    <Select.Option value="3">Обработан</Select.Option>
+                    <Select.Option value="4">Закрыт</Select.Option>
+                  </Select>
+                )}
+              </div>
+            </Form>
           </Spin>
       </Drawer>
     );
   }
 }
 
-export default EditLeadDrawer;
+export default Form.create({ name: 'editLead' })(EditLeadDrawer);

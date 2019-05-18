@@ -9,9 +9,8 @@ class Build extends React.Component {
   }
   render() {
     let packageJson = require('./../../../package.json');
-    let data_1 = [
-      ['Имя приложения', packageJson.name],
-      ['Текущая версия', packageJson.version]
+    let items = [
+      ['Версия', packageJson.version]
     ];
     return (
       <div>
@@ -23,7 +22,7 @@ class Build extends React.Component {
             <List
               bordered
               className="app-build-list"
-              dataSource={data_1}
+              dataSource={items}
               renderItem={item => (<List.Item>{item[0]}: <b>{item[1]}</b></List.Item>)} />
           </div>
         </div>

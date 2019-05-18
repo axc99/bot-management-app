@@ -1,12 +1,13 @@
 import React from 'react';
 import axios from 'axios';
-import { List, Empty, Modal, Button, Avatar } from 'antd';
+import { connect } from 'react-redux';
+import { List, Empty, Modal, Button, Avatar, Input, Icon } from 'antd';
 import { Link } from 'react-router-dom';
 
-import AddAnswerForm from './Answers/AddAnswerForm';
-import EditAnswerForm from './Answers/EditAnswerForm';
-
+import AddAnswerDrawer from './Answers/AddAnswerDrawer';
+import EditAnswerDrawer from './Answers/EditAnswerDrawer';
 import { setTitle } from '../../../helpers';
+import config from '../../../config';
 
 class AnswerItem extends React.Component {
   confirmDelete = (answerId) => {
@@ -16,21 +17,21 @@ class AnswerItem extends React.Component {
       okText: 'Да',
       okType: 'danger',
       cancelText: 'Нет',
-      onOk() {
-        alert('delete answer #'+answerId);
+      onOk: () => {
+        axios.delete(config.serverUrl + 'app-api/projects/' + this.props.projectId + '/answers/' + answerId + '/');
+        this.props.list.deleteOne(answerId);
       }
     });
   }
   render() {
     return (
       <List.Item actions={[
-          <Button onClick={() => this.props.openEditAnswer(this.props.answer.id)} size="small">Открыть</Button>,
+          <Button onClick={() => this.props.openEditModal(this.props.answer.id)}>Открыть</Button>,
           <Button onClick={() => this.confirmDelete(this.props.answer.id)} type="dashed" icon="delete" shape="circle" size="small"></Button>
         ]}>
         <List.Item.Meta
-            avatar={<Avatar size="medium" icon="user" />}
-            title="Заголовок"
-            description="Описание..." />
+          title={<b>{this.props.answer.title}</b>}
+          description={this.props.answer.content} />
       </List.Item>
     )
   }
@@ -38,61 +39,66 @@ class AnswerItem extends React.Component {
 
 class Answers extends React.Component {
   state = {
-    addAnswerVisible: false,
-    editAnswerVisible: false,
-    answerId: null,
-    answers: null
+    addModalVisible: false,
+    editModalVisible: false,
+    answerTotalCount: 0,
+    answers: null,
+    page: 0
+  }
+  list = {
+    addOne: (answer) => {
+      const answers = this.state.answers;
+      const answerTotalCount = this.state.answerTotalCount+1;
+      answers.unshift(answer);
+      this.setState({ answers, answerTotalCount });
+    },
+    updateOne: (id, answer) => {
+      const answers = this.state.answers;
+      const answerIndex = answers.findIndex((c) => {
+        return c.id == id;
+      });
+      if (answerIndex < 0) return;
+      answers[answerIndex] = answer;
+      this.setState({ answers });
+    },
+    deleteOne: (id) => {
+      const answers = this.state.answers;
+      const answerTotalCount = this.state.answerTotalCount-1;
+      const answerIndex = answers.findIndex((c) => {
+          return c.id == id;
+      });
+      if (answerIndex < 0) return;
+      answers.splice(answerIndex, 1);
+      this.setState({ answers, answerTotalCount });
+    }
+  }
+  // Открыть: добавление
+  openAddModal = () => {
+    this.setState({ addModalVisible: true });
+  }
+  // Закрыть: добавление
+  closeAddModal = () => {
+    this.setState({ addModalVisible: false });
+  }
+  // Открыть: изменение
+  openEditModal = (answerId) => {
+    this.setState({ editModalVisible: true, answerId: answerId });
+  }
+  // Закрыть: изменение
+  closeEditModal = () => {
+    this.setState({ editModalVisible: false });
   }
   componentDidMount() {
-    setTitle('Лиды');
-    axios.get('http://localhost./app-api/projects/123/answers/', {}, {
-      headers: { 'Content-Type': 'application/json' }
-    }).then(
-      res => {
+    setTitle('База знаний');
+    axios.get(config.serverUrl + 'app-api/projects/' + this.props.project.id + '/answers/')
+      .then((res) => {
         const answers = res.data.answers;
-        this.setState({ answers });
-      },
-      err => {
-        Modal.error({
-          title: (<b>Ошибка при загрузке</b>)
-        });
-      }
-    );
-  }
-  // Открыть: добавление ответа
-  openAddAnswer = () => {
-    this.setState({ addAnswerVisible: true });
-  }
-  // Обработать закрытие: добавление ответа
-  handleCancelAddAnswer = () => {
-    this.setState({ addAnswerVisible: false });
-  }
-  // Открыть: изменение ответа
-  openEditAnswer = (answerId) => {
-    this.setState({ editAnswerVisible: true, answerId: answerId });
-  }
-  // Обработать закрытие: изменение ответа
-  handleCancelEditAnswer = () => {
-    this.setState({ editAnswerVisible: false });
-  }
-  // Добавить ответ
-  addAnswer = () => {
-    const form = this.formRef.props.form;
-    form.validateFields((err, values) => {
-      if (err) return;
-      // ...
-    });
-  }
-  // Изменить ответ
-  editAnswer = () => {
-    const form = this.formRef.props.form;
-    form.validateFields((err, values) => {
-      if (err) return;
-      // ...
-    });
-  }
-  saveFormRef = (formRef) => {
-    this.formRef = formRef;
+        const answerTotalCount = res.data.answerTotalCount;
+        this.setState({ answers, answerTotalCount });
+      })
+      .catch((err) => {
+        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
+      });
   }
   render() {
     let content;
@@ -118,28 +124,70 @@ class Answers extends React.Component {
     return (
       <div>
         <div className="app-main-view-header">
-          <div className="app-main-view-header-title">База знаний</div>
-          <div className="app-main-view-header-btns">
-            <Button onClick={this.openAddAnswer} className="app-main-view-header-btn" type="primary" icon="plus">Добавить ответ</Button>
+          <div className="app-main-view-header-title">
+            База знаний {this.state.answerTotalCount > 0 ? <div className="app-main-view-header-title-counter">({this.state.answerTotalCount})</div> : null}
+          </div>
+          <div className="app-main-view-header-controls">
+            <div className="app-main-view-header-control input">
+              <Input allowClear placeholder="Поиск..." style={{ width: 200 }} prefix={<Icon type="search" style={{ color: 'rgba(0,0,0,.25)' }} />} />
+            </div>
+            <div className="app-main-view-header-control button">
+              <Button onClick={this.openAddModal} type="primary" icon="plus">Добавить ответ</Button>
+            </div>
           </div>
         </div>
         <div className="app-main-view-content">
-          {content}
+          {
+            (this.state.answers !== null && this.state.answers.length == 0) ? (
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description="База знаний проекта пока пуста." />
+            ) : (
+              <List
+                bordered
+                size="large"
+                loading={!this.state.answers ? true : false}
+                pagination={this.state.answers && (this.state.answerTotalCount > this.state.answers.length) ? {
+                  size: 'large',
+                  pageSize: 50,
+                  total: this.state.answerTotalCount,
+                  onChange: (page, pageSize) => {
+                    axios.get(config.serverUrl + 'app-api/projects/' + this.props.project.id + '/answers/?offset=' + (Math.abs(page-1) * 3))
+                      .then((res) => {
+                        const answers = res.data.answers;
+                        const answerTotalCount = res.data.answerTotalCount;
+                        this.setState({ answers, answerTotalCount });
+                      })
+                      .catch((err) => {
+                        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
+                      });
+                  }
+                } : false}
+                dataSource={this.state.answers ? this.state.answers : []}
+                renderItem={item => <AnswerItem projectId={this.props.project.id} answer={item} list={this.list} openEditModal={this.openEditModal} />} />
+            )
+          }
         </div>
-        <AddAnswerForm
-          wrappedComponentRef={this.saveFormRef}
-          visible={this.state.addAnswerVisible}
-          onCancel={this.handleCancelAddAnswer}
-          addAnswer={this.addAnswer} />
-        <EditAnswerForm
+        <AddAnswerDrawer
+          projectId={this.props.project.id}
+          visible={this.state.addModalVisible}
+          list={this.list}
+          close={this.closeAddModal} />
+        <EditAnswerDrawer
+          list={this.list}
           answerId={this.state.answerId}
-          wrappedComponentRef={this.saveFormRef}
-          visible={this.state.editAnswerVisible}
-          onCancel={this.handleCancelEditAnswer}
-          editAnswer={this.editAnswer} />
+          projectId={this.props.project.id}
+          visible={this.state.editModalVisible}
+          close={this.closeEditModal} />
       </div>
     );
   }
 }
 
-export default Answers;
+function mapStateToProps(state) {
+  return {
+    project: state.project
+  }
+}
+
+export default connect(mapStateToProps)(Answers);

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
+import { Modal, Spin } from 'antd';
 
 import EditProjectForm from './Settings/EditProjectForm';
-
 import { setTitle } from '../../../helpers';
 import config from '../../../config';
 
@@ -15,11 +15,10 @@ class Settings extends React.Component {
     setTitle('Настройка проекта');
     axios.get(config.serverUrl + 'app-api/projects/' + this.props.project.id + '/')
       .then((res) => {
-        console.log('res.data', res.data);
         this.setState({ project: res.data.project });
       })
       .catch((err) => {
-        console.log('Error', err);
+        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
       });
   }
   render() {
@@ -29,7 +28,11 @@ class Settings extends React.Component {
           <div className="app-main-view-header-title">Настройка проекта</div>
         </div>
         <div className="app-main-view-content">
-          <EditProjectForm project={this.state.project} />
+          <div className="app-project-settings">
+            <Spin spinning={!this.state.project} size="large">
+              <EditProjectForm project={this.state.project} />
+            </Spin>
+          </div>
         </div>
       </div>
     );

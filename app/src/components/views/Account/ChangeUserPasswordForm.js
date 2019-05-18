@@ -53,8 +53,7 @@ class ChangePasswordForm extends React.Component {
         };
       })
       .catch((err) => {
-        console.log('Error', err);
-        Modal.error({ title: (<b>Ошибка при отправке запроса</b>) });
+        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
       })
       .finally(() => this.hideSending());
   }
@@ -67,37 +66,37 @@ class ChangePasswordForm extends React.Component {
     };
   }
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const form = this.props.form;
     return (
       <Form hideRequiredMark="false" onSubmit={this.handleSubmit} layout="vertical" className="app-form">
         <div className="app-form-fields">
           <Form.Item label="Текущий пароль" className="app-form-field">
-            {getFieldDecorator('password', {
+            {form.getFieldDecorator('password', {
               rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
             })(
-              <Input className="app-form-field-input" type="password" size="large" />
+              <Input className="app-form-field-input" type="password" />
             )}
           </Form.Item>
           <Form.Item label="Новый пароль" className="app-form-field">
-            {getFieldDecorator('newPassword', {
+            {form.getFieldDecorator('newPassword', {
               rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
             })(
-              <Input className="app-form-field-input" type="password" size="large" />
+              <Input className="app-form-field-input" type="password" />
             )}
           </Form.Item>
           <Form.Item label="Новый пароль ещё раз" className="app-form-field">
-            {getFieldDecorator('confirmNewPassword', {
+            {form.getFieldDecorator('confirmNewPassword', {
               rules: [
                 { required: true, message: 'Поле обязательно для заполнения.' },
                 { validator: this.compareToFirstPassword }
               ]
             })(
-              <Input className="app-form-field-input" type="password" size="large" />
+              <Input className="app-form-field-input" type="password" />
             )}
           </Form.Item>
         </div>
         <div className="app-form-btns">
-          <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit" size="large">Сменить пароль</Button>
+          <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit">Сменить пароль</Button>
         </div>
       </Form>
     )

@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { Tabs } from 'antd';
 
 import EditVkIntegrationForm from './Integrations/EditVkIntegrationForm';
-import EditFacebookIntegrationForm from './Integrations/EditVkIntegrationForm';
-import EditTelegramIntegrationForm from './Integrations/EditVkIntegrationForm';
+import EditFacebookIntegrationForm from './Integrations/EditFacebookIntegrationForm';
 
 class Integrations extends React.Component {
   render() {
@@ -23,11 +22,6 @@ class Integrations extends React.Component {
           <Tabs.TabPane tab="Facebook" key="2">
             <div className="app-main-view-tab-content">
               <EditFacebookIntegrationForm />
-            </div>
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="Telegram" key="3">
-            <div className="app-main-view-tab-content">
-              <EditTelegramIntegrationForm />
             </div>
           </Tabs.TabPane>
         </Tabs>

@@ -46,8 +46,7 @@ class RecoveryUserForm extends Component {
         };
       })
       .catch((err) => {
-        console.log('Error', err);
-        Modal.error({ title: (<b>Ошибка при отправке запроса</b>) });
+        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
       })
       .finally(() => this.hideSending());
   }
@@ -99,7 +98,7 @@ export default class Recovery extends React.Component {
           Восстановление доступа
           <Link to="/auth/sign-in/" className="app-auth-box-title-link">Вход</Link>
         </div>
-        <RecoveryUserForm history={this.props.history} />
+        <RecoveryUserForm />
       </div>
     );
   }

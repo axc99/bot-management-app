@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Modal, Spin, Form, Button, Input, Select } from 'antd';
+import { Modal, Form, Button, Input, Select } from 'antd';
 
 import config from '../../../../config';
 
@@ -30,8 +30,7 @@ class EditProjectForm extends React.Component {
         };
       })
       .catch((err) => {
-        console.log('Error', err);
-        Modal.error({ title: (<b>Ошибка при отправке запроса</b>) });
+        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
       })
       .finally(() => this.hideSending());
   }
@@ -42,30 +41,28 @@ class EditProjectForm extends React.Component {
     });
   }
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const form = this.props.form;
     return (
       <Form hideRequiredMark="false" onSubmit={this.handleSubmit} layout="vertical" className="app-form">
-        <Spin spinning={!this.props.project} size="large">
-          <div className="app-form-fields">
-            <Form.Item label="Название проекта" className="app-form-field">
-              {getFieldDecorator('name', {
-                rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
-              })(
-                <Input size="large" />
-              )}
-            </Form.Item>
-            <Form.Item label="Ссылка на сайт" className="app-form-field">
-              {getFieldDecorator('websiteUrl', {
-                rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
-              })(
-                <Input size="large" placeholder="https://" />
-              )}
-            </Form.Item>
-          </div>
-          <div className="app-form-btns">
-            <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit" size="large">Сохранить</Button>
-          </div>
-        </Spin>
+        <div className="app-form-fields">
+          <Form.Item label="Название проекта" className="app-form-field">
+            {form.getFieldDecorator('name', {
+              rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
+            })(
+              <Input />
+            )}
+          </Form.Item>
+          <Form.Item label="Ссылка на сайт" className="app-form-field">
+            {form.getFieldDecorator('websiteUrl', {
+              rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
+            })(
+              <Input placeholder="https://" />
+            )}
+          </Form.Item>
+        </div>
+        <div className="app-form-btns">
+          <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit">Сохранить</Button>
+        </div>
       </Form>
     )
   }

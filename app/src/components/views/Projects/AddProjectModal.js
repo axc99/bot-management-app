@@ -24,28 +24,22 @@ class AddProjectModal extends React.Component {
       })
       .then((res) => {
         const project = res.data.project;
-        if (project) {
-          Modal.success({
-            title: (<b>Проект создан</b>),
-            content: '...'
-          });
-          this.props.close();
-        };
+        this.props.close();
+        this.props.history.push('/projects/' + project.id + '/leads/');
       })
       .catch((err) => {
-        console.log('Error', err);
-        Modal.error({ title: (<b>Ошибка при отправке запроса</b>) });
+        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
       })
       .finally(() => this.hideSending());
   }
-  onOk = (e) => {
+  handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, data) => {
       if (!err) this.send(data);
     });
   }
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const form = this.props.form;
     return (
       <Modal
         width={400}
@@ -53,30 +47,45 @@ class AddProjectModal extends React.Component {
         title={(<b>Создать проект</b>)}
         okText="Создать"
         cancelText="Отмена"
-        onOk={this.onOk}
+        onOk={this.handleSubmit}
         confirmLoading={this.state.sending}
         onCancel={this.props.close} >
         <Form hideRequiredMark="false" className="app-form" layout="vertical">
           <div className="app-form-fields">
             <Form.Item label="Название проекта" className="app-form-field">
-              {getFieldDecorator('name', {
-                rules: [ { required: true, message: 'Заполните это поле.' } ],
+              {form.getFieldDecorator('name', {
+                rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
               })(
-                <Input autofocus="true" size="large" />
+                <Input autoFocus={true} />
               )}
             </Form.Item>
             <Form.Item label="Ссылка на сайт" className="app-form-field">
-              {getFieldDecorator('websiteUrl', {
-                rules: [ { required: true, message: 'Заполните это поле.' } ],
+              {form.getFieldDecorator('websiteUrl', {
+                rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
               })(
-                <Input autofocus="true" size="large" placeholder="https://..." />
+                <Input placeholder="https://..." />
+              )}
+            </Form.Item>
+            <Form.Item label="Тематика проекта" className="app-form-field">
+              {form.getFieldDecorator('subjectType', {
+                rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
+              })(
+                <Select
+                  showSearch
+                  style={{ width: '100%' }}
+                  placeholder="Выберите из списка" >
+                  <Select.Option value="jack">Jack</Select.Option>
+                  <Select.Option value="lucy">Lucy</Select.Option>
+                  <Select.Option value="tom">Tom</Select.Option>
+                </Select>
               )}
             </Form.Item>
           </div>
         </Form>
+
       </Modal>
     );
   }
 }
 
-export default Form.create({ name: 'add_project' })(AddProjectModal);
+export default Form.create({ name: 'addProject' })(AddProjectModal);

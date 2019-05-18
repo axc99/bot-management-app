@@ -10,11 +10,9 @@ export const setUser = data => {
       type: SET_USER,
       payload: {
         isAuthenticated: true,
-        user: {
-          id: data.id,
-          username: data.username,
-          session: data.session
-        }
+        id: data.id,
+        username: data.username,
+        session: data.session
       }
     });
   };

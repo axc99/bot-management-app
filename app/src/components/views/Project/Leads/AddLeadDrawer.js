@@ -1,12 +1,12 @@
 import React from 'react';
 import axios from 'axios';
-import { Divider, Drawer, Form, Input, Modal, Button } from 'antd';
+import { Divider, Drawer, Form, Input, Select, Modal, Button } from 'antd';
 
 import config from '../../../../config';
 import PersonFields from './PersonFields';
 import ContactFields from './ContactFields';
 
-class AddLeadForm extends React.Component {
+class AddLeadDrawer extends React.Component {
   state = {
     sending: false
   }
@@ -28,6 +28,7 @@ class AddLeadForm extends React.Component {
         const lead = res.data.lead;
         if (lead) this.props.list.addOne(lead);
         this.props.close();
+        this.props.form.resetFields();
       })
       .catch((err) => {
         console.log('Error', err);
@@ -42,36 +43,38 @@ class AddLeadForm extends React.Component {
     });
   }
   render() {
-    const { getFieldDecorator } = this.props.form;
-    return (
-      <Form hideRequiredMark="false" onSubmit={this.handleSubmit} className="app-form" layout="vertical">
-        <div className="app-form-fields">
-          <PersonFields getFieldDecorator={getFieldDecorator} />
-          <ContactFields getFieldDecorator={getFieldDecorator} />
-        </div>
-        <div className="app-form-btns">
-          <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit" size="large">Добавить</Button>
-        </div>
-      </Form>
-    )
-  }
-}
-
-AddLeadForm = Form.create({ name: 'addLead' })(AddLeadForm);
-
-class AddLeadDrawer extends React.Component {
-  render() {
+    const form = this.props.form;
     return (
       <Drawer
-          title={(<b>Добавить лид</b>)}
-          width="600"
-          placement="right"
-          onClose={this.props.close}
-          visible={this.props.visible} >
-          <AddLeadForm {...this.props} />
+        width="600"
+        placement="right"
+        title={(<b>Добавить лид</b>)}
+        onClose={this.props.close}
+        visible={this.props.visible} >
+        <Form hideRequiredMark="false" onSubmit={this.handleSubmit} className="app-form" layout="vertical">
+          <div className="app-form-fields">
+            <PersonFields getFieldDecorator={form.getFieldDecorator} />
+            <Divider className="app-form-fields-divider" />
+            <ContactFields getFieldDecorator={form.getFieldDecorator} />
+          </div>
+          <div className="app-form-btns">
+            <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit">Добавить</Button>
+            {form.getFieldDecorator('status', {
+                initialValue: '0'
+            })(
+              <Select className="app-form-btn" style={{ width: 160 }}>
+                <Select.Option value="0">Без статуса</Select.Option>
+                <Select.Option value="1">Не обработан</Select.Option>
+                <Select.Option value="2">В обработке</Select.Option>
+                <Select.Option value="3">Обработан</Select.Option>
+                <Select.Option value="4">Закрыт</Select.Option>
+              </Select>
+            )}
+          </div>
+        </Form>
       </Drawer>
     );
   }
 }
 
-export default AddLeadDrawer;
+export default Form.create({ name: 'addLead' })(AddLeadDrawer);

@@ -5,6 +5,8 @@ import { createStore, applyMiddleware } from 'redux';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { Provider } from 'react-redux';
 import reduxThunk from 'redux-thunk';
+import { LocaleProvider } from 'antd';
+import ruRU from 'antd/lib/locale-provider/ru_RU';
 import './index.css';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
@@ -30,9 +32,11 @@ const store = createStore(reducers, {
 
 ReactDOM.render((
   <Provider store={store}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <LocaleProvider locale={ruRU}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </LocaleProvider>
   </Provider>
 ), document.getElementById('root'));
 

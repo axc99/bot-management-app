@@ -12,41 +12,6 @@ export default class AppAuth extends Component {
     var type = this.props.match.params.type;
     var title, content, Form = null;
 
-    /*if (type == 'sign-up') {
-      setTitle('Создать аккаунт');
-      content = (
-        <div>
-          <div className="app-auth-box-title">
-            Регистрация в <b>ИС</b>
-            <Link to="/auth/sign-in/" className="app-auth-box-title-link">Вход</Link>
-          </div>
-          <SignUpForm history={this.props.history} />
-        </div>
-      );
-    } else if (type == 'recovery') {
-      setTitle('Восстановить доступ');
-      content = (
-        <div>
-          <div className="app-auth-box-title">
-            Восстановление доступа
-            <Link to="/auth/sign-in/" className="app-auth-box-title-link">Вход</Link>
-          </div>
-          [FORM]
-        </div>
-      )
-    } else if (type == 'change-password') {
-      content = (
-        <div>
-          <div className="app-auth-box-title">
-            Смена пароля
-          </div>
-          [FORM]
-        </div>
-      );
-    } else {
-      content = (<Redirect to="/auth/sign-in/" />);
-    }*/
-
     return (
       <div className="app-auth">
 

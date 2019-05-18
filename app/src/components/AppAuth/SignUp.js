@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Form, Button, Input, Icon, Checkbox, Modal } from 'antd';
+import { Form, Button, Input, Checkbox, Modal } from 'antd';
 
 import { setTitle } from '../../helpers';
 import config from '../../config';
@@ -43,12 +43,11 @@ class SignUpForm extends Component {
             title: (<b>Аккаунт создан</b>),
             content: 'На указанную почту было отправлено письмо с ссылкой для подтверждения аккаунта. Если письма нет - проверьте папку «спам».'
           });
-          this.props.history.push('/auth/sign-in/');
+          this.props.history.push('/auth/sign-in/?email='+data.email);
         };
       })
       .catch((err) => {
-        console.log('Error', err);
-        Modal.error({ title: (<b>Ошибка при отправке запроса</b>) });
+        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
       })
       .finally(() => this.hideSending());
   }
@@ -73,7 +72,10 @@ class SignUpForm extends Component {
         <div className="app-form-fields">
           <Form.Item label="E-mail" className="app-form-field">
             {getFieldDecorator('email', {
-              rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
+              rules: [
+                { type: 'email', message: 'Укажите email адрес.', }, 
+                { required: true, message: 'Поле обязательно для заполнения.' }
+              ],
             })(
               <Input autoFocus={true} size="large" />
             )}
