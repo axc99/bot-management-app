@@ -383,6 +383,9 @@
 .app-form-col {
   margin-bottom: 15px;
 }
+.app-form-row:last-child .app-form-col {
+  margin-bottom: 0;
+}
 .app-form-fields-divider {
   margin-top: 7.5px;
 }

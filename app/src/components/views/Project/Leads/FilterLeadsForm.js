@@ -1,14 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Form, Button, DatePicker, Select, Modal, Tabs } from 'antd';
+import { Form, Button, DatePicker, Select, Modal, Tabs, Badge } from 'antd';
 
 import config from '../../../../config';
 
 class FilterLeadsForm extends React.Component {
+  handleSubmit = (e) => {
+    e.preventDefault();
+    this.props.form.validateFields((err, data) => {
+      if (!err) this.props.setFilter(data);
+    });
+  }
   render() {
     const form = this.props.form;
     return (
-      <Form hideRequiredMark="false" className="app-form filter" layout="vertical">
+      <Form hideRequiredMark="false" onSubmit={this.handleSubmit} layout="vertical" className="app-form filter">
         <div className="app-form-fields">
           <Form.Item className="app-form-field">
             {form.getFieldDecorator('period')(
@@ -22,10 +28,10 @@ class FilterLeadsForm extends React.Component {
               <Select style={{ width: 300 }}>
                 <Select.Option value="">Любой статус</Select.Option>
                 <Select.Option value="0">Без статуса</Select.Option>
-                <Select.Option value="1">Не обработан</Select.Option>
-                <Select.Option value="2">В обработке</Select.Option>
-                <Select.Option value="3">Обработан</Select.Option>
-                <Select.Option value="4">Закрыт</Select.Option>
+                <Select.Option value="1"><Badge status="default" dot={true} /> Не обработан</Select.Option>
+                <Select.Option value="2"><Badge status="processing" dot={true} /> В обработке</Select.Option>
+                <Select.Option value="3"><Badge status="success" dot={true} /> Обработан</Select.Option>
+                <Select.Option value="4"><Badge status="error" dot={true} /> Закрыт</Select.Option>
               </Select>
             )}
           </Form.Item>
@@ -35,8 +41,8 @@ class FilterLeadsForm extends React.Component {
             })(
               <Select style={{ width: 300 }}>
                 <Select.Option value="">Любой источник</Select.Option>
-                <Select.Option value="1">#111</Select.Option>
-                <Select.Option value="2">#222</Select.Option>
+                <Select.Option value="1">Бот во Вконтакте</Select.Option>
+                <Select.Option value="2">Бот в Facebook</Select.Option>
               </Select>
             )}
           </Form.Item>
@@ -49,12 +55,4 @@ class FilterLeadsForm extends React.Component {
   }
 }
 
-function mapPropsToFields(props) {
-  const user = props.user;
-  if (!user) return;
-  return {
-
-  }
-}
-
-export default Form.create({ name: 'filterLeads', mapPropsToFields })(FilterLeadsForm);
+export default Form.create({ name: 'filterLeads' })(FilterLeadsForm);

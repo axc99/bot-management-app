@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Divider, Drawer, Form, Input, Select, Modal, Button, Spin } from 'antd';
+import { Divider, Drawer, Form, Input, Select, Modal, Button, Spin, Badge } from 'antd';
 
 import PersonFields from './PersonFields';
 import ContactFields from './ContactFields';
@@ -30,12 +30,13 @@ class EditLeadDrawer extends React.Component {
         if (lead) {
           this.props.list.updateOne(lead.id, lead);
           this.props.close();
-          this.props.form.resetFields();
+          setTimeout(() => {
+            this.props.form.resetFields();
+          }, 1000);
         };
       })
       .catch((err) => {
-        console.log('Error', err);
-        Modal.error({ title: (<b>Ошибка при отправке запроса</b>) });
+        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
       })
       .finally(() => this.hideSending());
   }
@@ -58,8 +59,10 @@ class EditLeadDrawer extends React.Component {
               lastName: { value: lead.lastName },
               firstName: { value: lead.firstName },
               patronymic: { value: lead.patronymic },
-              birthTimestamp: { value: lead.birthTimestamp },
-              residence: { value: lead.residence }
+              // birthTimestamp: { value: lead.birthTimestamp },
+              residence: { value: lead.residence },
+              phone: { value: lead.phone },
+              email: { value: lead.email }
             });
           })
           .catch((err) => {
@@ -88,14 +91,14 @@ class EditLeadDrawer extends React.Component {
               <div className="app-form-btns">
                 <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit">Сохранить</Button>
                 {form.getFieldDecorator('status', {
-                    initialValue: '0'
+                    initialValue: (lead && lead.status) ? lead.status.toString() : '0'
                 })(
                   <Select className="app-form-btn" defaultValue="0" style={{ width: 160 }}>
                     <Select.Option value="0">Без статуса</Select.Option>
-                    <Select.Option value="1">Не обработан</Select.Option>
-                    <Select.Option value="2">В обработке</Select.Option>
-                    <Select.Option value="3">Обработан</Select.Option>
-                    <Select.Option value="4">Закрыт</Select.Option>
+                    <Select.Option value="1"><Badge status="default" dot={true} /> Не обработан</Select.Option>
+                    <Select.Option value="2"><Badge status="processing" dot={true} /> В обработке</Select.Option>
+                    <Select.Option value="3"><Badge status="success" dot={true} /> Обработан</Select.Option>
+                    <Select.Option value="4"><Badge status="error" dot={true} /> Закрыт</Select.Option>
                   </Select>
                 )}
               </div>

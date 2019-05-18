@@ -25,11 +25,28 @@ class LeadItem extends React.Component {
     });
   }
   render() {
+    let btnContent = null;
+    switch (this.props.lead.status) {
+      case 1:
+        btnContent = (<div><Badge status="default" dot={true} /> Не обработан</div>);
+        break;
+      case 2:
+        btnContent = (<div><Badge status="processing" dot={true} /> В обработке</div>);
+        break;
+      case 3:
+        btnContent = (<div><Badge status="success" dot={true} /> Обработан</div>);
+        break;
+      case 4:
+        btnContent = (<div><Badge status="error" dot={true} /> Закрыт</div>);
+        break;
+    };
+    let actions = [
+      <Button onClick={() => this.props.openEditDrawer(this.props.lead.id)}>Открыть</Button>,
+      <Button onClick={() => this.confirmDelete(this.props.lead.id)} type="dashed" icon="delete" shape="circle" size="small"></Button>
+    ];
+    if (btnContent) actions.unshift(<Button onClick={() => this.props.openEditDrawer(this.props.lead.id)}>{btnContent}</Button>)
     return (
-      <List.Item actions={[
-          <Button onClick={() => this.props.openEditDrawer(this.props.lead.id)}>Открыть</Button>,
-          <Button onClick={() => this.confirmDelete(this.props.lead.id)} type="dashed" icon="delete" shape="circle" size="small"></Button>
-        ]}>
+      <List.Item actions={actions}>
         <List.Item.Meta
             avatar={<Avatar size="large" icon="user" />}
             title={<b>{this.props.lead.fullName ? this.props.lead.fullName : 'Без имени'}</b>}
@@ -108,12 +125,15 @@ class Leads extends React.Component {
   }
   // Загрузка
   load = () => {
-    const { search, page } = this.state;
+    const { search, page, filter } = this.state;
     const offset = Math.abs(page-1) * 50;
     axios.get(
       config.serverUrl + 'app-api/projects/' + this.props.project.id + '/leads/'
       + '?search=' + search
       + '&offset=' + offset
+      + '&filterPeriod=' + (filter.period ? filter.period.join(',') : '')
+      + '&filterStatus=' + (filter.status ? filter.status : '')
+      + '&filterSource=' + (filter.source ? filter.source : '')
     )
       .then((res) => {
         const leads = res.data.leads;
@@ -134,7 +154,16 @@ class Leads extends React.Component {
   }
   // Установить фильтр
   setFilter = (data) => {
-
+    const { period, status, source } = data;
+    this.setState(((period && period.length) || status || source) ? { filterUse: true } : { filterUse: false });
+    this.setState({
+      filter: {
+        period: period ? [period[0], period[1]] : null,
+        status: status ? status : null,
+        source: source ? source : null
+      }
+    }, () => this.load());
+    this.closeFilterPopover();
   }
   componentDidMount() {
     setTitle('Лиды');
@@ -156,8 +185,10 @@ class Leads extends React.Component {
                 trigger="click"
                 onVisibleChange={visible => { return visible ? this.openFilterPopover() : this.closeFilterPopover() }}
                 visible={this.state.filterPopoverVisible}
-                content={<FilterLeadsForm />}>
-                <Button icon="filter">Фильтр</Button>
+                content={<FilterLeadsForm setFilter={this.setFilter} />}>
+                <Badge dot={this.state.filterUse}>
+                  <Button icon="filter">Фильтр</Button>
+                </Badge>
               </Popover>
             </div>
             <div className="app-main-view-header-control btn">
