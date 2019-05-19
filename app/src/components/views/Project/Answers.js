@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { List, Empty, Modal, Button, Avatar, Input, Icon } from 'antd';
+import { List, Empty, Modal, Button, Avatar, Input, Icon, Tag } from 'antd';
 import { Link } from 'react-router-dom';
 
 import AddAnswerDrawer from './Answers/AddAnswerDrawer';
@@ -43,7 +43,8 @@ class Answers extends React.Component {
     editModalVisible: false,
     answerTotalCount: 0,
     answers: null,
-    page: 0
+    search: '',
+    page: 1
   }
   list = {
     addOne: (answer) => {
@@ -88,9 +89,15 @@ class Answers extends React.Component {
   closeEditModal = () => {
     this.setState({ editModalVisible: false });
   }
-  componentDidMount() {
-    setTitle('База знаний');
-    axios.get(config.serverUrl + 'app-api/projects/' + this.props.project.id + '/answers/')
+  // Загрузка
+  load = () => {
+    const { search, page } = this.state;
+    const offset = Math.abs(page-1) * 50;
+    axios.get(
+      config.serverUrl + 'app-api/projects/' + this.props.project.id + '/answers/'
+        + '?offset=' + offset
+        + '&search=' + search
+      )
       .then((res) => {
         const answers = res.data.answers;
         const answerTotalCount = res.data.answerTotalCount;
@@ -100,27 +107,19 @@ class Answers extends React.Component {
         Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
       });
   }
+  // Установить поиск
+  setSearch = (event) => {
+    this.setState({ search: event.target.value.trim() }, () => this.load());
+  }
+  // Установить страницу
+  setPage = (page) => {
+    this.setState({ page }, () => this.load());
+  }
+  componentDidMount() {
+    setTitle('База знаний');
+    this.load();
+  }
   render() {
-    let content;
-
-    if (this.state.answers !== null && this.state.answers.length == 0) {
-      content = (
-        <Empty
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-          description="В проекте пока нет ответов." />
-      );
-    } else {
-      content = (
-        <List
-          bordered
-          hideOnSinglePage={true}
-          loading={!this.state.answers ? true : false}
-          size="large"
-          dataSource={this.state.answers ? this.state.answers : []}
-          renderItem={item => <AnswerItem answer={item} openEditAnswer={this.openEditAnswer} />} />
-      );
-    };
-
     return (
       <div>
         <div className="app-main-view-header">
@@ -129,7 +128,7 @@ class Answers extends React.Component {
           </div>
           <div className="app-main-view-header-controls">
             <div className="app-main-view-header-control input">
-              <Input allowClear placeholder="Поиск..." style={{ width: 200 }} prefix={<Icon type="search" style={{ color: 'rgba(0,0,0,.25)' }} />} />
+              <Input allowClear onChange={this.setSearch} placeholder="Поиск..." style={{ width: 200 }} prefix={<Icon type="search" style={{ color: 'rgba(0,0,0,.25)' }} />} />
             </div>
             <div className="app-main-view-header-control button">
               <Button onClick={this.openAddModal} type="primary" icon="plus">Добавить ответ</Button>
@@ -152,15 +151,7 @@ class Answers extends React.Component {
                   pageSize: 50,
                   total: this.state.answerTotalCount,
                   onChange: (page, pageSize) => {
-                    axios.get(config.serverUrl + 'app-api/projects/' + this.props.project.id + '/answers/?offset=' + (Math.abs(page-1) * 3))
-                      .then((res) => {
-                        const answers = res.data.answers;
-                        const answerTotalCount = res.data.answerTotalCount;
-                        this.setState({ answers, answerTotalCount });
-                      })
-                      .catch((err) => {
-                        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
-                      });
+                    this.setPage(page);
                   }
                 } : false}
                 dataSource={this.state.answers ? this.state.answers : []}

@@ -62,6 +62,9 @@ body {
 .ant-form-item-with-help {
 	margin-bottom: -1px;
 }
+.ant-form-item-with-help:last-child {
+	margin-bottom: -19px;
+}
 
 .ant-form-explain {
 	margin-top: 0;

@@ -89,9 +89,14 @@ class EditAnswerDrawer extends React.Component {
                     <Input.TextArea autosize={{ minRows: 5 }} />
                   )}
                 </Form.Item>
+                <Form.Item label="Теги" className="app-form-field">
+                  {form.getFieldDecorator('tags')(
+                    <Select dropdownStyle={{ display: 'none' }} mode="tags" style={{ width: '100%' }}></Select>,
+                  )}
+                </Form.Item>
               </div>
               <div className="app-form-btns">
-                <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit" size="large">Сохранить</Button>
+                <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit">Сохранить</Button>
               </div>
             </Form>
           </Spin>

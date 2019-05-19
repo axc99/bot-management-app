@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { Form, Button, Input, Modal, Checkbox, Switch, List } from 'antd';
+import { Form, Button, Input, Modal, Checkbox, Switch } from 'antd';
 
 import config from '../../../../config';
 
@@ -27,36 +27,23 @@ class EditBotKnowledgeBaseForm extends React.Component {
     });
   }
   render() {
-    const { getFieldDecorator } = this.props.form;
-    const capturedFields = [
-      ['phone', 'Телефон', '+7 (123) 1234-56-78'],
-      ['email', 'Email', 'ivanov@gmail.com']
-    ];
+    const form = this.props.form;
     return (
       <Form hideRequiredMark="false" onSubmit={this.handleSubmit} layout="vertical" className="app-form">
         <div className="app-form-fields">
           <Form.Item className="app-form-field">
-            {getFieldDecorator('username')(
+            {form.getFieldDecorator('state')(
               <Checkbox>Осуществлять поиск ответа в базе</Checkbox>
             )}
           </Form.Item>
-          <Form.Item label="Сообщение после отправки заявки" className="app-form-field">
-            {getFieldDecorator('username')(
-              <Input.TextArea placeholder="Спасибо за заявку, ..." autosize={{ minRows: 3 }} />
-            )}
-          </Form.Item>
-          <Form.Item label="Собираемые данные" className="app-form-field">
-            {getFieldDecorator('capturedFields')(
-              <List
-                bordered
-                size="small"
-                dataSource={capturedFields}
-                renderItem={item => (<List.Item> <Checkbox>{item[1]}</Checkbox> </List.Item>)} />
+          <Form.Item label="Сообщение при неуданоч поиске" className="app-form-field">
+            {form.getFieldDecorator('message')(
+              <Input.TextArea placeholder="" autosize={{ minRows: 3 }} />
             )}
           </Form.Item>
         </div>
         <div className="app-form-btns">
-          <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit" size="large">Сохранить</Button>
+          <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit">Сохранить</Button>
         </div>
       </Form>
     )
@@ -64,10 +51,14 @@ class EditBotKnowledgeBaseForm extends React.Component {
 }
 
 function mapPropsToFields(props) {
-  const user = props.user;
-  if (!user) return;
+  const project = props.project;
   return {
-    // ...
+    state: Form.createFormField({
+      value: project.bot.state
+    }),
+    initialMessage: Form.createFormField({
+      value: project.bot.initialMessage
+    })
   }
 }
 

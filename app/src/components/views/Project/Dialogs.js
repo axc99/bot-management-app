@@ -1,10 +1,11 @@
 import React from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { Drawer, List, Empty, Modal, Button, Avatar, Popover } from 'antd';
+import { Drawer, List, Empty, Modal, Button, Avatar, Popover, Badge } from 'antd';
 import { Link } from 'react-router-dom';
 
 import DialogDrawer from './Dialogs/DialogDrawer';
+import FilterDialogsForm from './Dialogs/FilterDialogsForm';
 import { setTitle } from '../../../helpers';
 import config from '../../../config';
 
@@ -27,8 +28,14 @@ class DialogItem extends React.Component {
 class Dialogs extends React.Component {
   state = {
     modalVisible: false,
+    filterPopoverVisible: false,
+    filterUse: false,
     dialogTotalCount: 0,
     dialogs: null,
+    filter: {
+      period: null,
+      source: null
+    },
     page: 1
   }
   // Открыть
@@ -39,9 +46,24 @@ class Dialogs extends React.Component {
   closeModal = () => {
     this.setState({ modalVisible: false });
   }
-  componentDidMount() {
-    setTitle('Диалоги');
-    axios.get(config.serverUrl + 'app-api/projects/' + this.props.project.id + '/dialogs/')
+  // Открыть: фильтр
+  openFilterPopover = () => {
+    this.setState({ filterPopoverVisible: true });
+  }
+  // Закрыть: фильтр
+  closeFilterPopover = () => {
+    this.setState({ filterPopoverVisible: false });
+  }
+  // Загрузка
+  load = () => {
+    const { page, filter } = this.state;
+    const offset = Math.abs(page-1) * 50;
+    axios.get(
+      config.serverUrl + 'app-api/projects/' + this.props.project.id + '/dialogs/'
+        + '?offset=' + offset
+        + '&filterPeriod=' + ((filter.period && filter.period[0] && filter.period[1]) ? filter.period[0]._d.getTime() + ',' + filter.period[1]._d.getTime() : '')
+        + '&filterSource=' + (filter.source ? filter.source : '')
+      )
       .then((res) => {
         const dialogs = res.data.dialogs;
         const dialogTotalCount = res.data.dialogTotalCount;
@@ -51,6 +73,26 @@ class Dialogs extends React.Component {
         Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
       });
   }
+  // Установить страницу
+  setPage = (page) => {
+    this.setState({ page }, () => this.load());
+  }
+  // Установить фильтр
+  setFilter = (data) => {
+    const { period, source } = data;
+    this.setState(((period && period.length) || source) ? { filterUse: true } : { filterUse: false });
+    this.setState({
+      filter: {
+        period: period ? [period[0], period[1]] : null,
+        source: source ? source : null
+      }
+    }, () => this.load());
+    this.closeFilterPopover();
+  }
+  componentDidMount() {
+    setTitle('Диалоги');
+    this.load();
+  }
   render() {
     return (
       <div>
@@ -59,9 +101,16 @@ class Dialogs extends React.Component {
             Диалоги {this.state.dialogTotalCount > 0 ? <div className="app-main-view-header-title-counter">({this.state.dialogTotalCount})</div> : null}
           </div>
           <div className="app-main-view-header-controls">
-            <div className="app-main-view-header-control button">
-              <Popover content={<div>CONTENT</div>}>
-                <Button icon="filter">Фильтр</Button>
+            <div className="app-main-view-header-control input">
+              <Popover
+                placement="leftTop"
+                trigger="click"
+                onVisibleChange={visible => { return visible ? this.openFilterPopover() : this.closeFilterPopover() }}
+                visible={this.state.filterPopoverVisible}
+                content={<FilterDialogsForm setFilter={this.setFilter} />}>
+                <Badge dot={this.state.filterUse}>
+                  <Button icon="filter">Фильтр</Button>
+                </Badge>
               </Popover>
             </div>
           </div>
@@ -81,16 +130,7 @@ class Dialogs extends React.Component {
                   pageSize: 50,
                   total: this.state.dialogTotalCount,
                   onChange: (page, pageSize) => {
-                    axios.get(config.serverUrl + 'app-api/projects/' + this.props.project.id + '/dialogs/?offset=' + (Math.abs(page-1) * 3))
-                      .then((res) => {
-                        const dialogs = res.data.dialogs;
-                        const dialogTotalCount = res.data.dialogTotalCount;
-                        this.setState({ dialogs, dialogTotalCount });
-                      })
-                      .catch((err) => {
-                        console.log('Error', err);
-                        Modal.error({ title: (<b>Ошибка при загрузке</b>) });
-                      });
+                    this.setPage(page);
                   }
                 } : false}
                 size="large"

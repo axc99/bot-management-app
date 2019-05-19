@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Form, Button, DatePicker, Select, Modal, Tabs, Badge } from 'antd';
+import { Form, Button, DatePicker, Select, Modal, Tabs } from 'antd';
 
 import config from '../../../../config';
 
-class FilterLeadsForm extends React.Component {
+class FilterDialogsForm extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, data) => {
@@ -19,20 +19,6 @@ class FilterLeadsForm extends React.Component {
           <Form.Item className="app-form-field">
             {form.getFieldDecorator('period')(
               <DatePicker.RangePicker style={{ width: 300 }} />
-            )}
-          </Form.Item>
-          <Form.Item className="app-form-field">
-            {form.getFieldDecorator('status', {
-              initialValue: ''
-            })(
-              <Select style={{ width: 300 }}>
-                <Select.Option value="">Любой статус</Select.Option>
-                <Select.Option value="0">Без статуса</Select.Option>
-                <Select.Option value="1"><Badge status="default" dot={true} /> Не обработан</Select.Option>
-                <Select.Option value="2"><Badge status="processing" dot={true} /> В обработке</Select.Option>
-                <Select.Option value="3"><Badge status="success" dot={true} /> Обработан</Select.Option>
-                <Select.Option value="4"><Badge status="error" dot={true} /> Закрыт</Select.Option>
-              </Select>
             )}
           </Form.Item>
           <Form.Item className="app-form-field">
@@ -57,4 +43,4 @@ class FilterLeadsForm extends React.Component {
   }
 }
 
-export default Form.create({ name: 'filterLeads' })(FilterLeadsForm);
+export default Form.create({ name: 'filterDialogs' })(FilterDialogsForm);

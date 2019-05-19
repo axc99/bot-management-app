@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Divider, Drawer, Form, Input, Select, Modal, Button } from 'antd';
+import { Divider, Drawer, Form, Input, Select, Modal, Button, Badge } from 'antd';
 
 import config from '../../../../config';
 import PersonFields from './PersonFields';
@@ -62,12 +62,12 @@ class AddLeadDrawer extends React.Component {
             {form.getFieldDecorator('status', {
                 initialValue: '0'
             })(
-              <Select className="app-form-btn" style={{ width: 160 }}>
+              <Select className="app-form-btn" defaultValue="0" style={{ width: 160 }}>
                 <Select.Option value="0">Без статуса</Select.Option>
-                <Select.Option value="1">Не обработан</Select.Option>
-                <Select.Option value="2">В обработке</Select.Option>
-                <Select.Option value="3">Обработан</Select.Option>
-                <Select.Option value="4">Закрыт</Select.Option>
+                <Select.Option value="1"><Badge status="default" dot={true} /> Не обработан</Select.Option>
+                <Select.Option value="2"><Badge status="processing" dot={true} /> В обработке</Select.Option>
+                <Select.Option value="3"><Badge status="success" dot={true} /> Обработан</Select.Option>
+                <Select.Option value="4"><Badge status="error" dot={true} /> Закрыт</Select.Option>
               </Select>
             )}
           </div>

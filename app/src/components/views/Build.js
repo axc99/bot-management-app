@@ -8,8 +8,8 @@ class Build extends React.Component {
     setTitle('Приложение');
   }
   render() {
-    let packageJson = require('./../../../package.json');
-    let items = [
+    const packageJson = require('./../../../package.json');
+    let items1 = [
       ['Версия', packageJson.version]
     ];
     return (
@@ -22,7 +22,7 @@ class Build extends React.Component {
             <List
               bordered
               className="app-build-list"
-              dataSource={items}
+              dataSource={items1}
               renderItem={item => (<List.Item>{item[0]}: <b>{item[1]}</b></List.Item>)} />
           </div>
         </div>

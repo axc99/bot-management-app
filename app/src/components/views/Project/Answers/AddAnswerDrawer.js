@@ -65,13 +65,13 @@ class AddAnswerDrawer extends React.Component {
                 )}
               </Form.Item>
               <Form.Item label="Теги" className="app-form-field">
-                {form.getFieldDecorator('content')(
-                  <Select mode="tags" style={{ width: '100%' }} placeholder="Tags Mode"></Select>,
+                {form.getFieldDecorator('tags')(
+                  <Select dropdownStyle={{ display: 'none' }} mode="tags" style={{ width: '100%' }}></Select>,
                 )}
               </Form.Item>
             </div>
             <div className="app-form-btns">
-              <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit" size="large">Добавить</Button>
+              <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit">Добавить</Button>
             </div>
           </Form>
       </Drawer>

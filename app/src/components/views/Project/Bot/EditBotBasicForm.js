@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { Form, Button, Input, Modal, Checkbox, Switch } from 'antd';
+import { Form, Button, Input, Modal, Select, List } from 'antd';
 
 import config from '../../../../config';
 
@@ -18,7 +18,24 @@ class EditBotBasicForm extends React.Component {
     }, 500);
   }
   async send(data) {
-    alert('SEND!');
+    this.showSending();
+    axios.patch(
+      config.serverUrl + 'app-api/projects/' + this.props.project.id + '/', {
+        project: {
+          bot: data
+        }
+      })
+      .then((res) => {
+        if (res.data.project) {
+          Modal.success({
+            title: (<b>Изменения сохранены</b>)
+          });
+        };
+      })
+      .catch((err) => {
+        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
+      })
+      .finally(() => this.hideSending());
   }
   handleSubmit = (e) => {
     e.preventDefault();
@@ -27,23 +44,27 @@ class EditBotBasicForm extends React.Component {
     });
   }
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const form = this.props.form;
     return (
       <Form hideRequiredMark="false" onSubmit={this.handleSubmit} layout="vertical" className="app-form">
         <div className="app-form-fields">
-          <Form.Item label="Приветственное сообщение" className="app-form-field">
-            {getFieldDecorator('username')(
-              <Input.TextArea placeholder="Здравствуйте, ..." autosize={{ minRows: 3 }} />
+          <Form.Item label="Название бота" className="app-form-field">
+            {form.getFieldDecorator('name', {
+              rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ]
+            })(
+              <Input />
             )}
           </Form.Item>
-          <Form.Item className="app-form-field">
-            {getFieldDecorator('username')(
-              <Checkbox>Предлагать пользователю отправить заявку</Checkbox>
+          <Form.Item label="Приветственное сообщение" className="app-form-field">
+            {form.getFieldDecorator('initialMessage', {
+              rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ]
+            })(
+              <Input.TextArea placeholder="Здравствуйте, ..." autosize={{ minRows: 3 }} />
             )}
           </Form.Item>
         </div>
         <div className="app-form-btns">
-          <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit" size="large">Сохранить</Button>
+          <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit">Сохранить</Button>
         </div>
       </Form>
     )
@@ -51,10 +72,16 @@ class EditBotBasicForm extends React.Component {
 }
 
 function mapPropsToFields(props) {
-  const user = props.user;
-  if (!user) return;
-  return {
-    // ...
+  const project = props.project;
+  if (project) {
+    return {
+      name: Form.createFormField({
+        value: project.bot.name
+      }),
+      initialMessage: Form.createFormField({
+        value: project.bot.initialMessage
+      })
+    }
   }
 }
 

@@ -47,8 +47,7 @@ class EditLeadDrawer extends React.Component {
     });
   }
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const form = this.props.form;
-    const leadId = this.props.leadId;
+    const { form, leadId } = this.props;
     if (prevProps.leadId !== leadId) {
       if (leadId) {
         axios.get(config.serverUrl + 'app-api/projects/' + this.props.projectId + '/leads/' + leadId + '/')

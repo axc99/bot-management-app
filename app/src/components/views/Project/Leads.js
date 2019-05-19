@@ -25,6 +25,17 @@ class LeadItem extends React.Component {
     });
   }
   render() {
+    let avatarColor = null;
+    if (this.props.lead.source) {
+      switch (this.props.lead.source.type) {
+        case 1:
+          avatarColor = '#91a5bb';
+          break;
+        case 2:
+          avatarColor = '#8991a2';
+          break;
+      };
+    };
     let btnContent = null;
     switch (this.props.lead.status) {
       case 1:
@@ -48,7 +59,7 @@ class LeadItem extends React.Component {
     return (
       <List.Item actions={actions}>
         <List.Item.Meta
-            avatar={<Avatar size="large" icon="user" />}
+            avatar={<Avatar style={{ backgroundColor: avatarColor }} size="large" icon="user" />}
             title={<b>{this.props.lead.fullName ? this.props.lead.fullName : 'Без имени'}</b>}
             description={this.props.lead.contacts.length ? this.props.lead.contacts.join(' | ') : 'Пустой лид'} />
       </List.Item>
@@ -129,12 +140,12 @@ class Leads extends React.Component {
     const offset = Math.abs(page-1) * 50;
     axios.get(
       config.serverUrl + 'app-api/projects/' + this.props.project.id + '/leads/'
-      + '?search=' + search
-      + '&offset=' + offset
-      + '&filterPeriod=' + (filter.period ? filter.period.join(',') : '')
-      + '&filterStatus=' + (filter.status ? filter.status : '')
-      + '&filterSource=' + (filter.source ? filter.source : '')
-    )
+        + '?offset=' + offset
+        + '&search=' + search
+        + '&filterPeriod=' + ((filter.period && filter.period[0] && filter.period[1]) ? filter.period[0]._d.getTime() + ',' + filter.period[1]._d.getTime() : '')
+        + '&filterStatus=' + (filter.status ? filter.status : '')
+        + '&filterSource=' + (filter.source ? filter.source : '')
+      )
       .then((res) => {
         const leads = res.data.leads;
         const leadTotalCount = res.data.leadTotalCount;
