@@ -46,7 +46,7 @@ class Projects extends React.Component {
         this.setState({ projects, projectTotalCount });
       })
       .catch((err) => {
-        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
+        Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
       });
   }
   // Установить поиск
@@ -63,7 +63,7 @@ class Projects extends React.Component {
         <div className="app-main-view-header">
           <div className="app-main-view-header-title">Проекты</div>
           <div className="app-main-view-header-controls">
-            <div className="app-main-view-header-control input">
+            <div className="app-main-view-header-control search">
               <Input onChange={this.setSearch} allowClear placeholder="Поиск..." style={{ width: 200 }} prefix={<Icon type="search" style={{ color: 'rgba(0,0,0,.25)' }} />} />
             </div>
             <div className="app-main-view-header-control btn">
@@ -73,20 +73,13 @@ class Projects extends React.Component {
         </div>
         <div className="app-main-view-content">
           <div className="app-projects">
-            {
-              (this.state.projects !== null && this.state.projects.length == 0) ? (
-                <Empty
-                  image={Empty.PRESENTED_IMAGE_SIMPLE}
-                  description="У вас пока нет проектов." />
-              ) : (
-                <List
-                  bordered
-                  size="large"
-                  loading={!this.state.projects ? true : false}
-                  dataSource={this.state.projects ? this.state.projects : []}
-                  renderItem={item => <ProjectItem project={item} />} />
-              )
-            }
+            <List
+              bordered
+              size="large"
+              locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="У вас пока нет проектов." /> }}
+              loading={!this.state.projects ? true : false}
+              dataSource={this.state.projects ? this.state.projects : []}
+              renderItem={item => <ProjectItem project={item} />} />
           </div>
         </div>
         <AddProjectModal

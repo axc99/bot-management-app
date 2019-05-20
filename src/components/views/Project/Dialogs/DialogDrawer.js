@@ -19,7 +19,7 @@ class DialogDrawer extends React.Component {
             this.setState({ dialog });
           })
           .catch((err) => {
-            Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
+            Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
           });
       };
     };

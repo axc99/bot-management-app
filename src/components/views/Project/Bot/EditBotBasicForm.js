@@ -29,12 +29,12 @@ class EditBotBasicForm extends React.Component {
       .then((res) => {
         if (res.data.project) {
           Modal.success({
-            title: (<b>Изменения сохранены</b>)
+            title: 'Изменения сохранены'
           });
         };
       })
       .catch((err) => {
-        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
+        Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
       })
       .finally(() => this.hideSending());
   }

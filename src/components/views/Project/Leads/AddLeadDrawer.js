@@ -32,7 +32,7 @@ class AddLeadDrawer extends React.Component {
       })
       .catch((err) => {
         console.log('Error', err);
-        Modal.error({ title: (<b>Ошибка при отправке запроса</b>) });
+        Modal.error({ title: 'Ошибка при отправке запроса' });
       })
       .finally(() => this.hideSending());
   }

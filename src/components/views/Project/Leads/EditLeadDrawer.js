@@ -36,7 +36,7 @@ class EditLeadDrawer extends React.Component {
         };
       })
       .catch((err) => {
-        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
+        Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
       })
       .finally(() => this.hideSending());
   }
@@ -65,7 +65,7 @@ class EditLeadDrawer extends React.Component {
             });
           })
           .catch((err) => {
-            Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
+            Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
           });
       };
     };

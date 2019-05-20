@@ -34,19 +34,19 @@ class RecoveryUserForm extends Component {
         const resData = res.data;
         if (resData.error) {
           Modal.error({
-            title: (<b>Ошибка при входе</b>),
+            title: 'Ошибка при входе',
             content: resData.error.message
           });
         } else if (resData.result) {
           Modal.success({
-            title: (<b>Письмо отправлено</b>),
+            title: 'Письмо отправлено',
             content: 'Письмо с ссылкой для смены пароля было отправлено на ваш email. Если письма нет - проверьте папку «спам».'
           });
           this.props.history.push('/auth/sign-in/');
         };
       })
       .catch((err) => {
-        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
+        Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
       })
       .finally(() => this.hideSending());
   }

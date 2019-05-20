@@ -35,19 +35,19 @@ class SignUpForm extends Component {
         const resData = res.data;
         if (resData.error) {
           Modal.error({
-            title: (<b>Ошибка при регистрации</b>),
+            title: 'Ошибка при регистрации',
             content: resData.error.message
           });
         } else if (resData.result) {
           Modal.success({
-            title: (<b>Аккаунт создан</b>),
+            title: 'Аккаунт создан',
             content: 'На указанную почту было отправлено письмо с ссылкой для подтверждения аккаунта. Если письма нет - проверьте папку «спам».'
           });
           this.props.history.push('/auth/sign-in/?email='+data.email);
         };
       })
       .catch((err) => {
-        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
+        Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
       })
       .finally(() => this.hideSending());
   }
@@ -73,7 +73,7 @@ class SignUpForm extends Component {
           <Form.Item label="E-mail" className="app-form-field">
             {getFieldDecorator('email', {
               rules: [
-                { type: 'email', message: 'Укажите email адрес.', }, 
+                { type: 'email', message: 'Укажите email адрес.', },
                 { required: true, message: 'Поле обязательно для заполнения.' }
               ],
             })(

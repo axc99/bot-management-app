@@ -70,7 +70,7 @@ class Dialogs extends React.Component {
         this.setState({ dialogs, dialogTotalCount });
       })
       .catch((err) => {
-        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
+        Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
       });
   }
   // Установить страницу
@@ -116,28 +116,21 @@ class Dialogs extends React.Component {
           </div>
         </div>
         <div className="app-main-view-content">
-          {
-            (this.state.dialogs !== null && this.state.dialogs.length == 0) ? (
-              <Empty
-                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description="В проекте пока нет диалогов." />
-            ) : (
-              <List
-                bordered
-                loading={!this.state.dialogs ? true : false}
-                pagination={this.state.dialogs && (this.state.dialogTotalCount > this.state.dialogs.length) ? {
-                  size: 'large',
-                  pageSize: 50,
-                  total: this.state.dialogTotalCount,
-                  onChange: (page, pageSize) => {
-                    this.setPage(page);
-                  }
-                } : false}
-                size="large"
-                dataSource={this.state.dialogs ? this.state.dialogs : []}
-                renderItem={item => <DialogItem projectId={this.props.project.id} dialog={item} list={this.list} openModal={this.openModal} />} />
-            )
-          }
+          <List
+            bordered
+            locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="В проекте пока нет диалогов." /> }}
+            loading={!this.state.dialogs ? true : false}
+            pagination={this.state.dialogs && (this.state.dialogTotalCount > this.state.dialogs.length) ? {
+              size: 'large',
+              pageSize: 50,
+              total: this.state.dialogTotalCount,
+              onChange: (page, pageSize) => {
+                this.setPage(page);
+              }
+            } : false}
+            size="large"
+            dataSource={this.state.dialogs ? this.state.dialogs : []}
+            renderItem={item => <DialogItem projectId={this.props.project.id} dialog={item} list={this.list} openModal={this.openModal} />} />
         </div>
         <DialogDrawer
           list={this.list}

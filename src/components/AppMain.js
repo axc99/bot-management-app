@@ -1,6 +1,6 @@
 import React from 'react';
-import { NavLink, Switch, Route } from 'react-router-dom';
-import { Tooltip, Avatar, Icon } from 'antd';
+import { Link, NavLink, Switch, Route } from 'react-router-dom';
+import { Tooltip, Avatar, Icon, Button, Popover, Menu } from 'antd';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
@@ -43,7 +43,7 @@ class Sidebar extends React.Component {
             this.props.project ? (
               <div>
                 <div className="app-main-sidebar-nav-header">
-                  <div className="app-main-sidebar-nav-header-title">Проект</div>
+                  <Link to={`/projects/${this.props.project.id}/leads/`}><div className="app-main-sidebar-nav-header-title">Проект</div></Link>
                 </div>
                 <div className="app-main-sidebar-nav-menu">
                   <div className="app-main-sidebar-nav-menu-items">
@@ -96,6 +96,14 @@ class Sidebar extends React.Component {
             )
           }
         </div>
+        <Popover
+          placement="bottomRight"
+          trigger="click"
+          content={
+            <div>[MENU]</div>
+          } >
+          <Button shape="circle" size="large" icon="menu" className="app-main-sidebar-nav-mobile_btn"></Button>
+        </Popover>
       </div>
     );
 
@@ -116,14 +124,16 @@ class View extends React.Component {
   render() {
     return (
       <div className="app-main-view">
-        <Switch>
-          <Route path="/projects/:projectId/" component={Project} />
-          <Route exact path="/projects/" component={ProjectsView} />
-          <Route path="/information/" component={InformationView} />
-          <Route path="/build/" component={BuildView} />
-          <Route path="/account/" component={AccountView} />
-          <Route component={Error404View} />
-        </Switch>
+        <div className="app-main-view-area">
+          <Switch>
+            <Route path="/projects/:projectId/" component={Project} />
+            <Route exact path="/projects/" component={ProjectsView} />
+            <Route path="/information/" component={InformationView} />
+            <Route path="/build/" component={BuildView} />
+            <Route path="/account/" component={AccountView} />
+            <Route component={Error404View} />
+          </Switch>
+        </div>
       </div>
     )
   }

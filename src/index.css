@@ -16,7 +16,7 @@ body {
 
 /* scroll */
 
-@media only screen and (min-width: 1024px) {
+@media only screen and (min-width: 992px) {
 
 	::-webkit-scrollbar-track
 	{
@@ -72,4 +72,17 @@ body {
 
 .ant-list-item-meta-avatar {
 	margin-top: 4px;
+}
+
+@media only screen and (max-width: 576px) {
+
+	.ant-list-item-meta {
+		width: 100%;
+	}
+	.ant-list-item-action {
+		text-align: right;
+		width: 100%;
+		margin: 15px 0 5px;
+	}
+
 }

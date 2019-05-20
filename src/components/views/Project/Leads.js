@@ -152,7 +152,7 @@ class Leads extends React.Component {
         this.setState({ leads, leadTotalCount });
       })
       .catch((err) => {
-        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
+        Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
       });
   }
   // Установить поиск
@@ -188,7 +188,7 @@ class Leads extends React.Component {
             Лиды {this.state.leadTotalCount > 0 ? <div className="app-main-view-header-title-counter">({this.state.leadTotalCount})</div> : null}
           </div>
           <div className="app-main-view-header-controls">
-            <div className="app-main-view-header-control input">
+            <div className="app-main-view-header-control search">
               <Input allowClear onChange={this.setSearch} placeholder="Поиск..." style={{ width: 200 }} prefix={<Icon type="search" style={{ color: 'rgba(0,0,0,.25)' }} />} />
             </div>
             <div className="app-main-view-header-control input">
@@ -209,28 +209,21 @@ class Leads extends React.Component {
         </div>
         <div className="app-main-view-content">
           <div className="app-project-leads">
-          {
-            (this.state.leads !== null && this.state.leads.length == 0) ? (
-              <Empty
-                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description="В проекте пока нет лидов." />
-            ) : (
-              <List
-                bordered
-                size="large"
-                loading={!this.state.leads ? true : false}
-                pagination={this.state.leads && (this.state.leadTotalCount > this.state.leads.length) ? {
-                  size: 'large',
-                  pageSize: 50,
-                  total: this.state.leadTotalCount,
-                  onChange: (page, pageSize) => {
-                    this.setPage(page);
-                  }
-                } : false}
-                dataSource={this.state.leads ? this.state.leads : []}
-                renderItem={item => <LeadItem projectId={this.props.project.id} lead={item} list={this.list} openEditDrawer={this.openEditDrawer} />} />
-            )
-          }
+            <List
+              bordered
+              size="large"
+              locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="В проекте пока нет лидов." /> }}
+              loading={!this.state.leads ? true : false}
+              pagination={this.state.leads && (this.state.leadTotalCount > this.state.leads.length) ? {
+                size: 'large',
+                pageSize: 50,
+                total: this.state.leadTotalCount,
+                onChange: (page, pageSize) => {
+                  this.setPage(page);
+                }
+              } : false}
+              dataSource={this.state.leads ? this.state.leads : []}
+              renderItem={item => <LeadItem projectId={this.props.project.id} lead={item} list={this.list} openEditDrawer={this.openEditDrawer} />} />
           </div>
         </div>
         <AddLeadDrawer

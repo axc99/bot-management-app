@@ -9,7 +9,7 @@
   bottom: 0;
 }
 
-@media only screen and (max-width: 1024px) {
+@media only screen and (max-width: 992px) {
 	.app {
 		overflow-y: scroll;
 	}
@@ -163,6 +163,17 @@
   color: #333;
 }
 
+.app-main-sidebar-nav-mobile_btn {
+  display: none;
+  position: absolute;
+  bottom: 10px;
+  right: 18px;
+}
+.app-main-sidebar-nav-mobile_menu {
+  width: 240px;
+  margin: 0 -16px;
+}
+
 /* AppMainView */
 
 .app-main-view {
@@ -176,11 +187,15 @@
 	overflow-y: scroll;
 }
 
+.app-main-view-area {
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 0 45px;
+}
+
 .app-main-view-header {
 	height: 100px;
   padding: 35px 0 25px;
-  max-width: 1200px;
-  margin: 0 45px;
 }
 .app-main-view-header-title {
 	display: inline-block;
@@ -193,7 +208,7 @@
 }
 .app-main-view-header-title-counter {
   display: inline-block;
-  margin-left: 10px;
+  margin-left: 7.5px;
   font-size: 16px;
   line-height: 40px;
   color: #ccc;
@@ -212,7 +227,7 @@
 }
 
 .app-main-view-tabs {
-  margin: 0 45px 45px;
+  margin: 0 0 45px;
 }
 .app-main-view-tab-content {
   max-width: 1200px;
@@ -226,8 +241,6 @@
 
 .app-main-view-content {
 	padding: 45px 0;
-  max-width: 1200px;
-  margin: 0 45px;
   border-top: solid 1px #e8e8e8;
   min-height: 100px;
 }
@@ -261,6 +274,107 @@
 }
 .app-main-view-content-item-btn {
 	margin-left: 12px;
+}
+
+@media only screen and (max-width: 992px) {
+
+  .app-main-sidebar {
+    position: relative;
+    width: 100%;
+  }
+
+  .app-main-sidebar-panel {
+    position: relative;
+    width: 100%;
+  }
+  .app-main-sidebar-panel-header {
+    display: inline-block;
+    vertical-align: top;
+    height: auto;
+    padding: 7.5px 7.5px 7.5px 20px;
+  }
+  .app-main-sidebar-panel-header-user-avatar {
+    width: 36px;
+    height: 36px;
+  }
+  .app-main-sidebar-panel-header-user-avatar svg {
+    margin: 5px;
+  }
+  .app-main-sidebar-panel-menu {
+    display: inline-block;
+    vertical-align: top;
+    float: right;
+    padding: 7.5px 20px 7.5px 7.5px;
+  }
+  .app-main-sidebar-panel-menu-item {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 0;
+    width: 36px;
+    height: 36px;
+  }
+  .app-main-sidebar-panel-menu-item-icon {
+    width: 36px;
+    height: 36px;
+  }
+  .app-main-sidebar-panel-menu-item-icon svg {
+    margin: 9px;
+  }
+
+  .app-main-sidebar-nav {
+    width: 100%;
+    height: auto;
+  }
+  .app-main-sidebar-nav-header {
+    height: auto;
+    padding: 10px 20px;
+  }
+  .app-main-sidebar-nav-header-title {
+    margin-left: 0;
+  }
+  .app-main-sidebar-nav-menu {
+    display: none;
+  }
+
+  .app-main-sidebar-nav-mobile_btn {
+    display: block;
+  }
+
+  .app-main-view {
+    position: relative;
+    left: 0;
+    overflow-y: auto;
+  }
+  .app-main-view-area {
+    padding: 0 20px;
+  }
+  .app-main-view-header {
+    padding: 20px 0 25px;
+    height: 100%;
+  }
+  .app-main-view-header-title {
+    width: 100%;
+  }
+  .app-main-view-header-controls {
+    float: none;
+    padding: 0;
+    margin-top: 10px;
+  }
+  .app-main-view-header-controls {
+    margin-bottom: -5px;
+  }
+  .app-main-view-header-control {
+    margin-bottom: 15px;
+    margin-left: 0;
+    margin-right: 15px;
+  }
+  .app-main-view-header-control.search {
+    display: none;
+  }
+  .app-main-view-content {
+    padding: 35px 0 20px;
+  }
+
 }
 
 /* AppAuth */
@@ -299,14 +413,14 @@
   font-size: 14px;
 }
 
-@media only screen and (max-width: 1024px) {
+@media only screen and (max-width: 992px) {
   .app-auth {
     padding: 25px;
     overflow-y: visible;
   }
   .app-auth-box {
     margin: 0 auto;
-    border-radius: 0;
+    padding: 30px 30px 35px;
   }
 }
 
@@ -368,11 +482,12 @@
 /* InformationView */
 
 .app-information h2 {
-  margin-top: 45px;
-  margin-bottom: 20px;
+  margin-top: 25px;
+  margin-bottom: 15px;
   font-weight: 600;
-  font-size: 20px;
-  line-height: 30px;
+  font-size: 18px;
+  line-height: 28px;
+  color: #444;
 }
 .app-information p {
   font-size: 15px;

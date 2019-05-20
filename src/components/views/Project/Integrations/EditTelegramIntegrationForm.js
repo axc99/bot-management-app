@@ -9,7 +9,7 @@ import config from '../../../../config';
 class EditTelegramIntegrationForm extends React.Component {
   state = {
     sending: false,
-    integrationState: (this.props.project && this.props.project.integrations.telegram) ? this.props.project.integrations.telegram.state : 0
+    integrationState: (this.props.project && this.props.project.integrations && this.props.project.integrations.telegram) ? this.props.project.integrations.telegram.state : 0
   }
   showSending() {
     this.setState({ sending: true });
@@ -31,12 +31,12 @@ class EditTelegramIntegrationForm extends React.Component {
       .then((res) => {
         if (res.data.project) {
           Modal.success({
-            title: (<b>Изменения сохранены</b>)
+            title: 'Изменения сохранены'
           });
         };
       })
       .catch((err) => {
-        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
+        Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
       })
       .finally(() => this.hideSending());
   }
@@ -56,7 +56,7 @@ class EditTelegramIntegrationForm extends React.Component {
         <div className="app-form-fields">
           <Form.Item label="Состояние" className="app-form-field">
             {form.getFieldDecorator('state', {
-              initialValue: (project && project.integrations.telegram) ? project.integrations.telegram.state.toString() : '0',
+              initialValue: (project && project.integrations && project.integrations.telegram) ? project.integrations.telegram.state.toString() : '0',
               rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ]
             })(
               <Select onChange={this.handleIntegrationStateChange} defaultValue="1" style={{ width: 250 }}>

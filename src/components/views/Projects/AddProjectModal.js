@@ -28,7 +28,7 @@ class AddProjectModal extends React.Component {
         this.props.history.push('/projects/' + project.id + '/leads/');
       })
       .catch((err) => {
-        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
+        Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
       })
       .finally(() => this.hideSending());
   }
@@ -64,20 +64,6 @@ class AddProjectModal extends React.Component {
                 rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
               })(
                 <Input placeholder="https://..." />
-              )}
-            </Form.Item>
-            <Form.Item label="Тематика проекта" className="app-form-field">
-              {form.getFieldDecorator('subjectType', {
-                rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
-              })(
-                <Select
-                  showSearch
-                  style={{ width: '100%' }}
-                  placeholder="Выберите из списка" >
-                  <Select.Option value="jack">Jack</Select.Option>
-                  <Select.Option value="lucy">Lucy</Select.Option>
-                  <Select.Option value="tom">Tom</Select.Option>
-                </Select>
               )}
             </Form.Item>
           </div>

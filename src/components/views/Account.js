@@ -20,7 +20,7 @@ class Account extends React.Component {
         this.setState({ user: res.data.user });
       })
       .catch((err) => {
-        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
+        Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
       });
   }
   render() {

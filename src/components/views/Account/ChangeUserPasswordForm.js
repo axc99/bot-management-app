@@ -41,19 +41,19 @@ class ChangePasswordForm extends React.Component {
         const resData = res.data;
         if (resData.error) {
           Modal.error({
-            title: (<b>Ошибка при смена пароля</b>),
+            title: 'Ошибка при смена пароля',
             content: resData.error.message
           });
         } else if (resData.result) {
           Modal.success({
-            title: (<b>Пароль изменен</b>),
+            title: 'Пароль изменен',
             content: 'Вы успешно сменили пароль.'
           });
           this.props.form.resetFields();
         };
       })
       .catch((err) => {
-        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
+        Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
       })
       .finally(() => this.hideSending());
   }

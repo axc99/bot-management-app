@@ -20,7 +20,7 @@ class Settings extends React.Component {
         this.setState({ project: res.data.project });
       })
       .catch((err) => {
-        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
+        Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
       });
   }
   render() {

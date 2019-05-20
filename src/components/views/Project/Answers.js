@@ -117,7 +117,7 @@ class Answers extends React.Component {
         this.setState({ answers, answerTotalCount });
       })
       .catch((err) => {
-        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
+        Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
       });
   }
   // Установить поиск
@@ -149,28 +149,21 @@ class Answers extends React.Component {
           </div>
         </div>
         <div className="app-main-view-content">
-          {
-            (this.state.answers !== null && this.state.answers.length == 0) ? (
-              <Empty
-                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description="База знаний проекта пока пуста." />
-            ) : (
-              <List
-                bordered
-                size="large"
-                loading={!this.state.answers ? true : false}
-                pagination={this.state.answers && (this.state.answerTotalCount > this.state.answers.length) ? {
-                  size: 'large',
-                  pageSize: 50,
-                  total: this.state.answerTotalCount,
-                  onChange: (page, pageSize) => {
-                    this.setPage(page);
-                  }
-                } : false}
-                dataSource={this.state.answers ? this.state.answers : []}
-                renderItem={item => <AnswerItem projectId={this.props.project.id} answer={item} list={this.list} openEditModal={this.openEditModal} />} />
-            )
-          }
+          <List
+            bordered
+            size="large"
+            locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="База знаний проекта пока пуста." /> }}
+            loading={!this.state.answers ? true : false}
+            pagination={this.state.answers && (this.state.answerTotalCount > this.state.answers.length) ? {
+              size: 'large',
+              pageSize: 50,
+              total: this.state.answerTotalCount,
+              onChange: (page, pageSize) => {
+                this.setPage(page);
+              }
+            } : false}
+            dataSource={this.state.answers ? this.state.answers : []}
+            renderItem={item => <AnswerItem projectId={this.props.project.id} answer={item} list={this.list} openEditModal={this.openEditModal} />} />
         </div>
         <AddAnswerDrawer
           projectId={this.props.project.id}

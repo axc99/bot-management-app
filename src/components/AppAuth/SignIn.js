@@ -40,7 +40,7 @@ class SignInForm extends Component {
         const resData = res.data;
         if (resData.error) {
           Modal.error({
-            title: (<b>Ошибка при входе</b>),
+            title: 'Ошибка при входе',
             content: resData.error.message
           });
         } else if (resData.result) {
@@ -54,7 +54,7 @@ class SignInForm extends Component {
         };
       })
       .catch((err) => {
-        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
+        Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
       })
       .finally(() => this.hideSending());
   }
