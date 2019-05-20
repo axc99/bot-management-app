@@ -19,7 +19,7 @@ class EditProjectForm extends React.Component {
   async send(data) {
     this.showSending();
     axios.patch(
-      config.serverUrl + 'app-api/projects/' + this.props.project.id + '/', {
+      config.serverUrl + '/app-api/projects/' + this.props.project.id + '/', {
         project: data
       })
       .then((res) => {

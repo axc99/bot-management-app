@@ -7,7 +7,8 @@ import config from '../../../../config';
 
 class EditBotKnowledgeBaseForm extends React.Component {
   state = {
-    sending: false
+    sending: false,
+    knowledgeBaseState: (this.props.project && this.props.project.bot && this.props.project.bot.knowledgeBase) ? this.props.project.bot.knowledgeBase.state : 1
   }
   showSending() {
     this.setState({ sending: true });
@@ -18,13 +19,34 @@ class EditBotKnowledgeBaseForm extends React.Component {
     }, 500);
   }
   async send(data) {
-    alert('SEND!');
+    this.showSending();
+    axios.patch(
+      config.serverUrl + '/app-api/projects/' + this.props.project.id + '/', {
+        project: {
+          'bot.knowledgeBase.state': data.state,
+          'bot.knowledgeBase.errorMessage': data.errorMessage
+        }
+      })
+      .then((res) => {
+        if (res.data.project) {
+          Modal.success({
+            title: (<b>Изменения сохранены</b>)
+          });
+        };
+      })
+      .catch((err) => {
+        Modal.error({ title: (<b>Ошибка при отправке запроса</b>), content: err.message });
+      })
+      .finally(() => this.hideSending());
   }
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, data) => {
       if (!err) this.send(data);
     });
+  }
+  handleKnowledgeBaseStateChange = (e) => {
+    this.setState({ knowledgeBaseState: e.target.checked });
   }
   render() {
     const form = this.props.form;
@@ -33,12 +55,12 @@ class EditBotKnowledgeBaseForm extends React.Component {
         <div className="app-form-fields">
           <Form.Item className="app-form-field">
             {form.getFieldDecorator('state')(
-              <Checkbox>Осуществлять поиск ответа в базе</Checkbox>
+              <Checkbox defaultChecked={this.state.knowledgeBaseState} onChange={this.handleKnowledgeBaseStateChange}>Осуществлять поиск ответа в базе</Checkbox>
             )}
           </Form.Item>
           <Form.Item label="Сообщение при неуданоч поиске" className="app-form-field">
-            {form.getFieldDecorator('message')(
-              <Input.TextArea placeholder="" autosize={{ minRows: 3 }} />
+            {form.getFieldDecorator('errorMessage')(
+              <Input.TextArea disabled={!this.state.knowledgeBaseState} placeholder="" autosize={{ minRows: 3 }} />
             )}
           </Form.Item>
         </div>
@@ -52,13 +74,15 @@ class EditBotKnowledgeBaseForm extends React.Component {
 
 function mapPropsToFields(props) {
   const project = props.project;
-  return {
-    state: Form.createFormField({
-      value: project.bot.state
-    }),
-    initialMessage: Form.createFormField({
-      value: project.bot.initialMessage
-    })
+  if (project && project.bot && project.bot.knowledgeBase) {
+    return {
+      state: Form.createFormField({
+        value: project.bot.knowledgeBase.state
+      }),
+      errorMessage: Form.createFormField({
+        value: project.bot.knowledgeBase.errorMessage
+      })
+    }
   }
 }
 

@@ -39,7 +39,7 @@ class Projects extends React.Component {
   }
   // Загрузка
   load = () => {
-    axios.get(config.serverUrl + 'app-api/projects/?search=' + this.state.search)
+    axios.get(config.serverUrl + '/app-api/projects/?search=' + this.state.search)
       .then((res) => {
         const projects = res.data.projects;
         const projectTotalCount = res.data.projectTotalCount;

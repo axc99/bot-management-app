@@ -20,7 +20,7 @@ class EditAnswerDrawer extends React.Component {
   async send(data) {
     this.showSending();
     axios.patch(
-      config.serverUrl + 'app-api/projects/' + this.props.projectId + '/answers/' + this.state.answer.id + '/', {
+      config.serverUrl + '/app-api/projects/' + this.props.projectId + '/answers/' + this.state.answer.id + '/', {
         answer: data
       })
       .then((res) => {
@@ -47,13 +47,14 @@ class EditAnswerDrawer extends React.Component {
     const answerId = this.props.answerId;
     if (prevProps.answerId !== answerId) {
       if (answerId) {
-        axios.get(config.serverUrl + 'app-api/projects/' + this.props.projectId + '/answers/' + answerId + '/')
+        axios.get(config.serverUrl + '/app-api/projects/' + this.props.projectId + '/answers/' + answerId + '/')
           .then((res) => {
             const answer = res.data.answer;
             this.setState({ answer });
             form.setFields({
               title: { value: answer.title },
-              content: { value: answer.content }
+              content: { value: answer.content },
+              tags: { value: answer.tags }
             });
           })
           .catch((err) => {

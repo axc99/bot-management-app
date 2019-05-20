@@ -19,7 +19,7 @@ class AddAnswerDrawer extends React.Component {
   async send(data) {
     this.showSending();
     axios.post(
-      config.serverUrl + 'app-api/projects/' + this.props.projectId + '/answers/', {
+      config.serverUrl + '/app-api/projects/' + this.props.projectId + '/answers/', {
         answer: data
       })
       .then((res) => {

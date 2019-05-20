@@ -13,7 +13,7 @@ class DialogDrawer extends React.Component {
     const dialogId = this.props.dialogId;
     if (prevProps.dialogId !== dialogId) {
       if (dialogId) {
-        axios.get(config.serverUrl + 'app-api/projects/' + this.props.projectId + '/dialogs/' + dialogId + '/')
+        axios.get(config.serverUrl + '/app-api/projects/' + this.props.projectId + '/dialogs/' + dialogId + '/')
           .then((res) => {
             const dialog = res.data.dialog;
             this.setState({ dialog });

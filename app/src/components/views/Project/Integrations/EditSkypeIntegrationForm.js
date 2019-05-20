@@ -22,11 +22,10 @@ class EditSkypeIntegrationForm extends React.Component {
   async send(data) {
     this.showSending();
     axios.patch(
-      config.serverUrl + 'app-api/projects/' + this.props.project.id + '/', {
+      config.serverUrl + '/app-api/projects/' + this.props.project.id + '/', {
         project: {
-          integrations: {
-            skype: data
-          }
+          'integrations.skype.state': data.state,
+          'integrations.skype.accessToken': data.accessToken
         }
       })
       .then((res) => {
@@ -85,7 +84,7 @@ class EditSkypeIntegrationForm extends React.Component {
 
 function mapPropsToFields(props) {
   const project = props.project;
-  if (!(project && project.integrations.skype)) return;
+  if (!(project && project.integrations && project.integrations.skype)) return;
   return {
     accessToken: Form.createFormField({
       value: project.integrations.skype.accessToken

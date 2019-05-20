@@ -355,6 +355,14 @@
   color: #aaa;
 }
 
+/* app list */
+.app-list-item-tags {
+  margin: 10px 0 -7.5px;
+}
+.app-list-item-tags .ant-tag {
+  margin: 0 10px 10px 0;
+}
+
 /* Views */
 
 /* InformationView */

@@ -22,11 +22,10 @@ class EditBitrix24IntegrationForm extends React.Component {
   async send(data) {
     this.showSending();
     axios.patch(
-      config.serverUrl + 'app-api/projects/' + this.props.project.id + '/', {
+      config.serverUrl + '/app-api/projects/' + this.props.project.id + '/', {
         project: {
-          integrations: {
-            bitrix24: data
-          }
+          'integrations.bitrix24.state': data.state,
+          'integrations.bitrix24.accessToken': data.accessToken
         }
       })
       .then((res) => {
@@ -85,7 +84,7 @@ class EditBitrix24IntegrationForm extends React.Component {
 
 function mapPropsToFields(props) {
   const project = props.project;
-  if (!(project && project.integrations.bitrix24)) return;
+  if (!(project && project.integrations && project.integrations.bitrix24)) return;
   return {
     accessToken: Form.createFormField({
       value: project.integrations.bitrix24.accessToken

@@ -18,7 +18,7 @@ class AnswerItem extends React.Component {
       okType: 'danger',
       cancelText: 'Нет',
       onOk: () => {
-        axios.delete(config.serverUrl + 'app-api/projects/' + this.props.projectId + '/answers/' + answerId + '/');
+        axios.delete(config.serverUrl + '/app-api/projects/' + this.props.projectId + '/answers/' + answerId + '/');
         this.props.list.deleteOne(answerId);
       }
     });
@@ -31,7 +31,20 @@ class AnswerItem extends React.Component {
         ]}>
         <List.Item.Meta
           title={<b>{this.props.answer.title}</b>}
-          description={this.props.answer.content} />
+          description={
+            <div>
+              {this.props.answer.content}
+              {
+                this.props.answer.tags ? (
+                  <div className="app-list-item-tags">
+                    {
+                      this.props.answer.tags.map((tag) => <Tag>{tag}</Tag>)
+                    }
+                  </div>
+                ) : null
+              }
+            </div>
+          } />
       </List.Item>
     )
   }
@@ -94,7 +107,7 @@ class Answers extends React.Component {
     const { search, page } = this.state;
     const offset = Math.abs(page-1) * 50;
     axios.get(
-      config.serverUrl + 'app-api/projects/' + this.props.project.id + '/answers/'
+      config.serverUrl + '/app-api/projects/' + this.props.project.id + '/answers/'
         + '?offset=' + offset
         + '&search=' + search
       )

@@ -19,7 +19,7 @@ class AddProjectModal extends React.Component {
   async send(data) {
     this.showSending();
     axios.post(
-      config.serverUrl + 'app-api/projects/', {
+      config.serverUrl + '/app-api/projects/', {
         project: data
       })
       .then((res) => {

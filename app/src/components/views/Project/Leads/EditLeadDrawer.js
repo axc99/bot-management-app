@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Divider, Drawer, Form, Input, Select, Modal, Button, Spin, Badge } from 'antd';
+import { Divider, Drawer, Form, Input, Select, Modal, Button, Spin, Badge, Tabs } from 'antd';
 
 import PersonFields from './PersonFields';
 import ContactFields from './ContactFields';
@@ -22,7 +22,7 @@ class EditLeadDrawer extends React.Component {
   async send(data) {
     this.showSending();
     axios.patch(
-      config.serverUrl + 'app-api/projects/' + this.props.projectId + '/leads/' + this.state.lead.id + '/', {
+      config.serverUrl + '/app-api/projects/' + this.props.projectId + '/leads/' + this.state.lead.id + '/', {
         lead: data
       })
       .then((res) => {
@@ -50,7 +50,7 @@ class EditLeadDrawer extends React.Component {
     const { form, leadId } = this.props;
     if (prevProps.leadId !== leadId) {
       if (leadId) {
-        axios.get(config.serverUrl + 'app-api/projects/' + this.props.projectId + '/leads/' + leadId + '/')
+        axios.get(config.serverUrl + '/app-api/projects/' + this.props.projectId + '/leads/' + leadId + '/')
           .then((res) => {
             const lead = res.data.lead;
             this.setState({ lead });
@@ -81,27 +81,38 @@ class EditLeadDrawer extends React.Component {
           visible={this.props.visible}
           title={(<b>Лид {lead ? '#' + lead.id : ''}</b>)} >
           <Spin spinning={!lead} size="large">
-            <Form hideRequiredMark="false" onSubmit={this.handleSubmit} className="app-form" layout="vertical">
-              <div className="app-form-fields">
-                <PersonFields getFieldDecorator={form.getFieldDecorator} />
-                <Divider className="app-form-fields-divider" />
-                <ContactFields getFieldDecorator={form.getFieldDecorator} />
-              </div>
-              <div className="app-form-btns">
-                <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit">Сохранить</Button>
-                {form.getFieldDecorator('status', {
-                    initialValue: (lead && lead.status) ? lead.status.toString() : '0'
-                })(
-                  <Select className="app-form-btn" defaultValue="0" style={{ width: 160 }}>
-                    <Select.Option value="0">Без статуса</Select.Option>
-                    <Select.Option value="1"><Badge status="default" dot={true} /> Не обработан</Select.Option>
-                    <Select.Option value="2"><Badge status="processing" dot={true} /> В обработке</Select.Option>
-                    <Select.Option value="3"><Badge status="success" dot={true} /> Обработан</Select.Option>
-                    <Select.Option value="4"><Badge status="error" dot={true} /> Закрыт</Select.Option>
-                  </Select>
-                )}
-              </div>
-            </Form>
+            <Tabs
+              className="app-drawer-tabs"
+              defaultActiveKey="1" >
+              <Tabs.TabPane className="app-drawer-tab-pane" tab="Информация" key="1">
+                <div className="app-drawer-tab-pane-content">
+                  <Form hideRequiredMark="false" onSubmit={this.handleSubmit} className="app-form" layout="vertical">
+                    <div className="app-form-fields">
+                      <PersonFields getFieldDecorator={form.getFieldDecorator} />
+                      <Divider className="app-form-fields-divider" />
+                      <ContactFields getFieldDecorator={form.getFieldDecorator} />
+                    </div>
+                    <div className="app-form-btns">
+                      <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit">Сохранить</Button>
+                      {form.getFieldDecorator('status', {
+                          initialValue: (lead && lead.status) ? lead.status.toString() : '0'
+                      })(
+                        <Select className="app-form-btn" defaultValue="0" style={{ width: 160 }}>
+                          <Select.Option value="0">Без статуса</Select.Option>
+                          <Select.Option value="1"><Badge status="default" dot={true} /> Не обработан</Select.Option>
+                          <Select.Option value="2"><Badge status="processing" dot={true} /> В обработке</Select.Option>
+                          <Select.Option value="3"><Badge status="success" dot={true} /> Обработан</Select.Option>
+                          <Select.Option value="4"><Badge status="error" dot={true} /> Закрыт</Select.Option>
+                        </Select>
+                      )}
+                    </div>
+                  </Form>
+                </div>
+              </Tabs.TabPane>
+              <Tabs.TabPane tab="Источник" key="2">
+
+              </Tabs.TabPane>
+            </Tabs>
           </Spin>
       </Drawer>
     );

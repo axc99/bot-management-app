@@ -1,3 +1,3 @@
 export default {
-  serverUrl: 'http://localhost./'
+  serverUrl: window.location.origin
 }

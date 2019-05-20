@@ -15,7 +15,7 @@ class Settings extends React.Component {
   }
   componentDidMount() {
     setTitle('Поведение бота');
-    axios.get(config.serverUrl + 'app-api/projects/' + this.props.project.id + '/')
+    axios.get(config.serverUrl + '/app-api/projects/' + this.props.project.id + '/')
       .then((res) => {
         this.setState({ project: res.data.project });
       })

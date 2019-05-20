@@ -22,7 +22,7 @@ class RecoveryUserForm extends Component {
   async send(data) {
     this.showSending();
     axios.post(
-      config.serverUrl + 'app-api/rpc/', {
+      config.serverUrl + '/app-api/rpc/', {
         jsonrpc: '2.0',
         method: 'recoveryUser',
         params: {

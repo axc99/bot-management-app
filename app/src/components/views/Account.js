@@ -15,7 +15,7 @@ class Account extends React.Component {
   }
   componentDidMount() {
     setTitle('Мой аккаунт');
-    axios.get(config.serverUrl + 'app-api/users/' + this.props.user.id + '/')
+    axios.get(config.serverUrl + '/app-api/users/' + this.props.user.id + '/')
       .then((res) => {
         this.setState({ user: res.data.user });
       })

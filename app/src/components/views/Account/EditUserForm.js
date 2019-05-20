@@ -20,7 +20,7 @@ class EditForm extends React.Component {
   async send(data) {
     this.showSending();
     axios.patch(
-      config.serverUrl + 'app-api/users/' + this.props.user.id + '/', {
+      config.serverUrl + '/app-api/users/' + this.props.user.id + '/', {
         user: data
       })
       .then((res) => {

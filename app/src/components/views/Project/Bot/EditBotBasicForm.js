@@ -20,9 +20,10 @@ class EditBotBasicForm extends React.Component {
   async send(data) {
     this.showSending();
     axios.patch(
-      config.serverUrl + 'app-api/projects/' + this.props.project.id + '/', {
+      config.serverUrl + '/app-api/projects/' + this.props.project.id + '/', {
         project: {
-          bot: data
+          'bot.name': data.name,
+          'bot.initialMessage': data.initialMessage
         }
       })
       .then((res) => {

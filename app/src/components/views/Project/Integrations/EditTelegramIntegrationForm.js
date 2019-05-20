@@ -22,11 +22,10 @@ class EditTelegramIntegrationForm extends React.Component {
   async send(data) {
     this.showSending();
     axios.patch(
-      config.serverUrl + 'app-api/projects/' + this.props.project.id + '/', {
+      config.serverUrl + '/app-api/projects/' + this.props.project.id + '/', {
         project: {
-          integrations: {
-            telegram: data
-          }
+          'integrations.telegram.state': data.state,
+          'integrations.telegram.accessToken': data.accessToken
         }
       })
       .then((res) => {
@@ -85,7 +84,7 @@ class EditTelegramIntegrationForm extends React.Component {
 
 function mapPropsToFields(props) {
   const project = props.project;
-  if (!(project && project.integrations.telegram)) return;
+  if (!(project && project.integrations && project.integrations.telegram)) return;
   return {
     accessToken: Form.createFormField({
       value: project.integrations.telegram.accessToken

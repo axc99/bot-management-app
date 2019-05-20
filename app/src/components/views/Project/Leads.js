@@ -19,7 +19,7 @@ class LeadItem extends React.Component {
       okType: 'danger',
       cancelText: 'Нет',
       onOk: () => {
-        axios.delete(config.serverUrl + 'app-api/projects/' + this.props.projectId + '/leads/' + leadId + '/');
+        axios.delete(config.serverUrl + '/app-api/projects/' + this.props.projectId + '/leads/' + leadId + '/');
         this.props.list.deleteOne(leadId);
       }
     });
@@ -139,7 +139,7 @@ class Leads extends React.Component {
     const { search, page, filter } = this.state;
     const offset = Math.abs(page-1) * 50;
     axios.get(
-      config.serverUrl + 'app-api/projects/' + this.props.project.id + '/leads/'
+      config.serverUrl + '/app-api/projects/' + this.props.project.id + '/leads/'
         + '?offset=' + offset
         + '&search=' + search
         + '&filterPeriod=' + ((filter.period && filter.period[0] && filter.period[1]) ? filter.period[0]._d.getTime() + ',' + filter.period[1]._d.getTime() : '')

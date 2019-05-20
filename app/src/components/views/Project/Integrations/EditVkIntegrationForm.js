@@ -22,11 +22,10 @@ class EditVkIntegrationForm extends React.Component {
   async send(data) {
     this.showSending();
     axios.patch(
-      config.serverUrl + 'app-api/projects/' + this.props.project.id + '/', {
+      config.serverUrl + '/app-api/projects/' + this.props.project.id + '/', {
         project: {
-          integrations: {
-            vk: data
-          }
+          'integrations.vk.state': data.state,
+          'integrations.vk.accessToken': data.accessToken
         }
       })
       .then((res) => {
@@ -60,7 +59,7 @@ class EditVkIntegrationForm extends React.Component {
               initialValue: (project && project.integrations.vk) ? project.integrations.vk.state.toString() : '0',
               rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ]
             })(
-              <Select onChange={this.handleIntegrationStateChange} defaultValue="1" style={{ width: 250 }}>
+              <Select onChange={this.handleIntegrationStateChange} style={{ width: 250 }}>
                 <Select.Option value="0">Не активно</Select.Option>
                 <Select.Option value="1">Активно</Select.Option>
                 <Select.Option value="2">Активно (без сбора лидов)</Select.Option>
@@ -88,7 +87,7 @@ class EditVkIntegrationForm extends React.Component {
 
 function mapPropsToFields(props) {
   const project = props.project;
-  if (!(project && project.integrations.vk)) return;
+  if (!(project && project.integrations && project.integrations.vk)) return;
   return {
     accessToken: Form.createFormField({
       value: project.integrations.vk.accessToken

@@ -21,7 +21,7 @@ class AddLeadDrawer extends React.Component {
   async send(data) {
     this.showSending();
     axios.post(
-      config.serverUrl + 'app-api/projects/' + this.props.projectId + '/leads/', {
+      config.serverUrl + '/app-api/projects/' + this.props.projectId + '/leads/', {
         lead: data
       })
       .then((res) => {
