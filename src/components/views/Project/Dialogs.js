@@ -75,12 +75,12 @@ class Dialogs extends React.Component {
   }
   // Установить страницу
   setPage = (page) => {
-    this.setState({ page }, () => this.load());
+    this.setState({ page, dialogs: null }, () => this.load());
   }
   // Установить фильтр
   setFilter = (data) => {
     const { period, source } = data;
-    this.setState(((period && period.length) || source) ? { filterUse: true } : { filterUse: false });
+    this.setState({ ...(((period && period.length) || source) ? { filterUse: true } : { filterUse: false }), dialogs: null });
     this.setState({
       filter: {
         period: period ? [period[0], period[1]] : null,

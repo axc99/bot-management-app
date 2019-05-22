@@ -29,7 +29,7 @@ class Settings extends React.Component {
         <div className="app-main-view-header">
           <div className="app-main-view-header-title">Поведение бота</div>
         </div>
-        <Spin spinning={!this.state.project} size="large">
+        <Spin spinning={!this.state.project}>
           <Tabs
             className="app-main-view-tabs"
             defaultActiveKey="1" >

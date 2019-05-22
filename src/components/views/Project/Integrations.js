@@ -30,7 +30,7 @@ class Integrations extends React.Component {
         <div className="app-main-view-header">
           <div className="app-main-view-header-title">Интеграции</div>
         </div>
-        <Spin spinning={!this.state.project} size="large">
+        <Spin spinning={!this.state.project}>
           <Tabs
             className="app-main-view-tabs"
             defaultActiveKey="1" >

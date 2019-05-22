@@ -38,13 +38,12 @@ class ChangePasswordForm extends React.Component {
         id: 1
       })
       .then((res) => {
-        const resData = res.data;
-        if (resData.error) {
+        if (res.data.error) {
           Modal.error({
-            title: 'Ошибка при смена пароля',
-            content: resData.error.message
+            title: 'Ошибка',
+            content: res.data.error.message
           });
-        } else if (resData.result) {
+        } else if (res.data.result) {
           Modal.success({
             title: 'Пароль изменен',
             content: 'Вы успешно сменили пароль.'

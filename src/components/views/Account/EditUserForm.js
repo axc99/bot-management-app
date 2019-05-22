@@ -24,7 +24,12 @@ class EditForm extends React.Component {
         user: data
       })
       .then((res) => {
-        if (res.data.user) {
+        if (res.data.error) {
+          Modal.error({
+            title: 'Ошибка',
+            content: res.data.error.message
+          });
+        } else if (res.data.user) {
           Modal.success({
             title: 'Изменения сохранены'
           });
@@ -58,7 +63,7 @@ class EditForm extends React.Component {
           </Form.Item>
           <Form.Item label="Фамилия" className="app-form-field">
             {form.getFieldDecorator('lastName')(
-              <Input autoFocus={true} />
+              <Input />
             )}
           </Form.Item>
           <Form.Item label="Имя" className="app-form-field">
@@ -77,21 +82,22 @@ class EditForm extends React.Component {
 
 function mapPropsToFields(props) {
   const user = props.user;
-  if (!user) return;
-  return {
-    username: Form.createFormField({
-      value: user.username
-    }),
-    email: Form.createFormField({
-      value: user.email
-    }),
-    firstName: Form.createFormField({
-      value: user.firstName
-    }),
-    lastName: Form.createFormField({
-      value: user.lastName
-    })
-  }
+  if (user) {
+    return {
+      username: Form.createFormField({
+        value: user.username
+      }),
+      email: Form.createFormField({
+        value: user.email
+      }),
+      firstName: Form.createFormField({
+        value: user.firstName
+      }),
+      lastName: Form.createFormField({
+        value: user.lastName
+      })
+    }
+  };
 }
 
 export default Form.create({ name: 'editUser', mapPropsToFields })(EditForm);

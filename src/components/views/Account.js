@@ -30,22 +30,22 @@ class Account extends React.Component {
           <div className="app-main-view-header-title">Мой аккаунт</div>
         </div>
         <div className="app-account">
-          <Tabs
-            className="app-main-view-tabs"
-            defaultActiveKey="1" >
-            <Tabs.TabPane tab="Информация" key="1">
-              <div className="app-main-view-tab-content">
-                <Spin spinning={!this.state.user} size="large">
+          <Spin spinning={!this.state.user}>
+            <Tabs
+              className="app-main-view-tabs"
+              defaultActiveKey="1" >
+              <Tabs.TabPane tab="Информация" key="1">
+                <div className="app-main-view-tab-content">
                   <EditUserForm user={this.state.user} />
-                </Spin>
-              </div>
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="Сменить пароль" key="2">
-              <div className="app-main-view-tab-content">
-                <ChangeUserPasswordForm user={this.state.user} />
-              </div>
-            </Tabs.TabPane>
-          </Tabs>
+                </div>
+              </Tabs.TabPane>
+              <Tabs.TabPane tab="Сменить пароль" key="2">
+                <div className="app-main-view-tab-content">
+                  <ChangeUserPasswordForm user={this.state.user} />
+                </div>
+              </Tabs.TabPane>
+            </Tabs>
+          </Spin>
         </div>
       </div>
     );

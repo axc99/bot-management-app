@@ -23,9 +23,19 @@ class AddProjectModal extends React.Component {
         project: data
       })
       .then((res) => {
-        const project = res.data.project;
-        this.props.close();
-        this.props.history.push('/projects/' + project.id + '/leads/');
+        if (res.data.error) {
+          Modal.error({
+            title: 'Ошибка',
+            content: res.data.error.message
+          });
+        } else if (res.data.project) {
+          this.props.close();
+          this.props.history.push('/projects/' + res.data.project.id + '/leads/');
+          Modal.success({
+            title: 'Проект создан',
+            content: 'Вы успешно создали проект.'
+          });
+        };
       })
       .catch((err) => {
         Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });

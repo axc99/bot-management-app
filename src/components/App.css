@@ -1,4 +1,4 @@
-/* App */
+/* app */
 
 .app {
   background: #fff;
@@ -38,7 +38,7 @@
   vertical-align: middle;
 }
 
-/* AppMainSidebar */
+/* app main sidebar */
 
 .app-main-sidebar {
   position: absolute;
@@ -174,7 +174,7 @@
   margin: 0 -16px;
 }
 
-/* AppMainView */
+/* app main view */
 
 .app-main-view {
 	position: absolute;
@@ -377,7 +377,7 @@
 
 }
 
-/* AppAuth */
+/* app auth */
 
 .app-auth {
   position: absolute;
@@ -424,7 +424,7 @@
   }
 }
 
-/* AppForm */
+/* app form */
 
 .app-form.filter {
   padding: 15px 10px;
@@ -477,7 +477,7 @@
   margin: 0 10px 10px 0;
 }
 
-/* Views */
+/* components */
 
 /* InformationView */
 
@@ -498,9 +498,17 @@
 /* BuildView */
 
 .app-build-list {
-  max-width: 800px;
-  margin-bottom: 35px;
+  margin-bottom: 25px;
 }
 .app-build-list:last-child {
   margin-bottom: 0;
+}
+
+/* EditLeadDrawer */
+
+.app-editLead-tabs {
+  margin-top: -12.5px;
+}
+.app-editLead-tab {
+  padding-top: 15px;
 }

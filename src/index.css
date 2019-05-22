@@ -49,6 +49,9 @@ body {
 .ant-modal-confirm-body .ant-modal-confirm-title {
 	font-weight: 600;
 }
+.ant-modal-body {
+	padding-bottom: 40px;
+}
 
 .ant-form-item {
 	margin-bottom: 18px;

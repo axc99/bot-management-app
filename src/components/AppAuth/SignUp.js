@@ -32,16 +32,15 @@ class SignUpForm extends Component {
         id: 1
       })
       .then((res) => {
-        const resData = res.data;
-        if (resData.error) {
+        if (res.data.error) {
           Modal.error({
             title: 'Ошибка при регистрации',
-            content: resData.error.message
+            content: res.data.error.message
           });
-        } else if (resData.result) {
+        } else if (res.data.result) {
           Modal.success({
             title: 'Аккаунт создан',
-            content: 'На указанную почту было отправлено письмо с ссылкой для подтверждения аккаунта. Если письма нет - проверьте папку «спам».'
+            content: 'Вы можете войти в свой аккаунт.'
           });
           this.props.history.push('/auth/sign-in/?email='+data.email);
         };

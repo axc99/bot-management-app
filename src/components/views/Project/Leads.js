@@ -25,19 +25,9 @@ class LeadItem extends React.Component {
     });
   }
   render() {
-    let avatarColor = null;
-    if (this.props.lead.source) {
-      switch (this.props.lead.source.type) {
-        case 1:
-          avatarColor = '#91a5bb';
-          break;
-        case 2:
-          avatarColor = '#8991a2';
-          break;
-      };
-    };
+    const lead = this.props.lead;
     let btnContent = null;
-    switch (this.props.lead.status) {
+    switch (lead.status) {
       case 1:
         btnContent = (<div><Badge status="default" dot={true} /> Не обработан</div>);
         break;
@@ -52,16 +42,16 @@ class LeadItem extends React.Component {
         break;
     };
     let actions = [
-      <Button onClick={() => this.props.openEditDrawer(this.props.lead.id)}>Открыть</Button>,
-      <Button onClick={() => this.confirmDelete(this.props.lead.id)} type="dashed" icon="delete" shape="circle" size="small"></Button>
+      <Button onClick={() => this.props.openEditDrawer(lead.id)}>Открыть</Button>,
+      <Button onClick={() => this.confirmDelete(lead.id)} type="dashed" icon="delete" shape="circle" size="small"></Button>
     ];
-    if (btnContent) actions.unshift(<Button onClick={() => this.props.openEditDrawer(this.props.lead.id)}>{btnContent}</Button>)
+    if (btnContent) actions.unshift(<Button onClick={() => this.props.openEditDrawer(lead.id)}>{btnContent}</Button>)
     return (
       <List.Item actions={actions}>
         <List.Item.Meta
-            avatar={<Avatar style={{ backgroundColor: avatarColor }} size="large" icon="user" />}
-            title={<b>{this.props.lead.fullName ? this.props.lead.fullName : 'Без имени'}</b>}
-            description={this.props.lead.contacts.length ? this.props.lead.contacts.join(' | ') : 'Пустой лид'} />
+            avatar={<Avatar size="large" icon="user"></Avatar>}
+            title={<b>{lead.fullName ? lead.fullName : 'Без имени'}</b>}
+            description={lead.contacts.length ? lead.contacts.join(' | ') : 'Пустой лид'} />
       </List.Item>
     )
   }
@@ -72,15 +62,10 @@ class Leads extends React.Component {
     addDrawerVisible: false,
     editDrawerVisible: false,
     filterPopoverVisible: false,
-    filterUse: false,
     leadTotalCount: 0,
     leads: null,
     search: '',
-    filter: {
-      period: null,
-      status: null,
-      source: null
-    },
+    filter: null,
     page: 1
   }
   list = {
@@ -124,7 +109,7 @@ class Leads extends React.Component {
   }
   // Закрыть: изменение
   closeEditDrawer = () => {
-    this.setState({ editDrawerVisible: false });
+    this.setState({ editDrawerVisible: false, leadId: null });
   }
   // Открыть: фильтр
   openFilterPopover = () => {
@@ -142,9 +127,13 @@ class Leads extends React.Component {
       config.serverUrl + '/app-api/projects/' + this.props.project.id + '/leads/'
         + '?offset=' + offset
         + '&search=' + search
-        + '&filterPeriod=' + ((filter.period && filter.period[0] && filter.period[1]) ? filter.period[0]._d.getTime() + ',' + filter.period[1]._d.getTime() : '')
-        + '&filterStatus=' + (filter.status ? filter.status : '')
-        + '&filterSource=' + (filter.source ? filter.source : '')
+        + (
+          filter ? (
+            '&filterPeriod=' + ((filter.period && filter.period[0] && filter.period[1]) ? filter.period[0]._d.getTime() + ',' + filter.period[1]._d.getTime() : '')
+            + '&filterStatus=' + (filter.status ? filter.status : '')
+            + '&filterSource=' + (filter.source ? filter.source : '')
+          ) : ''
+        )
       )
       .then((res) => {
         const leads = res.data.leads;
@@ -157,22 +146,22 @@ class Leads extends React.Component {
   }
   // Установить поиск
   setSearch = (event) => {
-    this.setState({ search: event.target.value.trim() }, () => this.load());
+    this.setState({ search: event.target.value.trim(), leads: null }, () => this.load());
   }
   // Установить страницу
   setPage = (page) => {
-    this.setState({ page }, () => this.load());
+    this.setState({ page, leads: null }, () => this.load());
   }
   // Установить фильтр
   setFilter = (data) => {
     const { period, status, source } = data;
-    this.setState(((period && period.length) || status || source) ? { filterUse: true } : { filterUse: false });
     this.setState({
-      filter: {
+      filter: ((period && period.length) || status || source) ? {
         period: period ? [period[0], period[1]] : null,
         status: status ? status : null,
         source: source ? source : null
-      }
+      } : null,
+      leads: null
     }, () => this.load());
     this.closeFilterPopover();
   }
@@ -197,7 +186,7 @@ class Leads extends React.Component {
                 onVisibleChange={visible => { return visible ? this.openFilterPopover() : this.closeFilterPopover() }}
                 visible={this.state.filterPopoverVisible}
                 content={<FilterLeadsForm setFilter={this.setFilter} />}>
-                <Badge dot={this.state.filterUse}>
+                <Badge dot={this.state.filter}>
                   <Button icon="filter">Фильтр</Button>
                 </Badge>
               </Popover>
@@ -212,7 +201,7 @@ class Leads extends React.Component {
             <List
               bordered
               size="large"
-              locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="В проекте пока нет лидов." /> }}
+              locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={(this.state.search || this.state.filter) ? 'По вашему запросу не найдено лидов.' : 'В проекте пока нет лидов.'} /> }}
               loading={!this.state.leads ? true : false}
               pagination={this.state.leads && (this.state.leadTotalCount > this.state.leads.length) ? {
                 size: 'large',
@@ -231,12 +220,16 @@ class Leads extends React.Component {
           projectId={this.props.project.id}
           visible={this.state.addDrawerVisible}
           close={this.closeAddDrawer} />
-        <EditLeadDrawer
-          list={this.list}
-          leadId={this.state.leadId}
-          projectId={this.props.project.id}
-          visible={this.state.editDrawerVisible}
-          close={this.closeEditDrawer} />
+        {
+          this.state.leadId ? (
+            <EditLeadDrawer
+              list={this.list}
+              leadId={this.state.leadId}
+              projectId={this.props.project.id}
+              visible={this.state.editDrawerVisible}
+              close={this.closeEditDrawer} />
+          ) : null
+        }
       </div>
     );
   }

@@ -29,7 +29,7 @@ class Settings extends React.Component {
         </div>
         <div className="app-main-view-content">
           <div className="app-project-settings">
-            <Spin spinning={!this.state.project} size="large">
+            <Spin spinning={!this.state.project}>
               <EditProjectForm project={this.state.project} />
             </Spin>
           </div>

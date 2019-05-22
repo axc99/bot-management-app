@@ -23,9 +23,15 @@ class AddAnswerDrawer extends React.Component {
         answer: data
       })
       .then((res) => {
-        const answer = res.data.answer;
-        if (answer) this.props.list.addOne(answer);
-        this.props.close();
+        if (res.data.error) {
+          Modal.error({
+            title: 'Ошибка',
+            content: res.data.error.message
+          });
+        } else if (res.data.answer) {
+          this.props.list.addOne(res.data.answer);
+          this.props.close();
+        };
       })
       .catch((err) => {
         console.log('Error', err);

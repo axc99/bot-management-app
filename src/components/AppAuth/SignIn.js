@@ -37,17 +37,16 @@ class SignInForm extends Component {
         id: 1
       })
       .then((res) => {
-        const resData = res.data;
-        if (resData.error) {
+        if (res.data.error) {
           Modal.error({
             title: 'Ошибка при входе',
-            content: resData.error.message
+            content: res.data.error.message
           });
-        } else if (resData.result) {
+        } else if (res.data.result) {
           this.props.setUser({
-            id: resData.result.user.id,
+            id: res.data.result.user.id,
             session: {
-              accessToken: resData.result.user.session.accessToken
+              accessToken: res.data.result.user.session.accessToken
             }
           });
           this.props.history.push('/projects/');

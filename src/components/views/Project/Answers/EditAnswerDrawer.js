@@ -42,25 +42,28 @@ class EditAnswerDrawer extends React.Component {
       if (!err) this.send(data);
     });
   }
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    const form = this.props.form;
-    const answerId = this.props.answerId;
-    if (prevProps.answerId !== answerId) {
-      if (answerId) {
-        axios.get(config.serverUrl + '/app-api/projects/' + this.props.projectId + '/answers/' + answerId + '/')
-          .then((res) => {
-            const answer = res.data.answer;
-            this.setState({ answer });
-            form.setFields({
-              title: { value: answer.title },
-              content: { value: answer.content },
-              tags: { value: answer.tags }
+  componentDidMount() {
+    const { form, answerId } = this.props;
+    if (answerId) {
+      axios.get(config.serverUrl + '/app-api/projects/' + this.props.projectId + '/answers/' + answerId + '/')
+        .then((res) => {
+          if (res.data.error) {
+            Modal.error({
+              title: 'Ошибка',
+              content: res.data.error.message
             });
-          })
-          .catch((err) => {
-            Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
-          });
-      };
+          } else if (res.data.answer) {
+            this.setState({ answer: res.data.answer });
+            form.setFields({
+              title: { value: res.data.answer.title },
+              content: { value: res.data.answer.content },
+              tags: { value: res.data.answer.tags }
+            });
+          };
+        })
+        .catch((err) => {
+          Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
+        });
     };
   }
   render() {
@@ -73,7 +76,7 @@ class EditAnswerDrawer extends React.Component {
           onClose={this.props.close}
           visible={this.props.visible}
           title={(<b>Ответ {answer ? '#' + answer.id : ''}</b>)} >
-          <Spin spinning={!answer} size="large">
+          <Spin spinning={!answer}>
             <Form hideRequiredMark="false" onSubmit={this.handleSubmit} className="app-form" layout="vertical">
               <div className="app-form-fields">
                 <Form.Item label="Заголовок" className="app-form-field">

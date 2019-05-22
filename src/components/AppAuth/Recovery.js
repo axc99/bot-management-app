@@ -24,25 +24,23 @@ class RecoveryUserForm extends Component {
     axios.post(
       config.serverUrl + '/app-api/rpc/', {
         jsonrpc: '2.0',
-        method: 'recoveryUser',
+        method: 'recoveryAccess',
         params: {
           email: data.email
         },
         id: 1
       })
       .then((res) => {
-        const resData = res.data;
-        if (resData.error) {
+        if (res.data.error) {
           Modal.error({
-            title: 'Ошибка при входе',
-            content: resData.error.message
+            title: 'Ошибка при восстановлении',
+            content: res.data.error.message
           });
-        } else if (resData.result) {
+        } else if (res.data.result) {
           Modal.success({
             title: 'Письмо отправлено',
             content: 'Письмо с ссылкой для смены пароля было отправлено на ваш email. Если письма нет - проверьте папку «спам».'
           });
-          this.props.history.push('/auth/sign-in/');
         };
       })
       .catch((err) => {

@@ -25,10 +25,16 @@ class AddLeadDrawer extends React.Component {
         lead: data
       })
       .then((res) => {
-        const lead = res.data.lead;
-        if (lead) this.props.list.addOne(lead);
-        this.props.close();
-        this.props.form.resetFields();
+        if (res.data.error) {
+          Modal.error({
+            title: 'Ошибка',
+            content: res.data.error.message
+          });
+        } else if (res.data.lead) {
+          this.props.list.addOne(res.data.lead);
+          this.props.close();
+          this.props.form.resetFields();
+        };
       })
       .catch((err) => {
         console.log('Error', err);

@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { List, Empty, Button, Modal, Input, Icon, Divider } from 'antd';
+import { List, Empty, Button, Modal, Input, Icon } from 'antd';
 import { Link } from 'react-router-dom';
 
 import AddProjectModal from './Projects/AddProjectModal.js';
@@ -17,7 +17,7 @@ function ProjectItem(props) {
       ]}>
       <List.Item.Meta
         title={<Link to={'/projects/'+props.project.id+'/leads/'}><b>{props.project.name}</b></Link>}
-        description={<div><span>Интернет-магазин</span><Divider type="vertical" /><a target="_blank" href={props.project.websiteUrl}>{props.project.websiteUrlStr}</a></div>} />
+        description={<a target="_blank" href={props.project.websiteUrl}>{props.project.websiteUrlStr}</a>} />
     </List.Item>
   )
 }
@@ -51,7 +51,7 @@ class Projects extends React.Component {
   }
   // Установить поиск
   setSearch = (event) => {
-    this.setState({ search: event.target.value.trim() }, () => this.load());
+    this.setState({ search: event.target.value.trim(), projects: null }, () => this.load());
   }
   componentDidMount() {
     setTitle('Проекты');

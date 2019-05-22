@@ -122,11 +122,11 @@ class Answers extends React.Component {
   }
   // Установить поиск
   setSearch = (event) => {
-    this.setState({ search: event.target.value.trim() }, () => this.load());
+    this.setState({ search: event.target.value.trim(), answers: null }, () => this.load());
   }
   // Установить страницу
   setPage = (page) => {
-    this.setState({ page }, () => this.load());
+    this.setState({ page, answers: null }, () => this.load());
   }
   componentDidMount() {
     setTitle('База знаний');
@@ -170,12 +170,16 @@ class Answers extends React.Component {
           visible={this.state.addModalVisible}
           list={this.list}
           close={this.closeAddModal} />
-        <EditAnswerDrawer
-          list={this.list}
-          answerId={this.state.answerId}
-          projectId={this.props.project.id}
-          visible={this.state.editModalVisible}
-          close={this.closeEditModal} />
+        {
+          this.state.answerId ? (
+            <EditAnswerDrawer
+              list={this.list}
+              answerId={this.state.answerId}
+              projectId={this.props.project.id}
+              visible={this.state.editModalVisible}
+              close={this.closeEditModal} />
+          ) : null
+        }
       </div>
     );
   }
