@@ -4,7 +4,8 @@ import { Switch, Route } from 'react-router-dom';
 
 import LeadsView from './Project/Leads';
 import DialogsView from './Project/Dialogs';
-import AnswersView from './Project/Answers';
+import LeadCaptureView from './Project/LeadCapture';
+import KnowledgeBaseView from './Project/KnowledgeBase';
 import SettingsView from './Project/Settings';
 import BotView from './Project/Bot';
 import IntegrationsView from './Project/Integrations';
@@ -26,7 +27,8 @@ class Project extends React.Component {
         <Switch>
           <Route path="/projects/:projectId/leads/" component={LeadsView} />
           <Route path="/projects/:projectId/dialogs/" component={DialogsView} />
-          <Route path="/projects/:projectId/answers/" component={AnswersView} />
+          <Route path="/projects/:projectId/lead-capture/" component={LeadCaptureView} />
+          <Route path="/projects/:projectId/knowledge-base/" component={KnowledgeBaseView} />
           <Route path="/projects/:projectId/bot/" component={BotView} />
           <Route path="/projects/:projectId/integrations/" component={IntegrationsView} />
           <Route path="/projects/:projectId/settings/" component={SettingsView} />

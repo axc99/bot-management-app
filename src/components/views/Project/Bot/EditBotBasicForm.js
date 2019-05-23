@@ -49,7 +49,7 @@ class EditBotBasicForm extends React.Component {
     return (
       <Form hideRequiredMark="false" onSubmit={this.handleSubmit} layout="vertical" className="app-form">
         <div className="app-form-fields">
-          <Form.Item label="Название бота" className="app-form-field">
+          <Form.Item label="Имя бота" className="app-form-field">
             {form.getFieldDecorator('name', {
               rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ]
             })(

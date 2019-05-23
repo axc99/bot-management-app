@@ -25,6 +25,7 @@ class EditBotLeadCaptureForm extends React.Component {
         project: {
           'bot.leadCapture.state': data.state,
           'bot.leadCapture.actionName': data.actionName,
+          'bot.leadCapture.question': data.question,
           'bot.leadCapture.successMessage': data.successMessage,
           'bot.leadCapture.capturedFields': data.capturedFields
         }
@@ -52,10 +53,6 @@ class EditBotLeadCaptureForm extends React.Component {
   }
   render() {
     const form = this.props.form;
-    const capturedFields = [
-      ['phone', 'Телефон'],
-      ['email', 'Email']
-    ];
     return (
       <Form hideRequiredMark="false" onSubmit={this.handleSubmit} layout="vertical" className="app-form">
         <div className="app-form-fields">
@@ -69,18 +66,14 @@ class EditBotLeadCaptureForm extends React.Component {
               <Input disabled={!this.state.leadCaptureState} placeholder="Отправить заявку" autosize={{ minRows: 3 }} />
             )}
           </Form.Item>
+          <Form.Item label="Формулировка вопроса" className="app-form-field">
+            {form.getFieldDecorator('question')(
+              <Input disabled={!this.state.leadCaptureState} placeholder="" autosize={{ minRows: 3 }} />
+            )}
+          </Form.Item>
           <Form.Item label="Сообщение после отправки" className="app-form-field">
             {form.getFieldDecorator('successMessage')(
               <Input.TextArea disabled={!this.state.leadCaptureState} placeholder="Спасибо за заявку, ..." autosize={{ minRows: 3 }} />
-            )}
-          </Form.Item>
-          <Form.Item label="Собираемые данные" className="app-form-field">
-            {form.getFieldDecorator('capturedFields')(
-              <List
-                bordered
-                size="small"
-                dataSource={capturedFields}
-                renderItem={item => (<List.Item> <Checkbox disabled={!this.state.leadCaptureState} style={{ width: '100%' }}>{item[1]}</Checkbox> </List.Item>)} />
             )}
           </Form.Item>
         </div>
@@ -102,11 +95,11 @@ function mapPropsToFields(props) {
       actionName: Form.createFormField({
         value: project.bot.leadCapture.actionName
       }),
+      question: Form.createFormField({
+        value: project.bot.leadCapture.question
+      }),
       successMessage: Form.createFormField({
         value: project.bot.leadCapture.successMessage
-      }),
-      capturedFields: Form.createFormField({
-        value: project.bot.leadCapture.capturedFields
       })
     }
   }

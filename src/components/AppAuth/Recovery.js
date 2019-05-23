@@ -69,7 +69,7 @@ class RecoveryUserForm extends Component {
         <div className="app-form-fields">
           <Form.Item label="E-mail" className="app-form-field">
             {getFieldDecorator('email', {
-              rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
+              rules: [ { required: true, message: 'Email обязателен для заполнения.' } ]
             })(
               <Input autoFocus={true} size="large" />
             )}

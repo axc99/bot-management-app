@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { Drawer, List, Empty, Modal, Button, Avatar, Badge, Popover, Select, Input, Icon } from 'antd';
 import { Link } from 'react-router-dom';
 
-import AddLeadDrawer from './Leads/AddLeadDrawer';
 import EditLeadDrawer from './Leads/EditLeadDrawer';
 import FilterLeadsForm from './Leads/FilterLeadsForm';
 import { setTitle } from '../../../helpers';
@@ -13,8 +12,8 @@ import config from '../../../config';
 class LeadItem extends React.Component {
   confirmDelete = (leadId) => {
     Modal.confirm({
-      title: 'Удалить лид',
-      content: 'Вы действительно хотите удалить данный лид? Данные будет безвозвратно утерены.',
+      title: 'Удалить заявку',
+      content: 'Вы действительно хотите удалить данную заявку? Данные будет безвозвратно утерены.',
       okText: 'Да',
       okType: 'danger',
       cancelText: 'Нет',
@@ -51,7 +50,7 @@ class LeadItem extends React.Component {
         <List.Item.Meta
             avatar={<Avatar size="large" icon="user"></Avatar>}
             title={<b>{lead.fullName ? lead.fullName : 'Без имени'}</b>}
-            description={lead.contacts.length ? lead.contacts.join(' | ') : 'Пустой лид'} />
+            description={lead.contacts.length ? lead.contacts.join(' | ') : 'Пустая заявка'} />
       </List.Item>
     )
   }
@@ -59,7 +58,7 @@ class LeadItem extends React.Component {
 
 class Leads extends React.Component {
   state = {
-    addDrawerVisible: false,
+    addBtnLoading: false,
     editDrawerVisible: false,
     filterPopoverVisible: false,
     leadTotalCount: 0,
@@ -95,9 +94,28 @@ class Leads extends React.Component {
       this.setState({ leads, leadTotalCount });
     }
   }
-  // Открыть: добавление
-  openAddDrawer = () => {
-    this.setState({ addDrawerVisible: true });
+  // Добавить лид
+  addLead = () => {
+    this.setState({ addBtnLoading: true });
+    axios.post(
+      config.serverUrl + '/app-api/projects/' + this.props.project.id + '/leads/', {
+        lead: {}
+      })
+      .then((res) => {
+        if (res.data.error) {
+          Modal.error({
+            title: 'Ошибка',
+            content: res.data.error.message
+          });
+        } else if (res.data.lead) {
+          this.list.addOne(res.data.lead);
+          this.openEditDrawer(res.data.lead._id);
+        };
+      })
+      .catch((err) => {
+        Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
+      })
+      .finally(() => this.setState({ addBtnLoading: false }));
   }
   // Закрыть: добавление
   closeAddDrawer = () => {
@@ -166,7 +184,7 @@ class Leads extends React.Component {
     this.closeFilterPopover();
   }
   componentDidMount() {
-    setTitle('Лиды');
+    setTitle('Заявки');
     this.load();
   }
   render() {
@@ -174,7 +192,7 @@ class Leads extends React.Component {
       <div>
         <div className="app-main-view-header">
           <div className="app-main-view-header-title">
-            Лиды {this.state.leadTotalCount > 0 ? <div className="app-main-view-header-title-counter">({this.state.leadTotalCount})</div> : null}
+            Заявки {this.state.leadTotalCount > 0 ? <div className="app-main-view-header-title-counter">({this.state.leadTotalCount})</div> : null}
           </div>
           <div className="app-main-view-header-controls">
             <div className="app-main-view-header-control search">
@@ -192,7 +210,7 @@ class Leads extends React.Component {
               </Popover>
             </div>
             <div className="app-main-view-header-control btn">
-              <Button onClick={this.openAddDrawer} type="primary" icon="plus">Добавить лид</Button>
+              <Button onClick={this.addLead} loading={this.state.addBtnLoading} type="primary" icon="plus">Добавить заявку</Button>
             </div>
           </div>
         </div>
@@ -201,7 +219,7 @@ class Leads extends React.Component {
             <List
               bordered
               size="large"
-              locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={(this.state.search || this.state.filter) ? 'По вашему запросу не найдено лидов.' : 'В проекте пока нет лидов.'} /> }}
+              locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={(this.state.search || this.state.filter) ? 'По вашему запросу не найдено заявок.' : 'В проекте пока нет заявок.'} /> }}
               loading={!this.state.leads ? true : false}
               pagination={this.state.leads && (this.state.leadTotalCount > this.state.leads.length) ? {
                 size: 'large',
@@ -215,11 +233,6 @@ class Leads extends React.Component {
               renderItem={item => <LeadItem projectId={this.props.project.id} lead={item} list={this.list} openEditDrawer={this.openEditDrawer} />} />
           </div>
         </div>
-        <AddLeadDrawer
-          list={this.list}
-          projectId={this.props.project.id}
-          visible={this.state.addDrawerVisible}
-          close={this.closeAddDrawer} />
         {
           this.state.leadId ? (
             <EditLeadDrawer

@@ -71,14 +71,18 @@ class ChangePasswordForm extends React.Component {
         <div className="app-form-fields">
           <Form.Item label="Текущий пароль" className="app-form-field">
             {form.getFieldDecorator('password', {
-              rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
+              rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ]
             })(
               <Input className="app-form-field-input" type="password" />
             )}
           </Form.Item>
           <Form.Item label="Новый пароль" className="app-form-field">
             {form.getFieldDecorator('newPassword', {
-              rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
+              rules: [
+                { required: true, message: 'Поле обязательно для заполнения.' },
+                { min: 5, message: 'Пароль не может быть меньше 5 символов.' },
+                { max: 150, message: 'Пароль не может быть больше 150 символов.' }
+              ]
             })(
               <Input className="app-form-field-input" type="password" />
             )}

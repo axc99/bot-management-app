@@ -1,54 +1,285 @@
 import React from 'react';
 import axios from 'axios';
-import { Divider, Drawer, Form, Input, Select, Modal, Button, Spin, Badge, List, Tabs } from 'antd';
+import { Divider, Drawer, Form, Input, Select, Modal, Button, Spin, Badge, List, Tabs, Row, Col, DatePicker, Icon } from 'antd';
 
-import PersonFields from './PersonFields';
-import ContactFields from './ContactFields';
 import config from '../../../../config';
+
+const EditLeadFieldsForm = Form.create({
+  name: 'editLeadFields',
+  mapPropsToFields: (props) => {
+    const { lead } = props;
+    return (lead && lead.fields) ? {
+      'fields.firstName': Form.createFormField({ value: lead.fields.firstName }),
+      'fields.lastName': Form.createFormField({ value: lead.fields.lastName }),
+      'fields.patronymic': Form.createFormField({ value: lead.fields.patronymic }),
+      'fields.birthDate': Form.createFormField({ value: lead.fields.birthDate }),
+      'fields.residence': Form.createFormField({ value: lead.fields.residence }),
+      'fields.email': Form.createFormField({ value: lead.fields.email }),
+      'fields.phone': Form.createFormField({ value: lead.fields.phone })
+    } : {};
+  }
+})(
+  class extends React.Component {
+    state = {
+      sending: false
+    }
+    showSending() {
+      this.setState({ sending: true });
+    }
+    hideSending() {
+      setTimeout(() => {
+        this.setState({ sending: false });
+      }, 500);
+    }
+    async send(data) {
+      this.showSending();
+      axios.patch(
+        config.serverUrl + '/app-api/projects/' + this.props.projectId + '/leads/' + this.props.lead.id + '/', {
+          lead: data
+        })
+        .then((res) => {
+          if (res.data.lead) {
+            this.props.list.updateOne(res.data.lead.id, res.data.lead);
+            this.props.close();
+            setTimeout(() => {
+              this.props.form.resetFields();
+            }, 1000);
+          };
+        })
+        .catch((err) => {
+          Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
+        })
+        .finally(() => this.hideSending());
+    }
+    handleSubmit = (e) => {
+      e.preventDefault();
+      this.props.form.validateFields((err, data) => {
+        if (!err) this.send(data);
+      });
+    }
+    render() {
+      const { form, lead } = this.props;
+      return (
+        <Form hideRequiredMark="false" onSubmit={this.handleSubmit} className="app-form" layout="vertical">
+          <div className="app-form-fields">
+            <Row gutter={20} className="app-form-row">
+              <Col span={8} className="app-form-col">
+                <Form.Item label="Фамилия" className="app-form-field">
+                  {form.getFieldDecorator('fields.lastName', {
+                    rules: [
+                      { max: 50, message: 'Больше 50 символов.' }
+                    ]
+                  })(
+                    <Input autofocus="true" />
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={8} className="app-form--col">
+                <Form.Item label="Имя" className="app-form-field">
+                  {form.getFieldDecorator('fields.firstName', {
+                    rules: [
+                      { max: 50, message: 'Больше 50 символов.' }
+                    ]
+                  })(
+                    <Input />
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={8} className="app-form-col">
+                <Form.Item label="Отчество" className="app-form-field">
+                  {form.getFieldDecorator('fields.patronymic', {
+                    rules: [
+                      { max: 50, message: 'Больше 50 символов.' }
+                    ]
+                  })(
+                    <Input />
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={20} className="app-form-row">
+              <Col span={8} className="app-form-col">
+                <Form.Item label="Дата рождения" className="app-form-field">
+                  {form.getFieldDecorator('fields.birthTimestamp')(
+                    <DatePicker placeholder="Выберите дату" />
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={16} className="app-form-col">
+                <Form.Item label="Адрес проживания" className="app-form-field">
+                  {form.getFieldDecorator('fields.residence', {
+                    rules: [
+                      { max: 300, message: 'Больше 300 символов.' }
+                    ]
+                  })(
+                    <Input />
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Divider className="app-form-fields-divider" />
+            <Row gutter={20} className="app-form-row">
+              <Col span={12} className="app-form-col">
+                <Form.Item label="Телефон" className="app-form-field">
+                  {form.getFieldDecorator('fields.email', {
+                    rules: [
+                      { max: 30, message: 'Телефон не может быть больше 30 символов.' }
+                    ]
+                  })(
+                    <Input prefix={<Icon type="phone" style={{ color: 'rgba(0,0,0,.25)' }} />} />
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={12} className="app-form-col">
+                <Form.Item label="Email" className="app-form-field">
+                  {form.getFieldDecorator('fields.phone', {
+                    rules: [
+                      { type: 'email', message: 'Укажите email.' },
+                      { max: 250, message: 'Email не может быть больше 250 символов.' }
+                    ]
+                  })(
+                    <Input prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />} />
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+          </div>
+          <div className="app-form-btns">
+            <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit">Сохранить</Button>
+            {form.getFieldDecorator('status', {
+                initialValue: lead ? (lead.status ? lead.status.toString() : '0') : null
+            })(
+              <Select className="app-form-btn" defaultValue="0" style={{ width: 160 }}>
+                <Select.Option value="0">Без статуса</Select.Option>
+                <Select.Option value="1"><Badge status="default" dot={true} /> Не обработан</Select.Option>
+                <Select.Option value="2"><Badge status="processing" dot={true} /> В обработке</Select.Option>
+                <Select.Option value="3"><Badge status="success" dot={true} /> Обработан</Select.Option>
+                <Select.Option value="4"><Badge status="error" dot={true} /> Закрыт</Select.Option>
+              </Select>
+            )}
+          </div>
+        </Form>
+      );
+    }
+  }
+)
+
+const EditLeadAccountsForm = Form.create({
+  name: 'editLeadAccounts',
+  mapPropsToFields: (props) => {
+    const { lead } = props;
+    return (lead && lead.accounts) ? {
+      'accounts.vk.url': Form.createFormField({ value: lead.accounts.vk ? lead.accounts.vk.url : null }),
+      'accounts.facebook.url': Form.createFormField({ value: lead.accounts.facebook ? lead.accounts.facebook.url : null }),
+      'accounts.telegram.username': Form.createFormField({ value: lead.accounts.telegram ? lead.accounts.telegram.username : null }),
+      'accounts.skype.username': Form.createFormField({ value: lead.accounts.skype ? lead.accounts.skype.username : null })
+    } : {};
+  }
+})(
+  class extends React.Component {
+    state = {
+      sending: false
+    }
+    showSending() {
+      this.setState({ sending: true });
+    }
+    hideSending() {
+      setTimeout(() => {
+        this.setState({ sending: false });
+      }, 500);
+    }
+    async send(data) {
+      this.showSending();
+      axios.patch(
+        config.serverUrl + '/app-api/projects/' + this.props.projectId + '/leads/' + this.props.lead.id + '/', {
+          lead: data
+        })
+        .then((res) => {
+          if (res.data.lead) {
+            this.props.list.updateOne(res.data.lead.id, res.data.lead);
+            this.props.close();
+            setTimeout(() => {
+              this.props.form.resetFields();
+            }, 1000);
+          };
+        })
+        .catch((err) => {
+          Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
+        })
+        .finally(() => this.hideSending());
+    }
+    handleSubmit = (e) => {
+      e.preventDefault();
+      this.props.form.validateFields((err, data) => {
+        if (!err) this.send(data);
+      });
+    }
+    render() {
+      const { form, lead } = this.props;
+      return (
+        <Form hideRequiredMark="false" onSubmit={this.handleSubmit} className="app-form" layout="vertical">
+          <div className="app-form-fields">
+            <Row gutter={20} className="app-form-row">
+              <Col span={12} className="app-form-col">
+                <Form.Item label="Вконтакте" className="app-form-field">
+                  {form.getFieldDecorator('accounts.vk.url', {
+                    rules: [
+                      { max: 100, message: 'Ссылка не может быть больше 100 символов.' }
+                    ]
+                  })(
+                    <Input placeholder="https://vk.com/..." autofocus="true" />
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={12} className="app-form-col">
+                <Form.Item label="Facebook" className="app-form-field">
+                  {form.getFieldDecorator('accounts.facebook.url', {
+                    rules: [
+                      { max: 100, message: 'Ссылка не может быть больше 100 символов.' }
+                    ]
+                  })(
+                    <Input placeholder="https://vk.com/id..." />
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={20} className="app-form-row">
+              <Col span={12} className="app-form-col">
+                <Form.Item label="Telegram" className="app-form-field">
+                  {form.getFieldDecorator('accounts.telegram.username', {
+                    rules: [
+                      { max: 100, message: 'Никнейм не может быть больше 100 символов.' }
+                    ]
+                  })(
+                    <Input placeholder="@..." />
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={12} className="app-form-col">
+                <Form.Item label="Skype" className="app-form-field">
+                  {form.getFieldDecorator('accounts.skype.username', {
+                    rules: [
+                      { max: 100, message: 'Никнейм не может быть больше 100 символов.' }
+                    ]
+                  })(
+                    <Input placeholder="...@outlook.com" />
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+          </div>
+          <div className="app-form-btns">
+            <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit">Сохранить</Button>
+          </div>
+        </Form>
+      );
+    }
+  }
+)
 
 class EditLeadDrawer extends React.Component {
   state = {
-    lead: null,
-    sending: false
-  }
-  showSending() {
-    this.setState({ sending: true });
-  }
-  hideSending() {
-    setTimeout(() => {
-      this.setState({ sending: false });
-    }, 500);
-  }
-  async send(data) {
-    this.showSending();
-    axios.patch(
-      config.serverUrl + '/app-api/projects/' + this.props.projectId + '/leads/' + this.state.lead.id + '/', {
-        lead: data
-      })
-      .then((res) => {
-        if (res.data.error) {
-          Modal.error({
-            title: 'Ошибка',
-            content: res.data.error.message
-          });
-        } else if (res.data.lead) {
-          this.props.list.updateOne(res.data.lead.id, res.data.lead);
-          this.props.close();
-          setTimeout(() => {
-            this.props.form.resetFields();
-          }, 1000);
-        };
-      })
-      .catch((err) => {
-        Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
-      })
-      .finally(() => this.hideSending());
-  }
-  handleSubmit = (e) => {
-    e.preventDefault();
-    this.props.form.validateFields((err, data) => {
-      if (!err) this.send(data);
-    });
+    lead: null
   }
   componentDidMount() {
     const { form, leadId } = this.props;
@@ -62,15 +293,25 @@ class EditLeadDrawer extends React.Component {
             });
           } else if (res.data.lead) {
             this.setState({ lead: res.data.lead });
-            form.setFields({
-              lastName: { value: res.data.lead.lastName },
-              firstName: { value: res.data.lead.firstName },
-              patronymic: { value: res.data.lead.patronymic },
-              // birthTimestamp: { value: res.data.lead.birthTimestamp },
-              residence: { value: res.data.lead.residence },
-              phone: { value: res.data.lead.phone },
-              email: { value: res.data.lead.email }
-            });
+            /*if (res.data.lead.fields) {
+              form.setFields({
+                'fields.lastName': { value: res.data.lead.fields.lastName },
+                'fields.firstName': { value: res.data.lead.fields.firstName },
+                'fields.patronymic': { value: res.data.lead.fields.patronymic },
+                // 'fields.birthDate': { value: res.data.lead.fields.birthDate },
+                'fields.residence': { value: res.data.lead.fields.residence },
+                'fields.phone': { value: res.data.lead.fields.phone },
+                'fields.email': { value: res.data.lead.fields.email }
+              });
+            };
+            if (res.data.lead.accounts) {
+              form.setFields({
+                'accounts.vk.url': { value: res.data.lead.accounts.vk ? res.data.lead.accounts.vk.url : '' },
+                'accounts.facebook.url': { value: res.data.lead.accounts.facebook ? res.data.lead.accounts.facebook.url : '' },
+                'accounts.telegram.username': { value: res.data.lead.accounts.telegram ? res.data.lead.accounts.telegram.username : '' },
+                'accounts.skype.username': { value: res.data.lead.accounts.skype ? res.data.lead.accounts.skype.username : '' }
+              });
+            };*/
           };
         })
         .catch((err) => {
@@ -92,43 +333,21 @@ class EditLeadDrawer extends React.Component {
           placement="right"
           onClose={this.props.close}
           visible={this.props.visible}
-          title={(<b>Лид {lead ? '#' + lead.id : ''}</b>)} >
+          title={(<b>Заявка {lead ? '#' + lead.id : ''}</b>)} >
           <Spin spinning={!lead}>
-            <Tabs defaultActiveKey="1" className="app-editLead-tabs">
-              <Tabs.TabPane tab="Личные данные" key="1" className="app-editLead-tab">
-                <Form hideRequiredMark="false" onSubmit={this.handleSubmit} className="app-form" layout="vertical">
-                  <div className="app-form-fields">
-                    <PersonFields getFieldDecorator={form.getFieldDecorator} />
-                    <Divider className="app-form-fields-divider" />
-                    <ContactFields getFieldDecorator={form.getFieldDecorator} />
-                  </div>
-                  <div className="app-form-btns">
-                    <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit">Сохранить</Button>
-                    {form.getFieldDecorator('status', {
-                        initialValue: lead ? (lead.status ? lead.status.toString() : '0') : null
-                    })(
-                      <Select className="app-form-btn" defaultValue="0" style={{ width: 160 }}>
-                        <Select.Option value="0">Без статуса</Select.Option>
-                        <Select.Option value="1"><Badge status="default" dot={true} /> Не обработан</Select.Option>
-                        <Select.Option value="2"><Badge status="processing" dot={true} /> В обработке</Select.Option>
-                        <Select.Option value="3"><Badge status="success" dot={true} /> Обработан</Select.Option>
-                        <Select.Option value="4"><Badge status="error" dot={true} /> Закрыт</Select.Option>
-                      </Select>
-                    )}
-                  </div>
-                </Form>
+            <Tabs tabBarStyle={{ marginLeft: '0' }} defaultActiveKey="1" className="app-editLead-tabs">
+              <Tabs.TabPane tab="Основное" key="1" className="app-editLead-tab">
+                <EditLeadFieldsForm {...this.props} {...this.state} />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Профили" key="2" className="app-editLead-tab">
-                <Form hideRequiredMark="false" onSubmit={this.handleSubmit} className="app-form" layout="vertical">
-
-                </Form>
+                <EditLeadAccountsForm {...this.props} {...this.state} />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Информация" key="3" className="app-editLead-tab">
                 <List
                   size="small"
                   className="app-editLead-list"
                   dataSource={infoItems}
-                  renderItem={item => <List.Item>{item[0]}: {item[1]}</List.Item>} />
+                  renderItem={item => <List.Item><b>{item[0]}:</b> {item[1]}</List.Item>} />
               </Tabs.TabPane>
             </Tabs>
           </Spin>
@@ -137,4 +356,4 @@ class EditLeadDrawer extends React.Component {
   }
 }
 
-export default Form.create({ name: 'editLead' })(EditLeadDrawer);
+export default EditLeadDrawer;

@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { List, Empty, Modal, Button, Avatar, Input, Icon, Tag } from 'antd';
 import { Link } from 'react-router-dom';
 
-import AddAnswerDrawer from './Answers/AddAnswerDrawer';
-import EditAnswerDrawer from './Answers/EditAnswerDrawer';
+import AddAnswerDrawer from './KnowledgeBase/AddAnswerDrawer';
+import EditAnswerDrawer from './KnowledgeBase/EditAnswerDrawer';
 import { setTitle } from '../../../helpers';
 import config from '../../../config';
 
@@ -50,7 +50,7 @@ class AnswerItem extends React.Component {
   }
 }
 
-class Answers extends React.Component {
+class KnowledgeBase extends React.Component {
   state = {
     addModalVisible: false,
     editModalVisible: false,
@@ -128,6 +128,10 @@ class Answers extends React.Component {
   setPage = (page) => {
     this.setState({ page, answers: null }, () => this.load());
   }
+  // Открыть веб-версию
+  openInWeb = () => {
+    window.open(config.serverUrl + '/kb/' + this.props.project.id + '/');
+  }
   componentDidMount() {
     setTitle('База знаний');
     this.load();
@@ -145,6 +149,9 @@ class Answers extends React.Component {
             </div>
             <div className="app-main-view-header-control button">
               <Button onClick={this.openAddModal} type="primary" icon="plus">Добавить ответ</Button>
+            </div>
+            <div className="app-main-view-header-control link">
+              <Button onClick={this.openInWeb} type="dashed" icon="link">Веб-версия</Button>
             </div>
           </div>
         </div>
@@ -191,4 +198,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps)(Answers);
+export default connect(mapStateToProps)(KnowledgeBase);

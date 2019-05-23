@@ -73,15 +73,20 @@ class SignUpForm extends Component {
             {getFieldDecorator('email', {
               rules: [
                 { type: 'email', message: 'Укажите email адрес.', },
-                { required: true, message: 'Поле обязательно для заполнения.' }
-              ],
+                { max: 250, message: 'Email не может быть больше 250 символов.' },
+                { required: true, message: 'Email обязателен для заполнения.' }
+              ]
             })(
               <Input autoFocus={true} size="large" />
             )}
           </Form.Item>
           <Form.Item label="Пароль" className="app-form-field">
             {getFieldDecorator('password', {
-              rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
+              rules: [
+                { required: true, message: 'Пароль обязателен для заполнения.' },
+                { min: 5, message: 'Пароль не может быть меньше 5 символов.' },
+                { max: 150, message: 'Пароль не может быть больше 150 символов.' }
+              ]
             })(
               <Input className="app-form-field-input" type="password" size="large" />
             )}
@@ -89,7 +94,7 @@ class SignUpForm extends Component {
           <Form.Item label="Пароль ещё раз" className="app-form-field">
             {getFieldDecorator('confirmPassword', {
               rules: [
-                { required: true, message: 'Поле обязательно для заполнения.' },
+                { required: true, message: 'Пароль обязателен для заполнения.' },
                 { validator: this.compareToFirstPassword }
               ]
             })(

@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Modal, Form, Button, Input, Select } from 'antd';
+import validator from 'validator';
 
 import config from '../../../../config';
 
@@ -40,6 +41,12 @@ class EditProjectForm extends React.Component {
       if (!err) this.send(data);
     });
   }
+  checkURL = (rule, value, callback) => {
+    const form = this.props.form;
+    const url = form.getFieldValue('websiteUrl');
+    if (url && !validator.isURL(url)) callback('Поле должно содержать ссылку на страницу.');
+    else callback();
+  }
   render() {
     const form = this.props.form;
     return (
@@ -47,14 +54,20 @@ class EditProjectForm extends React.Component {
         <div className="app-form-fields">
           <Form.Item label="Название проекта" className="app-form-field">
             {form.getFieldDecorator('name', {
-              rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
+              rules: [
+                { required: true, message: 'Поле обязательно для заполнения.' },
+                { max: 30, message: 'Поле не может быть длиннее 30 символов.' }
+              ]
             })(
               <Input />
             )}
           </Form.Item>
           <Form.Item label="Ссылка на сайт" className="app-form-field">
             {form.getFieldDecorator('websiteUrl', {
-              rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ],
+              rules: [
+                { max: 100, message: 'Поле не может быть длиннее 100 символов.' },
+                { validator: this.checkURL }
+              ]
             })(
               <Input placeholder="https://" />
             )}
@@ -68,14 +81,10 @@ class EditProjectForm extends React.Component {
   }
 }
 
-function mapPropsToFields(props) {
+const mapPropsToFields = (props) => {
   return props.project ? {
-    name: Form.createFormField({
-      value: props.project.name
-    }),
-    websiteUrl: Form.createFormField({
-      value: props.project.websiteUrl
-    }),
+    name: Form.createFormField({ value: props.project.name }),
+    websiteUrl: Form.createFormField({ value: props.project.websiteUrl }),
   } : {};
 }
 

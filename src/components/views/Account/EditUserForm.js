@@ -62,12 +62,20 @@ class EditForm extends React.Component {
             )}
           </Form.Item>
           <Form.Item label="Фамилия" className="app-form-field">
-            {form.getFieldDecorator('lastName')(
+            {form.getFieldDecorator('lastName', {
+              rules: [
+                { max: 50, message: 'Поле не может быть длиннее 50 символов.' }
+              ]
+            })(
               <Input />
             )}
           </Form.Item>
           <Form.Item label="Имя" className="app-form-field">
-            {form.getFieldDecorator('firstName')(
+            {form.getFieldDecorator('firstName', {
+              rules: [
+                { max: 50, message: 'Поле не может быть длиннее 50 символов.' }
+              ]
+            })(
               <Input />
             )}
           </Form.Item>

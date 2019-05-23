@@ -507,8 +507,11 @@
 /* EditLeadDrawer */
 
 .app-editLead-tabs {
-  margin-top: -12.5px;
+  margin-top: -15px;
 }
 .app-editLead-tab {
   padding-top: 15px;
+}
+.app-editLead-list {
+  margin-top: -5px;
 }

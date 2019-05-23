@@ -8,16 +8,17 @@ import { setTitle } from '../../helpers';
 import config from '../../config';
 
 function ProjectItem(props) {
+  const { project } = props;
   return (
     <List.Item actions={[
-        <Link to={'/projects/' + props.project.id + '/leads/'}>Лиды</Link>,
-        <Link to={'/projects/' + props.project.id + '/answers/'}>База знаний</Link>,
-        <Link to={'/projects/' + props.project.id + '/bot/'}>Бот</Link>,
-        <Link to={'/projects/' + props.project.id + '/settings/'}>Настройки</Link>
+        <Link to={'/projects/' + project.id + '/leads/'}>Заявки</Link>,
+        <Link to={'/projects/' + project.id + '/answers/'}>База знаний</Link>,
+        <Link to={'/projects/' + project.id + '/bot/'}>Бот</Link>,
+        <Link to={'/projects/' + project.id + '/settings/'}>Настройки</Link>
       ]}>
       <List.Item.Meta
-        title={<Link to={'/projects/'+props.project.id+'/leads/'}><b>{props.project.name}</b></Link>}
-        description={<a target="_blank" href={props.project.websiteUrl}>{props.project.websiteUrlStr}</a>} />
+        title={<Link to={'/projects/'+project.id+'/leads/'}><b>{project.name}</b></Link>}
+        description={project.websiteUrl ? <a target="_blank" href={project.websiteUrl}>{project.websiteUrlStr}</a> : <span>#{project._id}</span>} />
     </List.Item>
   )
 }
