@@ -25,7 +25,8 @@ class EditBitrix24IntegrationForm extends React.Component {
       config.serverUrl + '/app-api/projects/' + this.props.project.id + '/', {
         project: {
           'integrations.bitrix24.state': data.state,
-          'integrations.bitrix24.accessToken': data.accessToken
+          'integrations.bitrix24.portalDomain': data.portalDomain,
+          'integrations.bitrix24.webhookSecret': data.webhookSecret
         }
       })
       .then((res) => {
@@ -62,20 +63,29 @@ class EditBitrix24IntegrationForm extends React.Component {
               <Select onChange={this.handleIntegrationStateChange} defaultValue="1" style={{ width: 250 }}>
                 <Select.Option value="0">Не активно</Select.Option>
                 <Select.Option value="1">Активно</Select.Option>
-                <Select.Option value="2">Активно (без сбора лидов)</Select.Option>
               </Select>
             )}
           </Form.Item>
-          <Form.Item label="Ключ доступа" className="app-form-field">
-            {form.getFieldDecorator('accessToken', {
+          <Form.Item label="Домен портала" className="app-form-field">
+            {form.getFieldDecorator('portalDomain', {
               rules: [ { required: this.state.integrationState > 0, message: 'Поле обязательно для заполнения.' } ],
             })(
-              <Input disabled={this.state.integrationState == 0} placeholder="{access_token}" />
+              <Input disabled={this.state.integrationState == 0} placeholder="*.bitrix24.ru" />
+            )}
+          </Form.Item>
+          <Form.Item label="Секретный код" className="app-form-field">
+            {form.getFieldDecorator('webhookSecret', {
+              rules: [ { required: this.state.integrationState > 0, message: 'Поле обязательно для заполнения.' } ],
+            })(
+              <Input disabled={this.state.integrationState == 0} placeholder="" />
             )}
           </Form.Item>
         </div>
         <div className="app-form-btns">
           <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit">Сохранить</Button>
+        </div>
+        <div className="app-form-links">
+          <a target="_blank" href="https://helpdesk.bitrix24.ru/open/5408147/" className="app-form-link">Вебхуки | Создание Входящего вебхука</a>
         </div>
       </Form>
     )
@@ -86,8 +96,11 @@ function mapPropsToFields(props) {
   const project = props.project;
   if (!(project && project.integrations && project.integrations.bitrix24)) return;
   return {
-    accessToken: Form.createFormField({
-      value: project.integrations.bitrix24.accessToken
+    portalDomain: Form.createFormField({
+      value: project.integrations.bitrix24.portalDomain
+    }),
+    webhookSecret: Form.createFormField({
+      value: project.integrations.bitrix24.webhookSecret
     })
   }
 }

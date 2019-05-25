@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Divider, Drawer, Form, Input, Select, Modal, Button, Spin, Badge, List, Tabs, Row, Col, DatePicker, Icon } from 'antd';
+import validator from 'validator';
 
 import config from '../../../../config';
 
@@ -214,6 +215,10 @@ const EditLeadAccountsForm = Form.create({
         if (!err) this.send(data);
       });
     }
+    checkURL = (rule, value, callback) => {
+      if (value && !validator.isURL(value)) callback('Укажите ссылку.');
+      else callback();
+    }
     render() {
       const { form, lead } = this.props;
       return (
@@ -224,7 +229,8 @@ const EditLeadAccountsForm = Form.create({
                 <Form.Item label="Вконтакте" className="app-form-field">
                   {form.getFieldDecorator('accounts.vk.url', {
                     rules: [
-                      { max: 100, message: 'Ссылка не может быть больше 100 символов.' }
+                      { max: 100, message: 'Ссылка не может быть больше 100 символов.' },
+                      { validator: this.checkURL }
                     ]
                   })(
                     <Input placeholder="https://vk.com/..." autofocus="true" />
@@ -235,7 +241,8 @@ const EditLeadAccountsForm = Form.create({
                 <Form.Item label="Facebook" className="app-form-field">
                   {form.getFieldDecorator('accounts.facebook.url', {
                     rules: [
-                      { max: 100, message: 'Ссылка не может быть больше 100 символов.' }
+                      { max: 100, message: 'Ссылка не может быть больше 100 символов.' },
+                      { validator: this.checkURL }
                     ]
                   })(
                     <Input placeholder="https://vk.com/id..." />

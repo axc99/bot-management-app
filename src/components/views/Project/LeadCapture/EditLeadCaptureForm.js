@@ -45,7 +45,7 @@ class EditLeadCaptureForm extends React.Component {
     return (
       <Form hideRequiredMark="false" onSubmit={this.handleSubmit} layout="vertical" className="app-form">
         <div className="app-form-fields">
-          <Form.Item label="Название формы" className="app-form-field">
+          <Form.Item label="Название действия" className="app-form-field">
             {form.getFieldDecorator('leadCapture.title', {
               rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ]
             })(
@@ -95,7 +95,6 @@ class EditLeadCaptureForm extends React.Component {
 
 function mapPropsToFields(props) {
   const project = props.project;
-  if (project) debugger;
   return (project && project.leadCapture) ? {
     'leadCapture.title': Form.createFormField({
       value: project.leadCapture.title

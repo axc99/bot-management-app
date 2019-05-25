@@ -45,9 +45,7 @@ class AddProjectModal extends React.Component {
     });
   }
   checkURL = (rule, value, callback) => {
-    const form = this.props.form;
-    const url = form.getFieldValue('websiteUrl');
-    if (url && !validator.isURL(url)) callback('Укажите ссылку на страницу.');
+    if (value && !validator.isURL(value)) callback('Укажите ссылку.');
     else callback();
   }
   render() {

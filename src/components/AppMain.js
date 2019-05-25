@@ -57,7 +57,7 @@ class Sidebar extends React.Component {
                       <Icon type="message" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Диалоги</div>
                     </NavLink>
                     <NavLink to={`/projects/${this.props.project.id}/lead-capture/`} className="app-main-sidebar-nav-menu-item">
-                      <Icon type="file-done" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Сбор лидов</div>
+                      <Icon type="file-done" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Сбор заявок</div>
                     </NavLink>
                     <NavLink to={`/projects/${this.props.project.id}/knowledge-base/`} className="app-main-sidebar-nav-menu-item">
                       <Icon type="read" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">База знаний</div>

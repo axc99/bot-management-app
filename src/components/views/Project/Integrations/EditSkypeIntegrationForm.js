@@ -25,7 +25,8 @@ class EditSkypeIntegrationForm extends React.Component {
       config.serverUrl + '/app-api/projects/' + this.props.project.id + '/', {
         project: {
           'integrations.skype.state': data.state,
-          'integrations.skype.accessToken': data.accessToken
+          'integrations.skype.appId': data.appId,
+          'integrations.skype.appPassword': data.appPassword
         }
       })
       .then((res) => {
@@ -66,11 +67,18 @@ class EditSkypeIntegrationForm extends React.Component {
               </Select>
             )}
           </Form.Item>
-          <Form.Item label="Ключ доступа" className="app-form-field">
-            {form.getFieldDecorator('accessToken', {
+          <Form.Item label="Идентификатор приложения" className="app-form-field">
+            {form.getFieldDecorator('appId', {
               rules: [ { required: this.state.integrationState > 0, message: 'Поле обязательно для заполнения.' } ],
             })(
-              <Input disabled={this.state.integrationState == 0} placeholder="{access_token}" />
+              <Input disabled={this.state.integrationState == 0} placeholder="" />
+            )}
+          </Form.Item>
+          <Form.Item label="Пароль" className="app-form-field">
+            {form.getFieldDecorator('appPassword', {
+              rules: [ { required: this.state.integrationState > 0, message: 'Поле обязательно для заполнения.' } ],
+            })(
+              <Input disabled={this.state.integrationState == 0} placeholder="" />
             )}
           </Form.Item>
         </div>
@@ -86,8 +94,11 @@ function mapPropsToFields(props) {
   const project = props.project;
   if (!(project && project.integrations && project.integrations.skype)) return;
   return {
-    accessToken: Form.createFormField({
-      value: project.integrations.skype.accessToken
+    appId: Form.createFormField({
+      value: project.integrations.skype.appId
+    }),
+    appPassword: Form.createFormField({
+      value: project.integrations.skype.appPassword
     })
   }
 }

@@ -32,7 +32,6 @@ class Build extends React.Component {
             <List
               bordered
               className="app-build-list"
-              header={<b>NPM Пакеты</b>}
               dataSource={items2}
               renderItem={item => (
                 <List.Item actions={[<a target="_blank" href={item[2]}>npmjs.com</a>, <a target="_blank" href={item[3]}>yarnpkg.com</a>]}>
