@@ -4,12 +4,22 @@ import { connect } from 'react-redux';
 import { Modal, Spin } from 'antd';
 
 import EditProjectForm from './Settings/EditProjectForm';
+import DeleteProjectModal from './Settings/DeleteProjectModal';
 import { setTitle } from '../../../helpers';
 import config from '../../../config';
 
 class Settings extends React.Component {
   state = {
-    project: null
+    project: null,
+    deleteModalVisible: false
+  }
+  // Открыть: удаление
+  openDeleteModal = () => {
+    this.setState({ deleteModalVisible: true });
+  }
+  // Закрыть: удаление
+  closeDeleteModal = () => {
+    this.setState({ deleteModalVisible: false });
   }
   componentDidMount() {
     setTitle('Настройка проекта');
@@ -30,10 +40,17 @@ class Settings extends React.Component {
         <div className="app-main-view-content">
           <div className="app-project-settings">
             <Spin spinning={!this.state.project}>
-              <EditProjectForm project={this.state.project} />
+              <EditProjectForm
+                openDeleteModal={this.openDeleteModal}
+                project={this.state.project} />
             </Spin>
           </div>
         </div>
+        <DeleteProjectModal
+          history={this.props.history}
+          visible={this.state.deleteModalVisible}
+          close={this.closeDeleteModal}
+          project={this.state.project} />
       </div>
     );
   }

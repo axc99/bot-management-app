@@ -3,13 +3,16 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Form, Button, Input, Icon, Checkbox, Modal } from 'antd';
+import ReCAPTCHA from "react-google-recaptcha";
 
 import { setTitle } from '../../helpers';
 import config from '../../config';
 
 class RecoveryUserForm extends Component {
   state = {
-    sending: false
+    sending: false,
+    recaptchaResponse: null,
+    recaptchaRef: React.createRef()
   }
   showSending() {
     this.setState({ sending: true });
@@ -20,13 +23,18 @@ class RecoveryUserForm extends Component {
     }, 500);
   }
   async send(data) {
+    if (!this.state.recaptchaResponse) {
+      this.state.recaptchaRef.current.reset();
+      return;
+    };
     this.showSending();
     axios.post(
       config.serverUrl + '/app-api/rpc/', {
         jsonrpc: '2.0',
         method: 'recoveryAccess',
         params: {
-          email: data.email
+          email: data.email,
+          recaptchaResponse: this.state.recaptchaResponse
         },
         id: 1
       })
@@ -69,12 +77,21 @@ class RecoveryUserForm extends Component {
         <div className="app-form-fields">
           <Form.Item label="E-mail" className="app-form-field">
             {getFieldDecorator('email', {
-              rules: [ { required: true, message: 'Email обязателен для заполнения.' } ]
+              rules: [
+                { type: 'email', message: 'Укажите email адрес.', },
+                { max: 250, message: 'Email не может быть больше 250 символов.' },
+                { required: true, message: 'Email обязателен для заполнения.' }
+              ]
             })(
               <Input autoFocus={true} size="large" />
             )}
           </Form.Item>
         </div>
+        <ReCAPTCHA
+          ref={this.state.recaptchaRef}
+          className="app-form-captcha"
+          sitekey={config.recaptchaKey}
+          onChange={(e) => { this.setState({ recaptchaResponse: e }) }} />
         <div className="app-form-btns">
           <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit" size="large">Восстановить</Button>
         </div>

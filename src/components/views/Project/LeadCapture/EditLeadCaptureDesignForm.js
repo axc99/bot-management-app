@@ -20,7 +20,9 @@ class EditLeadCaptureDesignForm extends React.Component {
     this.showSending();
     axios.patch(
       config.serverUrl + '/app-api/projects/' + this.props.project.id + '/', {
-        project: data
+        project: {
+          'leadCapture.design.align': data.align
+        }
       })
       .then((res) => {
         if (res.data.project) {
@@ -45,13 +47,13 @@ class EditLeadCaptureDesignForm extends React.Component {
     return (
       <Form hideRequiredMark="false" onSubmit={this.handleSubmit} layout="vertical" className="app-form">
         <div className="app-form-fields">
-          <Form.Item label="Выреанивание по горизонтали" className="app-form-field">
-            {form.getFieldDecorator('leadCapture.design.align', {
+          <Form.Item label="Выреанивание" className="app-form-field">
+            {form.getFieldDecorator('align', {
               initialValue: (project && project.leadCapture && project.leadCapture.design) ? project.leadCapture.design.align.toString() : '0',
               rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ]
             })(
               <Select onChange={this.handleIntegrationStateChange} style={{ width: 250 }}>
-                <Select.Option value="0">Слево</Select.Option>
+                <Select.Option value="0">По левому краю</Select.Option>
                 <Select.Option value="1">По центру</Select.Option>
               </Select>
             )}

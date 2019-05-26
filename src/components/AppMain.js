@@ -6,6 +6,7 @@ import { compose } from 'redux';
 
 import Project from './views/Project';
 import ProjectsView from './views/Projects';
+import LogView from './views/Log';
 import InformationView from './views/Information';
 import BuildView from './views/Build';
 import AccountView from './views/Account';
@@ -84,6 +85,9 @@ class Sidebar extends React.Component {
                     <NavLink exact to="/projects/" className="app-main-sidebar-nav-menu-item">
                       <Icon type="bars" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Мои проекты</div>
                     </NavLink>
+                    <NavLink to="/log/" className="app-main-sidebar-nav-menu-item">
+                      <Icon type="history" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Лог действий</div>
+                    </NavLink>
                     <NavLink to="/information/" className="app-main-sidebar-nav-menu-item">
                       <Icon type="info-circle" className="app-main-sidebar-nav-menu-item-icon" /><div className="app-main-sidebar-nav-menu-item-text">Информация</div>
                     </NavLink>
@@ -131,6 +135,7 @@ class View extends React.Component {
           <Switch>
             <Route path="/projects/:projectId/" component={Project} />
             <Route exact path="/projects/" component={ProjectsView} />
+            <Route path="/log/" component={LogView} />
             <Route path="/information/" component={InformationView} />
             <Route path="/build/" component={BuildView} />
             <Route path="/account/" component={AccountView} />

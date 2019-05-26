@@ -46,7 +46,7 @@ body {
 .ant-modal-wrap {
 	overflow-y: scroll;
 }
-.ant-modal-confirm-body .ant-modal-confirm-title {
+.ant-modal-title, .ant-modal-confirm-body .ant-modal-confirm-title {
 	font-weight: 600;
 }
 .ant-modal-body {

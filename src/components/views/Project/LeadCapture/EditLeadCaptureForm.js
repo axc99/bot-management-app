@@ -20,7 +20,12 @@ class EditLeadCaptureForm extends React.Component {
     this.showSending();
     axios.patch(
       config.serverUrl + '/app-api/projects/' + this.props.project.id + '/', {
-        project: data
+        project: {
+          'leadCapture.title': data.title,
+          'leadCapture.fields': data.fields,
+          'leadCapture.btnText': data.btnText,
+          'leadCapture.finalText': data.finalText
+        }
       })
       .then((res) => {
         if (res.data.project) {
@@ -46,21 +51,21 @@ class EditLeadCaptureForm extends React.Component {
       <Form hideRequiredMark="false" onSubmit={this.handleSubmit} layout="vertical" className="app-form">
         <div className="app-form-fields">
           <Form.Item label="Название действия" className="app-form-field">
-            {form.getFieldDecorator('leadCapture.title', {
+            {form.getFieldDecorator('title', {
               rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ]
             })(
               <Input />
             )}
           </Form.Item>
           <Form.Item label="Собираемые данные" className="app-form-field">
-            {form.getFieldDecorator('leadCapture.fields')(
+            {form.getFieldDecorator('fields')(
               <Checkbox.Group
                 style={{ width: '100%' }} >
                 <List
                   bordered
                   size="small" >
-                  <List.Item><Checkbox value={100}>Имя</Checkbox></List.Item>
                   <List.Item><Checkbox value={101}>Фамилия</Checkbox></List.Item>
+                  <List.Item><Checkbox value={100}>Имя</Checkbox></List.Item>
                   <List.Item><Checkbox value={102}>Отчество</Checkbox></List.Item>
                   <List.Item><Checkbox value={110}>Дата рождения</Checkbox></List.Item>
                   <List.Item><Checkbox value={120}>Место проживания</Checkbox></List.Item>
@@ -71,14 +76,14 @@ class EditLeadCaptureForm extends React.Component {
             )}
           </Form.Item>
           <Form.Item label="Текст кнопки" className="app-form-field">
-            {form.getFieldDecorator('leadCapture.btnText', {
+            {form.getFieldDecorator('btnText', {
               rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ]
             })(
               <Input />
             )}
           </Form.Item>
           <Form.Item label="Текст финальной страницы" className="app-form-field">
-            {form.getFieldDecorator('leadCapture.finalText', {
+            {form.getFieldDecorator('finalText', {
               rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ]
             })(
               <Input.TextArea placeholder="Здравствуйте, ..." autosize={{ minRows: 3 }} />
@@ -96,16 +101,16 @@ class EditLeadCaptureForm extends React.Component {
 function mapPropsToFields(props) {
   const project = props.project;
   return (project && project.leadCapture) ? {
-    'leadCapture.title': Form.createFormField({
+    title: Form.createFormField({
       value: project.leadCapture.title
     }),
-    'leadCapture.fields': Form.createFormField({
+    fields: Form.createFormField({
       value: project.leadCapture.fields
     }),
-    'leadCapture.btnText': Form.createFormField({
+    btnText: Form.createFormField({
       value: project.leadCapture.btnText
     }),
-    'leadCapture.finalText': Form.createFormField({
+    finalText: Form.createFormField({
       value: project.leadCapture.finalText
     }),
   } : {};

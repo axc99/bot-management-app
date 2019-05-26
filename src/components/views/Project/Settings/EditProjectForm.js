@@ -21,7 +21,10 @@ class EditProjectForm extends React.Component {
     this.showSending();
     axios.patch(
       config.serverUrl + '/app-api/projects/' + this.props.project.id + '/', {
-        project: data
+        project: {
+          name: data.name,
+          websiteUrl: data.websiteUrl
+        }
       })
       .then((res) => {
         if (res.data.project) {
@@ -73,6 +76,7 @@ class EditProjectForm extends React.Component {
         </div>
         <div className="app-form-btns">
           <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit">Сохранить</Button>
+          <Button onClick={this.props.openDeleteModal} className="app-form-btn" type="danger" ghost>Удалить</Button>
         </div>
       </Form>
     )

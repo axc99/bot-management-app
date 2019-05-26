@@ -165,15 +165,15 @@ const EditLeadFieldsForm = Form.create({
   }
 )
 
-const EditLeadAccountsForm = Form.create({
-  name: 'editLeadAccounts',
+const EditLeadProfilesForm = Form.create({
+  name: 'editLeadProfiles',
   mapPropsToFields: (props) => {
     const { lead } = props;
-    return (lead && lead.accounts) ? {
-      'accounts.vk.url': Form.createFormField({ value: lead.accounts.vk ? lead.accounts.vk.url : null }),
-      'accounts.facebook.url': Form.createFormField({ value: lead.accounts.facebook ? lead.accounts.facebook.url : null }),
-      'accounts.telegram.username': Form.createFormField({ value: lead.accounts.telegram ? lead.accounts.telegram.username : null }),
-      'accounts.skype.username': Form.createFormField({ value: lead.accounts.skype ? lead.accounts.skype.username : null })
+    return (lead && lead.profiles) ? {
+      'profiles.vk.url': Form.createFormField({ value: lead.profiles.vk ? lead.profiles.vk.url : null }),
+      'profiles.facebook.url': Form.createFormField({ value: lead.profiles.facebook ? lead.profiles.facebook.url : null }),
+      'profiles.telegram.username': Form.createFormField({ value: lead.profiles.telegram ? lead.profiles.telegram.username : null }),
+      'profiles.skype.username': Form.createFormField({ value: lead.profiles.skype ? lead.profiles.skype.username : null })
     } : {};
   }
 })(
@@ -227,7 +227,7 @@ const EditLeadAccountsForm = Form.create({
             <Row gutter={20} className="app-form-row">
               <Col span={12} className="app-form-col">
                 <Form.Item label="Вконтакте" className="app-form-field">
-                  {form.getFieldDecorator('accounts.vk.url', {
+                  {form.getFieldDecorator('profiles.vk.url', {
                     rules: [
                       { max: 100, message: 'Ссылка не может быть больше 100 символов.' },
                       { validator: this.checkURL }
@@ -239,7 +239,7 @@ const EditLeadAccountsForm = Form.create({
               </Col>
               <Col span={12} className="app-form-col">
                 <Form.Item label="Facebook" className="app-form-field">
-                  {form.getFieldDecorator('accounts.facebook.url', {
+                  {form.getFieldDecorator('profiles.facebook.url', {
                     rules: [
                       { max: 100, message: 'Ссылка не может быть больше 100 символов.' },
                       { validator: this.checkURL }
@@ -253,7 +253,7 @@ const EditLeadAccountsForm = Form.create({
             <Row gutter={20} className="app-form-row">
               <Col span={12} className="app-form-col">
                 <Form.Item label="Telegram" className="app-form-field">
-                  {form.getFieldDecorator('accounts.telegram.username', {
+                  {form.getFieldDecorator('profiles.telegram.username', {
                     rules: [
                       { max: 100, message: 'Никнейм не может быть больше 100 символов.' }
                     ]
@@ -264,7 +264,7 @@ const EditLeadAccountsForm = Form.create({
               </Col>
               <Col span={12} className="app-form-col">
                 <Form.Item label="Skype" className="app-form-field">
-                  {form.getFieldDecorator('accounts.skype.username', {
+                  {form.getFieldDecorator('profiles.skype.username', {
                     rules: [
                       { max: 100, message: 'Никнейм не может быть больше 100 символов.' }
                     ]
@@ -311,12 +311,12 @@ class EditLeadDrawer extends React.Component {
                 'fields.email': { value: res.data.lead.fields.email }
               });
             };
-            if (res.data.lead.accounts) {
+            if (res.data.lead.profiles) {
               form.setFields({
-                'accounts.vk.url': { value: res.data.lead.accounts.vk ? res.data.lead.accounts.vk.url : '' },
-                'accounts.facebook.url': { value: res.data.lead.accounts.facebook ? res.data.lead.accounts.facebook.url : '' },
-                'accounts.telegram.username': { value: res.data.lead.accounts.telegram ? res.data.lead.accounts.telegram.username : '' },
-                'accounts.skype.username': { value: res.data.lead.accounts.skype ? res.data.lead.accounts.skype.username : '' }
+                'profiles.vk.url': { value: res.data.lead.profiles.vk ? res.data.lead.profiles.vk.url : '' },
+                'profiles.facebook.url': { value: res.data.lead.profiles.facebook ? res.data.lead.profiles.facebook.url : '' },
+                'profiles.telegram.username': { value: res.data.lead.profiles.telegram ? res.data.lead.profiles.telegram.username : '' },
+                'profiles.skype.username': { value: res.data.lead.profiles.skype ? res.data.lead.profiles.skype.username : '' }
               });
             };*/
           };
@@ -347,7 +347,7 @@ class EditLeadDrawer extends React.Component {
                 <EditLeadFieldsForm {...this.props} {...this.state} />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Профили" key="2" className="app-editLead-tab">
-                <EditLeadAccountsForm {...this.props} {...this.state} />
+                <EditLeadProfilesForm {...this.props} {...this.state} />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Информация" key="3" className="app-editLead-tab">
                 <List

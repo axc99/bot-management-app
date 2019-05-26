@@ -54,7 +54,7 @@ class AddProjectModal extends React.Component {
       <Modal
         width={400}
         visible={this.props.visible}
-        title={(<b>Создать проект</b>)}
+        title="Создать проект"
         okText="Создать"
         cancelText="Отмена"
         onOk={this.handleSubmit}
