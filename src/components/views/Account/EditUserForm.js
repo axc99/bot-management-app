@@ -5,6 +5,8 @@ import { Form, Button, Input, Modal, Tabs } from 'antd';
 
 import config from '../../../config';
 
+const source = axios.CancelToken.source();
+
 class EditForm extends React.Component {
   state = {
     sending: false
@@ -19,9 +21,14 @@ class EditForm extends React.Component {
   }
   async send(data) {
     this.showSending();
-    axios.patch(
-      config.serverUrl + '/app-api/users/' + this.props.user.id + '/', {
-        user: data
+
+    if (source.token) source.token = null;
+    else source.cancel();
+
+    axios
+      .patch(config.serverUrl + '/app-api/users/' + this.props.user.id + '/', {
+        user: data,
+        cancelToken: source.token
       })
       .then((res) => {
         if (res.data.error) {
@@ -36,6 +43,7 @@ class EditForm extends React.Component {
         };
       })
       .catch((err) => {
+        if (axios.isCancel(err)) return;
         Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
       })
       .finally(() => this.hideSending());
@@ -45,6 +53,9 @@ class EditForm extends React.Component {
     this.props.form.validateFields((err, data) => {
       if (!err) this.send(data);
     });
+  }
+  componentWillUnmount() {
+    source.cancel();
   }
   render() {
     const form = this.props.form;

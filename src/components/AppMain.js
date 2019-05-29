@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, NavLink, Switch, Route } from 'react-router-dom';
-import { Tooltip, Avatar, Icon, Button, Popover, Menu } from 'antd';
+import { Tooltip, Avatar, Icon, Button, Popover, Menu, List } from 'antd';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
@@ -107,9 +107,55 @@ class Sidebar extends React.Component {
           placement="bottomRight"
           trigger="click"
           content={
-            <div>[MENU]</div>
+            this.props.project ? (
+              <List
+                className="app-main-sidebar-nav-mobileMenu"
+                size="small" >
+                <List.Item className="app-main-sidebar-nav-mobileMenu-item">
+                  <NavLink className="app-main-sidebar-nav-mobileMenu-item-link" exact to="/projects/">« Все проекты</NavLink>
+                </List.Item>
+                <List.Item className="app-main-sidebar-nav-mobileMenu-item">
+                  <NavLink className="app-main-sidebar-nav-mobileMenu-item-link" to={`/projects/${this.props.project.id}/leads/`}>Заявки</NavLink>
+                </List.Item>
+                <List.Item className="app-main-sidebar-nav-mobileMenu-item">
+                  <NavLink className="app-main-sidebar-nav-mobileMenu-item-link" to={`/projects/${this.props.project.id}/dialogs/`}>Диалоги</NavLink>
+                </List.Item>
+                <List.Item className="app-main-sidebar-nav-mobileMenu-item">
+                  <NavLink className="app-main-sidebar-nav-mobileMenu-item-link" to={`/projects/${this.props.project.id}/lead-capture/`}>Сбор заявок</NavLink>
+                </List.Item>
+                <List.Item className="app-main-sidebar-nav-mobileMenu-item">
+                  <NavLink className="app-main-sidebar-nav-mobileMenu-item-link" to={`/projects/${this.props.project.id}/knowledge-base/`}>База знаний</NavLink>
+                </List.Item>
+                <List.Item className="app-main-sidebar-nav-mobileMenu-item">
+                  <NavLink className="app-main-sidebar-nav-mobileMenu-item-link" to={`/projects/${this.props.project.id}/bot/`}>Поведение бота</NavLink>
+                </List.Item>
+                <List.Item className="app-main-sidebar-nav-mobileMenu-item">
+                  <NavLink className="app-main-sidebar-nav-mobileMenu-item-link" to={`/projects/${this.props.project.id}/integrations/`}>Интеграции</NavLink>
+                </List.Item>
+                <List.Item className="app-main-sidebar-nav-mobileMenu-item">
+                  <NavLink className="app-main-sidebar-nav-mobileMenu-item-link" to={`/projects/${this.props.project.id}/settings/`}>Настройки</NavLink>
+                </List.Item>
+              </List>
+            ) : (
+              <List
+                className="app-main-sidebar-nav-mobileMenu"
+                size="small" >
+                <List.Item className="app-main-sidebar-nav-mobileMenu-item">
+                  <NavLink className="app-main-sidebar-nav-mobileMenu-item-link" exact to="/projects/">Проекты</NavLink>
+                </List.Item>
+                <List.Item className="app-main-sidebar-nav-mobileMenu-item">
+                  <NavLink className="app-main-sidebar-nav-mobileMenu-item-link" to="/log/">Лог действий</NavLink>
+                </List.Item>
+                <List.Item className="app-main-sidebar-nav-mobileMenu-item">
+                  <NavLink className="app-main-sidebar-nav-mobileMenu-item-link" to="/information/">Информация</NavLink>
+                </List.Item>
+                <List.Item className="app-main-sidebar-nav-mobileMenu-item">
+                  <NavLink className="app-main-sidebar-nav-mobileMenu-item-link" to="/build/">Приложение</NavLink>
+                </List.Item>
+              </List>
+            )
           } >
-          <Button shape="circle" size="large" icon="menu" className="app-main-sidebar-nav-mobile_btn"></Button>
+          <Button shape="circle" size="large" icon="menu" className="app-main-sidebar-nav-mobileBtn"></Button>
         </Popover>
       </div>
     );

@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Divider, Drawer, List, Modal, Button, Spin } from 'antd';
+import { Divider, Drawer, Modal, Button, Spin, List } from 'antd';
 
 import config from '../../../../config';
 
@@ -27,23 +27,31 @@ class DialogDrawer extends React.Component {
   render() {
     const form = this.props.form;
     const dialog = this.state.dialog;
-    const data = [
-      ['Первое сообщение', 'awdw'],
-      ['Последнее сообщение', 'awdw']
+    const infoItems = [
+      ['Сообщения', dialog ? dialog.messageCount : '0'],
+      ['Добавлено', dialog ? dialog.createdAtStr : '...'],
+      ['Источник', (dialog && dialog.source) ? dialog.source.typeStr : '...']
     ];
     return (
       <Drawer
-          width="400"
-          placement="right"
-          onClose={this.props.close}
-          visible={this.props.visible}
-          title={(<b>Диалог {dialog ? '#' + dialog.id : ''}</b>)} >
+        width="400"
+        placement="right"
+        onClose={this.props.close}
+        visible={this.props.visible}
+        title={(<b>Диалог {dialog ? '#' + dialog.id : ''}</b>)} >
           <Spin spinning={!dialog} size="large">
-          <List
-            bordered
-            size="small"
-            dataSource={data}
-            renderItem={item => (<List.Item>{item[0]}: <b>{item[1]}</b></List.Item>)} />
+            <List
+              size="small"
+              className="app-dialog-list"
+              dataSource={infoItems}
+              renderItem={item => <List.Item><b>{item[0]}:</b> {item[1]}</List.Item>} />
+            <div className="app-dialog-btns">
+              {
+                (dialog && dialog.lead) ? (
+                  <Button className="app-dialog-btn">Открыть лид</Button>
+                ) : null
+              }
+            </div>
           </Spin>
       </Drawer>
     );

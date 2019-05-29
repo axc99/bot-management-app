@@ -23,17 +23,15 @@ class Project extends React.Component {
   }
   render() {
     return (
-      <div>
-        <Switch>
-          <Route path="/projects/:projectId/leads/" component={LeadsView} />
-          <Route path="/projects/:projectId/dialogs/" component={DialogsView} />
-          <Route path="/projects/:projectId/lead-capture/" component={LeadCaptureView} />
-          <Route path="/projects/:projectId/knowledge-base/" component={KnowledgeBaseView} />
-          <Route path="/projects/:projectId/bot/" component={BotView} />
-          <Route path="/projects/:projectId/integrations/" component={IntegrationsView} />
-          <Route path="/projects/:projectId/settings/" component={SettingsView} />
-        </Switch>
-      </div>
+      <Switch>
+        <Route path="/projects/:projectId/leads/" component={LeadsView} />
+        <Route path="/projects/:projectId/dialogs/" component={DialogsView} />
+        <Route path="/projects/:projectId/lead-capture/" component={LeadCaptureView} />
+        <Route path="/projects/:projectId/knowledge-base/" component={KnowledgeBaseView} />
+        <Route path="/projects/:projectId/bot/" component={BotView} />
+        <Route path="/projects/:projectId/integrations/" component={IntegrationsView} />
+        <Route path="/projects/:projectId/settings/" component={SettingsView} />
+      </Switch>
     )
   }
 }

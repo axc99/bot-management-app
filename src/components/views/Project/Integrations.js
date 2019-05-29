@@ -10,19 +10,31 @@ import EditBitrix24IntegrationForm from './Integrations/EditBitrix24IntegrationF
 import { setTitle } from '../../../helpers';
 import config from '../../../config';
 
+const source = axios.CancelToken.source();
+
 class Integrations extends React.Component {
   state = {
     project: null
   }
   componentDidMount() {
     setTitle('Интеграции');
-    axios.get(config.serverUrl + '/app-api/projects/' + this.props.project.id + '/')
+
+    if (source.token) source.token = null;
+    else source.cancel();
+
+    axios
+      .get(config.serverUrl + '/app-api/projects/' + this.props.project.id + '/', {
+        cancelToken: source.token
+      })
       .then((res) => {
         this.setState({ project: res.data.project });
       })
       .catch((err) => {
         Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
       });
+  }
+  componentWillUnmount() {
+    source.cancel();
   }
   render() {
     return (

@@ -8,23 +8,36 @@ import EditLeadCaptureDesignForm from './LeadCapture/EditLeadCaptureDesignForm';
 import { setTitle } from '../../../helpers';
 import config from '../../../config';
 
+const source = axios.CancelToken.source();
+
 class LeadCapture extends React.Component {
   state = {
     project: null
   }
-  // Открыть веб-версию
+  // открыть веб-форму
   openInWeb = () => {
-    window.open(config.serverUrl + '/lc/' + this.props.project.id + '/');
+    window.open(config.serverUrl + '/form/' + this.props.project.id + '/');
   }
   componentDidMount() {
     setTitle('Сбор заявок');
-    axios.get(config.serverUrl + '/app-api/projects/' + this.props.project.id + '/')
+
+    if (source.token) source.token = null;
+    else source.cancel();
+
+    axios
+      .get(config.serverUrl + '/app-api/projects/' + this.props.project.id + '/', {
+        cancelToken: source.token
+      })
       .then((res) => {
-        this.setState({ project: res.data.project });
+        const { project } = res.data;
+        this.setState({ project });
       })
       .catch((err) => {
         Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
       });
+  }
+  componentWillUnmount() {
+    source.cancel();
   }
   render() {
     return (

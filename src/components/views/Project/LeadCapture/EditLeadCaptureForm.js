@@ -86,7 +86,7 @@ class EditLeadCaptureForm extends React.Component {
             {form.getFieldDecorator('finalText', {
               rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ]
             })(
-              <Input.TextArea placeholder="Здравствуйте, ..." autosize={{ minRows: 3 }} />
+              <Input.TextArea autosize={{ minRows: 3 }} />
             )}
           </Form.Item>
         </div>

@@ -144,6 +144,15 @@ const EditLeadFieldsForm = Form.create({
                 </Form.Item>
               </Col>
             </Row>
+            <Form.Item label="Комментарий" className="app-form-field full">
+              {form.getFieldDecorator('comment', {
+                rules: [
+                  { max: 500, message: 'Комментарий не может быть больше 500 символов.' }
+                ]
+              })(
+                <Input.TextArea autosize={{ minRows: 2 }} />
+              )}
+            </Form.Item>
           </div>
           <div className="app-form-btns">
             <Button loading={this.state.sending} className="app-form-btn" type="primary" htmlType="submit">Сохранить</Button>
@@ -170,10 +179,12 @@ const EditLeadProfilesForm = Form.create({
   mapPropsToFields: (props) => {
     const { lead } = props;
     return (lead && lead.profiles) ? {
-      'profiles.vk.url': Form.createFormField({ value: lead.profiles.vk ? lead.profiles.vk.url : null }),
-      'profiles.facebook.url': Form.createFormField({ value: lead.profiles.facebook ? lead.profiles.facebook.url : null }),
-      'profiles.telegram.username': Form.createFormField({ value: lead.profiles.telegram ? lead.profiles.telegram.username : null }),
-      'profiles.skype.username': Form.createFormField({ value: lead.profiles.skype ? lead.profiles.skype.username : null })
+      'profiles.vk.value': Form.createFormField({ value: lead.profiles.vk ? lead.profiles.vk.value : null }),
+      'profiles.facebook.value': Form.createFormField({ value: lead.profiles.facebook ? lead.profiles.facebook.value : null }),
+      'profiles.telegram.value': Form.createFormField({ value: lead.profiles.telegram ? lead.profiles.telegram.value : null }),
+      'profiles.skype.value': Form.createFormField({ value: lead.profiles.skype ? lead.profiles.skype.value : null }),
+      'profiles.viber.value': Form.createFormField({ value: lead.profiles.viber ? lead.profiles.viber.value : null }),
+      'profiles.instagram.value': Form.createFormField({ value: lead.profiles.instagram ? lead.profiles.instagram.value : null })
     } : {};
   }
 })(
@@ -227,7 +238,7 @@ const EditLeadProfilesForm = Form.create({
             <Row gutter={20} className="app-form-row">
               <Col span={12} className="app-form-col">
                 <Form.Item label="Вконтакте" className="app-form-field">
-                  {form.getFieldDecorator('profiles.vk.url', {
+                  {form.getFieldDecorator('profiles.vk.value', {
                     rules: [
                       { max: 100, message: 'Ссылка не может быть больше 100 символов.' },
                       { validator: this.checkURL }
@@ -239,13 +250,13 @@ const EditLeadProfilesForm = Form.create({
               </Col>
               <Col span={12} className="app-form-col">
                 <Form.Item label="Facebook" className="app-form-field">
-                  {form.getFieldDecorator('profiles.facebook.url', {
+                  {form.getFieldDecorator('profiles.facebook.value', {
                     rules: [
                       { max: 100, message: 'Ссылка не может быть больше 100 символов.' },
                       { validator: this.checkURL }
                     ]
                   })(
-                    <Input placeholder="https://vk.com/id..." />
+                    <Input placeholder="https://www.facebook.com/..." />
                   )}
                 </Form.Item>
               </Col>
@@ -253,9 +264,9 @@ const EditLeadProfilesForm = Form.create({
             <Row gutter={20} className="app-form-row">
               <Col span={12} className="app-form-col">
                 <Form.Item label="Telegram" className="app-form-field">
-                  {form.getFieldDecorator('profiles.telegram.username', {
+                  {form.getFieldDecorator('profiles.telegram.value', {
                     rules: [
-                      { max: 100, message: 'Никнейм не может быть больше 100 символов.' }
+                      { max: 100, message: 'Значение не может быть больше 100 символов.' }
                     ]
                   })(
                     <Input placeholder="@..." />
@@ -264,12 +275,36 @@ const EditLeadProfilesForm = Form.create({
               </Col>
               <Col span={12} className="app-form-col">
                 <Form.Item label="Skype" className="app-form-field">
-                  {form.getFieldDecorator('profiles.skype.username', {
+                  {form.getFieldDecorator('profiles.skype.value', {
                     rules: [
-                      { max: 100, message: 'Никнейм не может быть больше 100 символов.' }
+                      { max: 100, message: 'Значение не может быть больше 100 символов.' }
                     ]
                   })(
-                    <Input placeholder="...@outlook.com" />
+                    <Input placeholder="live:..." />
+                  )}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={20} className="app-form-row">
+              <Col span={12} className="app-form-col">
+                <Form.Item label="Viber" className="app-form-field">
+                  {form.getFieldDecorator('profiles.viber.value', {
+                    rules: [
+                      { max: 100, message: 'Значение не может быть больше 100 символов.' }
+                    ]
+                  })(
+                    <Input placeholder="+7 ..." autofocus="true" />
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={12} className="app-form-col">
+                <Form.Item label="Instagram" className="app-form-field">
+                  {form.getFieldDecorator('profiles.instagram.value', {
+                    rules: [
+                      { max: 100, message: 'Значение не может быть больше 100 символов.' }
+                    ]
+                  })(
+                    <Input placeholder="@..." />
                   )}
                 </Form.Item>
               </Col>
@@ -330,35 +365,37 @@ class EditLeadDrawer extends React.Component {
     const form = this.props.form;
     const lead = this.state.lead;
     const infoItems = [
-      ['Добавлено', lead ? lead.addTimeStr : '...'],
-      ['Обновлено', lead ? lead.updateTimeStr : '...'],
+      ['Добавлено', lead ? lead.createdAtStr : '...'],
+      ['Обновлено', lead ? lead.updatedAtStr : '...'],
       ['Источник', (lead && lead.source) ? lead.source.typeStr : '...']
     ];
     return (
-      <Drawer
-          width="600"
-          placement="right"
-          onClose={this.props.close}
-          visible={this.props.visible}
-          title={(<b>Заявка {lead ? '#' + lead.id : ''}</b>)} >
-          <Spin spinning={!lead}>
-            <Tabs tabBarStyle={{ marginLeft: '0' }} defaultActiveKey="1" className="app-editLead-tabs">
-              <Tabs.TabPane tab="Основное" key="1" className="app-editLead-tab">
-                <EditLeadFieldsForm {...this.props} {...this.state} />
-              </Tabs.TabPane>
-              <Tabs.TabPane tab="Профили" key="2" className="app-editLead-tab">
-                <EditLeadProfilesForm {...this.props} {...this.state} />
-              </Tabs.TabPane>
-              <Tabs.TabPane tab="Информация" key="3" className="app-editLead-tab">
-                <List
-                  size="small"
-                  className="app-editLead-list"
-                  dataSource={infoItems}
-                  renderItem={item => <List.Item><b>{item[0]}:</b> {item[1]}</List.Item>} />
-              </Tabs.TabPane>
-            </Tabs>
-          </Spin>
-      </Drawer>
+      <div className="app-editLead">
+        <Drawer
+            width="600"
+            placement="right"
+            onClose={this.props.close}
+            visible={this.props.visible}
+            title={(<b>Заявка {lead ? '#' + lead.id : ''}</b>)} >
+            <Spin spinning={!lead}>
+              <Tabs tabBarStyle={{ marginLeft: '0' }} defaultActiveKey="1" className="app-editLead-tabs">
+                <Tabs.TabPane tab="Основное" key="1" className="app-editLead-tab">
+                  <EditLeadFieldsForm {...this.props} {...this.state} />
+                </Tabs.TabPane>
+                <Tabs.TabPane tab="Профили" key="2" className="app-editLead-tab">
+                  <EditLeadProfilesForm {...this.props} {...this.state} />
+                </Tabs.TabPane>
+                <Tabs.TabPane tab="Информация" key="3" className="app-editLead-tab">
+                  <List
+                    size="small"
+                    className="app-editLead-list"
+                    dataSource={infoItems}
+                    renderItem={item => <List.Item><b>{item[0]}:</b> {item[1]}</List.Item>} />
+                </Tabs.TabPane>
+              </Tabs>
+            </Spin>
+        </Drawer>
+      </div>
     );
   }
 }

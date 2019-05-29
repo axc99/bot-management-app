@@ -1,5 +1,3 @@
-/* app */
-
 .app {
   background: #fff;
   position: fixed;
@@ -38,7 +36,7 @@
   vertical-align: middle;
 }
 
-/* app main sidebar */
+/* main sidebar */
 
 .app-main-sidebar {
   position: absolute;
@@ -163,18 +161,32 @@
   color: #333;
 }
 
-.app-main-sidebar-nav-mobile_btn {
+.app-main-sidebar-nav-mobileBtn {
   display: none;
   position: absolute;
   bottom: 10px;
   right: 18px;
 }
-.app-main-sidebar-nav-mobile_menu {
-  width: 240px;
-  margin: 0 -16px;
+.app-main-sidebar-nav-mobileMenu {
+  width: 140px;
+}
+.app-main-sidebar-nav-mobileMenu-item-link {
+  color: #333;
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+.app-main-sidebar-nav-mobileMenu-item-link.active {
+  font-weight: 600;
 }
 
-/* app main view */
+@media only screen and (max-width: 992px) {
+  .app-main-sidebar-nav-mobileBtn {
+    display: block;
+  }
+}
+
+/* main view */
 
 .app-main-view {
 	position: absolute;
@@ -189,7 +201,7 @@
 
 .app-main-view-area {
   margin: 0 auto;
-  max-width: 1200px;
+  max-width: 1260px;
   padding: 0 45px;
 }
 
@@ -377,7 +389,7 @@
 
 }
 
-/* app auth */
+/* auth */
 
 .app-auth {
   position: absolute;
@@ -424,7 +436,7 @@
   }
 }
 
-/* app form */
+/* form */
 
 .app-form.filter {
   padding: 15px 10px;
@@ -440,6 +452,9 @@
 }
 .app-form-field {
   max-width: 400px;
+}
+.app-form-field.full {
+  max-width: 100%;
 }
 .app-form.filter .app-form-field {
   margin-bottom: 10px;
@@ -473,19 +488,27 @@
 }
 
 /* app list */
-.app-list-item-tags {
+
+.app-list-item-info {
+  margin-top: 2.5px;
+  font-size: 14px;
+}
+.app-list-item-info-dot {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.app-list-item-info-tags {
   margin: 10px 0 -7.5px;
 }
-.app-list-item-tags .ant-tag {
+.app-list-item-info-tag {
   margin: 0 10px 10px 0;
 }
 
-/* components */
-
-/* InformationView */
+/* information */
 
 .app-information {
   position: relative;
+  margin-top: -10px;
 }
 .app-information-content {
   max-width: 800px;
@@ -503,7 +526,7 @@
   line-height: 35px;
 }
 
-/* BuildView */
+/* build */
 
 .app-build-list {
   margin-bottom: 25px;
@@ -512,7 +535,7 @@
   margin-bottom: 0;
 }
 
-/* EditLeadDrawer */
+/* editLead */
 
 .app-editLead-tabs {
   margin-top: -15px;

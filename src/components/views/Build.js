@@ -26,16 +26,16 @@ class Build extends React.Component {
           <div className="app-build">
             <List
               bordered
-              className="app-build-list"
+              className="app-list app-build-list"
               dataSource={items1}
               renderItem={item => (<List.Item>{item[0]}: <b>{item[1]}</b></List.Item>)} />
             <List
               bordered
-              className="app-build-list"
+              className="app-list app-build-list"
               dataSource={items2}
               renderItem={item => (
                 <List.Item actions={[<a target="_blank" href={item[2]}>npmjs.com</a>, <a target="_blank" href={item[3]}>yarnpkg.com</a>]}>
-                  {item[0]} ({item[1]})
+                  <b>{item[0]}</b> ({item[1]})
                 </List.Item>
               )} />
           </div>

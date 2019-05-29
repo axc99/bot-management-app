@@ -27,8 +27,9 @@ class FilterDialogsForm extends React.Component {
             })(
               <Select style={{ width: 300 }}>
                 <Select.Option value="">Любой источник</Select.Option>
+                <Select.Option value="1">Пользователь</Select.Option>
                 <Select.Option value="2,1">Бот во Вконтакте</Select.Option>
-                <Select.Option value="2,2">Бот в Facebook</Select.Option>
+                <Select.Option value="2,2">Бот в Telegram</Select.Option>
                 <Select.Option value="2,3">Бот в Skype</Select.Option>
               </Select>
             )}

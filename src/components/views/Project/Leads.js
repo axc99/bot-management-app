@@ -1,13 +1,20 @@
 import React from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { Drawer, List, Empty, Modal, Button, Avatar, Badge, Popover, Select, Input, Icon } from 'antd';
+import { Drawer, List, Empty, Modal, Button, Avatar, Badge, Popover, Select, Input, Icon, Tag, Divider } from 'antd';
 import { Link } from 'react-router-dom';
+
+import TimeAgo from 'react-timeago';
+import ruStrings from 'react-timeago/lib/language-strings/ru';
+import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 
 import EditLeadDrawer from './Leads/EditLeadDrawer';
 import FilterLeadsForm from './Leads/FilterLeadsForm';
 import { setTitle } from '../../../helpers';
 import config from '../../../config';
+
+const source = axios.CancelToken.source();
+const formatter = buildFormatter(ruStrings);
 
 class LeadItem extends React.Component {
   confirmDelete = (leadId) => {
@@ -44,13 +51,27 @@ class LeadItem extends React.Component {
       <Button onClick={() => this.props.openEditDrawer(lead.id)}>Открыть</Button>,
       <Button onClick={() => this.confirmDelete(lead.id)} type="dashed" icon="delete" shape="circle" size="small"></Button>
     ];
-    if (btnContent) actions.unshift(<Button onClick={() => this.props.openEditDrawer(lead.id)}>{btnContent}</Button>)
+    if (btnContent) actions.unshift(<Button onClick={() => this.props.openEditDrawer(lead.id)}>{btnContent}</Button>);
     return (
       <List.Item actions={actions}>
         <List.Item.Meta
-            avatar={<Avatar size="large" icon="user"></Avatar>}
+            avatar={<Avatar size="large" icon="user" src={(lead.mainProfile && lead.mainProfile.avatarUrls) ? lead.mainProfile.avatarUrls.sm : null}></Avatar>}
             title={<b>{lead.fullName ? lead.fullName : 'Без имени'}</b>}
-            description={lead.contacts.length ? lead.contacts.join(' | ') : 'Пустая заявка'} />
+            description={
+              <div>
+                {lead.contacts.length ? lead.contacts.join(' | ') : 'Пустая заявка'} <br />
+                <div className="app-list-item-info">
+                  <TimeAgo date={lead.createdAt} formatter={formatter} /> ({lead.source.typeStr})
+                  {
+                    lead.tags ? (
+                      <div className="app-list-item-info-tags">
+                        {lead.tags.map((tag) => <Tag className="app-list-item-info-tag">{tag}</Tag>)}
+                      </div>
+                    ) : null
+                  }
+                </div>
+              </div>
+            } />
       </List.Item>
     )
   }
@@ -141,8 +162,13 @@ class Leads extends React.Component {
   load = () => {
     const { search, page, filter } = this.state;
     const offset = Math.abs(page-1) * 50;
-    axios.get(
-      config.serverUrl + '/app-api/projects/' + this.props.project.id + '/leads/'
+
+    if (source.token) source.token = null;
+    else source.cancel();
+
+    axios
+      .get(
+        config.serverUrl + '/app-api/projects/' + this.props.project.id + '/leads/'
         + '?offset=' + offset
         + '&search=' + search
         + (
@@ -151,11 +177,11 @@ class Leads extends React.Component {
             + '&filterStatus=' + (filter.status ? filter.status : '')
             + '&filterSource=' + (filter.source ? filter.source : '')
           ) : ''
-        )
+        ),
+        { cancelToken: source.token }
       )
       .then((res) => {
-        const leads = res.data.leads;
-        const leadTotalCount = res.data.leadTotalCount;
+        const { leads, leadTotalCount } = res.data;
         this.setState({ leads, leadTotalCount });
       })
       .catch((err) => {
@@ -187,6 +213,9 @@ class Leads extends React.Component {
     setTitle('Заявки');
     this.load();
   }
+  componentWillUnmount() {
+    source.cancel();
+  }
   render() {
     return (
       <div>
@@ -198,7 +227,7 @@ class Leads extends React.Component {
             <div className="app-main-view-header-control search">
               <Input allowClear onChange={this.setSearch} placeholder="Поиск..." style={{ width: 200 }} prefix={<Icon type="search" style={{ color: 'rgba(0,0,0,.25)' }} />} />
             </div>
-            <div className="app-main-view-header-control input">
+            <div className="app-main-view-header-control filter">
               <Popover
                 trigger="click"
                 onVisibleChange={visible => { return visible ? this.openFilterPopover() : this.closeFilterPopover() }}

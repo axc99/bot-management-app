@@ -14,11 +14,9 @@ export default class AppAuth extends Component {
 
     return (
       <div className="app-auth">
-
         <div className="app-vertical_equalizer">
         <div className="app-vertical_equalizer-table">
         <div className="app-vertical_equalizer-table-cell">
-
           <div className="app-auth-box">
             <Switch>
               <Route path="/auth/sign-in/" component={SignIn} />
@@ -26,11 +24,9 @@ export default class AppAuth extends Component {
               <Route path="/auth/recovery/" component={Recovery} />
             </Switch>
           </div>
-
         </div>
         </div>
         </div>
-
       </div>
     );
   }

@@ -28,11 +28,14 @@ class EditAnswerDrawer extends React.Component {
         if (answer) {
           this.props.list.updateOne(answer.id, answer);
           this.props.close();
+          setTimeout(() => {
+            this.props.form.resetFields();
+          }, 1000);
         };
       })
       .catch((err) => {
         console.log('Error', err);
-        Modal.error({ title: 'Ошибка при отправке запроса' });
+        Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
       })
       .finally(() => this.hideSending());
   }

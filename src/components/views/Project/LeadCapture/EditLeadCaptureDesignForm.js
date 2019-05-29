@@ -47,7 +47,7 @@ class EditLeadCaptureDesignForm extends React.Component {
     return (
       <Form hideRequiredMark="false" onSubmit={this.handleSubmit} layout="vertical" className="app-form">
         <div className="app-form-fields">
-          <Form.Item label="Выреанивание" className="app-form-field">
+          <Form.Item label="Выравнивание" className="app-form-field">
             {form.getFieldDecorator('align', {
               initialValue: (project && project.leadCapture && project.leadCapture.design) ? project.leadCapture.design.align.toString() : '0',
               rules: [ { required: true, message: 'Поле обязательно для заполнения.' } ]

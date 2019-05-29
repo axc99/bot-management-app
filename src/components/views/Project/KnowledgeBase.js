@@ -9,6 +9,8 @@ import EditAnswerDrawer from './KnowledgeBase/EditAnswerDrawer';
 import { setTitle } from '../../../helpers';
 import config from '../../../config';
 
+const source = axios.CancelToken.source();
+
 class AnswerItem extends React.Component {
   confirmDelete = (answerId) => {
     Modal.confirm({
@@ -34,15 +36,17 @@ class AnswerItem extends React.Component {
           description={
             <div>
               {this.props.answer.content}
+              <div className="app-list-item-info">
               {
                 this.props.answer.tags ? (
-                  <div className="app-list-item-tags">
+                  <div className="app-list-item-info-tags">
                     {
-                      this.props.answer.tags.map((tag) => <Tag>{tag}</Tag>)
+                      this.props.answer.tags.map((tag) => <Tag className="app-list-item-info-tag">{tag}</Tag>)
                     }
                   </div>
                 ) : null
               }
+              </div>
             </div>
           } />
       </List.Item>
@@ -106,10 +110,18 @@ class KnowledgeBase extends React.Component {
   load = () => {
     const { search, page } = this.state;
     const offset = Math.abs(page-1) * 50;
-    axios.get(
-      config.serverUrl + '/app-api/projects/' + this.props.project.id + '/answers/'
+
+    if (source.token) source.token = null;
+    else source.cancel();
+
+    axios
+      .get(
+        config.serverUrl + '/app-api/projects/' + this.props.project.id + '/answers/'
         + '?offset=' + offset
-        + '&search=' + search
+        + '&search=' + search,
+        {
+          cancelToken: source.token
+        }
       )
       .then((res) => {
         const answers = res.data.answers;
@@ -128,13 +140,12 @@ class KnowledgeBase extends React.Component {
   setPage = (page) => {
     this.setState({ page, answers: null }, () => this.load());
   }
-  // Открыть веб-версию
-  openInWeb = () => {
-    window.open(config.serverUrl + '/kb/' + this.props.project.id + '/');
-  }
   componentDidMount() {
     setTitle('База знаний');
     this.load();
+  }
+  componentWillUnmount() {
+    source.cancel();
   }
   render() {
     return (
@@ -144,14 +155,11 @@ class KnowledgeBase extends React.Component {
             База знаний {this.state.answerTotalCount > 0 ? <div className="app-main-view-header-title-counter">({this.state.answerTotalCount})</div> : null}
           </div>
           <div className="app-main-view-header-controls">
-            <div className="app-main-view-header-control input">
+            <div className="app-main-view-header-control search">
               <Input allowClear onChange={this.setSearch} placeholder="Поиск..." style={{ width: 200 }} prefix={<Icon type="search" style={{ color: 'rgba(0,0,0,.25)' }} />} />
             </div>
-            <div className="app-main-view-header-control button">
+            <div className="app-main-view-header-control btn">
               <Button onClick={this.openAddModal} type="primary" icon="plus">Добавить ответ</Button>
-            </div>
-            <div className="app-main-view-header-control link">
-              <Button onClick={this.openInWeb} type="dashed" icon="link">Веб-версия</Button>
             </div>
           </div>
         </div>

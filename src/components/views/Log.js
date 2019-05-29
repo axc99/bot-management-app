@@ -8,19 +8,26 @@ import decode from 'unescape';
 import { setTitle } from '../../helpers';
 import config from '../../config';
 
+const source = axios.CancelToken.source();
+
 class Log extends React.Component {
   state = {
     actionTotalCount: 0,
     actions: null
   }
-  // Загрузка
   load = () => {
-    axios.get(config.serverUrl + '/app-api/users/' + this.props.user.id + '/actions/')
+    if (source.token) source.token = null;
+    else source.cancel();
+    axios
+      .get(config.serverUrl + '/app-api/users/' + this.props.user.id + '/actions/', {
+        cancelToken: source.token
+      })
       .then((res) => {
         const actions = res.data.actions;
         this.setState({ actions });
       })
       .catch((err) => {
+        if (axios.isCancel(err)) return;
         Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
       });
   }
@@ -28,11 +35,14 @@ class Log extends React.Component {
     setTitle('Лог действий');
     this.load();
   }
+  componentWillUnmount() {
+    source.cancel();
+  }
   render() {
     let TimelineItems;
     if (this.state.actions) {
       TimelineItems = this.state.actions.map((action) =>
-        <Timeline.Item color={action.color}>{decode(action.htmlStr)} <br /><b>{action.addTimeStr}</b></Timeline.Item>
+        <Timeline.Item color={action.color}>{decode(action.htmlStr)} <br /><b>{action.createdAtStr}</b></Timeline.Item>
       );
     };
     return (
@@ -41,10 +51,12 @@ class Log extends React.Component {
           <div className="app-main-view-header-title">Лог действий</div>
         </div>
         <div className="app-main-view-content">
-          <Timeline
-            pending={!this.state.actions ? 'Загрузка...' : null}>
-            {TimelineItems}
-          </Timeline>
+          <div className="app-log">
+            <Timeline
+              pending={!this.state.actions ? 'Загрузка...' : null}>
+              {TimelineItems}
+            </Timeline>
+          </div>
         </div>
       </div>
     );

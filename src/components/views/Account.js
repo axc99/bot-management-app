@@ -9,19 +9,32 @@ import ChangeUserPasswordForm from './Account/ChangeUserPasswordForm';
 import { setTitle } from '../../helpers';
 import config from '../../config';
 
+const source = axios.CancelToken.source();
+
 class Account extends React.Component {
   state = {
     user: null
   }
   componentDidMount() {
     setTitle('Мой аккаунт');
-    axios.get(config.serverUrl + '/app-api/users/' + this.props.user.id + '/')
+
+    if (source.token) source.token = null;
+    else source.cancel();
+    
+    axios
+      .get(config.serverUrl + '/app-api/users/' + this.props.user.id + '/', {
+        cancelToken: source.token
+      })
       .then((res) => {
         this.setState({ user: res.data.user });
       })
       .catch((err) => {
+        if (axios.isCancel(err)) return;
         Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
       });
+  }
+  componentWillUnmount() {
+    source.cancel();
   }
   render() {
     return (

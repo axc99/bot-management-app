@@ -4,22 +4,36 @@ import { connect } from 'react-redux';
 import { Drawer, List, Empty, Modal, Button, Avatar, Popover, Badge } from 'antd';
 import { Link } from 'react-router-dom';
 
+import TimeAgo from 'react-timeago';
+import ruStrings from 'react-timeago/lib/language-strings/ru';
+import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
+
 import DialogDrawer from './Dialogs/DialogDrawer';
 import FilterDialogsForm from './Dialogs/FilterDialogsForm';
 import { setTitle } from '../../../helpers';
 import config from '../../../config';
 
+const source = axios.CancelToken.source();
+const formatter = buildFormatter(ruStrings);
+
 class DialogItem extends React.Component {
   render() {
+    const { dialog } = this.props;
     return (
       <List.Item actions={[
-          <a target="_blank" href={this.props.dialog._service.url}><Button><b>{this.props.dialog._service.typeStr}</b></Button></a>,
-          <Button onClick={() => this.props.openModal(this.props.dialog.id)}>Открыть</Button>,
+          <Button onClick={() => this.props.openModal(dialog.id)}>Открыть</Button>
         ]}>
         <List.Item.Meta
             avatar={<Avatar size="large" icon="user" />}
-            title={<b>{this.props.dialog.fullName ? this.props.dialog.fullName : 'Без имени'}</b>}
-            description={this.props.dialog.contacts ? this.props.dialog.contacts : 'Пустой диалог'} />
+            title={<b>{dialog.fullName ? dialog.fullName : 'Без имени'}</b>}
+            description={
+              <div>
+                {dialog.messageCountStr} <br />
+                <div className="app-list-item-info">
+                  <TimeAgo date={dialog.createdAt} formatter={formatter} /> {dialog.source ? '('+dialog.source.typeStr+')' : null}
+                </div>
+              </div>
+            } />
       </List.Item>
     )
   }
@@ -58,15 +72,20 @@ class Dialogs extends React.Component {
   load = () => {
     const { page, filter } = this.state;
     const offset = Math.abs(page-1) * 50;
-    axios.get(
-      config.serverUrl + '/app-api/projects/' + this.props.project.id + '/dialogs/'
+
+    if (source.token) source.token = null;
+    else source.cancel();
+
+    axios
+      .get(
+        config.serverUrl + '/app-api/projects/' + this.props.project.id + '/dialogs/'
         + '?offset=' + offset
         + '&filterPeriod=' + ((filter.period && filter.period[0] && filter.period[1]) ? filter.period[0]._d.getTime() + ',' + filter.period[1]._d.getTime() : '')
-        + '&filterSource=' + (filter.source ? filter.source : '')
+        + '&filterSource=' + (filter.source ? filter.source : ''),
+        { cancelToken: source.token }
       )
       .then((res) => {
-        const dialogs = res.data.dialogs;
-        const dialogTotalCount = res.data.dialogTotalCount;
+        const { dialogs, dialogTotalCount } = res.data;
         this.setState({ dialogs, dialogTotalCount });
       })
       .catch((err) => {
@@ -93,6 +112,9 @@ class Dialogs extends React.Component {
     setTitle('Диалоги');
     this.load();
   }
+  componentWillUnmount() {
+    source.cancel();
+  }
   render() {
     return (
       <div>
@@ -101,7 +123,7 @@ class Dialogs extends React.Component {
             Диалоги {this.state.dialogTotalCount > 0 ? <div className="app-main-view-header-title-counter">({this.state.dialogTotalCount})</div> : null}
           </div>
           <div className="app-main-view-header-controls">
-            <div className="app-main-view-header-control input">
+            <div className="app-main-view-header-control filter">
               <Popover
                 placement="leftTop"
                 trigger="click"

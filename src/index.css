@@ -79,6 +79,9 @@ body {
 
 @media only screen and (max-width: 576px) {
 
+	.ant-drawer-content-wrapper {
+		width: 100% !important;
+	}
 	.ant-list-item-meta {
 		width: 100%;
 	}
@@ -86,6 +89,9 @@ body {
 		text-align: right;
 		width: 100%;
 		margin: 15px 0 5px;
+	}
+	.ant-list:not(.ant-list-vertical) .ant-list-item-no-flex .ant-list-item-action {
+		float: none;
 	}
 
 }

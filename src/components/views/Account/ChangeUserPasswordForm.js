@@ -6,6 +6,8 @@ import { Form, Button, Input, Modal, Tabs } from 'antd';
 import * as userActions from '../../../store/actions/user';
 import config from '../../../config';
 
+const source = axios.CancelToken.source();
+
 class ChangePasswordForm extends React.Component {
   state = {
     sending: false
@@ -18,16 +20,14 @@ class ChangePasswordForm extends React.Component {
       this.setState({ sending: false });
     }, 500);
   }
-  handleSubmit = (e) => {
-    e.preventDefault();
-    this.props.form.validateFields((err, data) => {
-      if (!err) this.send(data);
-    });
-  }
   async send(data) {
     this.showSending();
-    axios.post(
-      config.serverUrl + '/app-api/rpc/', {
+
+    if (source.token) source.token = null;
+    else source.cancel();
+
+    axios
+      .post(config.serverUrl + '/app-api/rpc/', {
         jsonrpc: '2.0',
         method: 'changePassword',
         params: {
@@ -36,6 +36,8 @@ class ChangePasswordForm extends React.Component {
           newPassword: data.newPassword
         },
         id: 1
+      }, {
+        cancelToken: source.token
       })
       .then((res) => {
         if (res.data.error) {
@@ -52,6 +54,7 @@ class ChangePasswordForm extends React.Component {
         };
       })
       .catch((err) => {
+        if (axios.isCancel(err)) return;
         Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
       })
       .finally(() => this.hideSending());
@@ -63,6 +66,15 @@ class ChangePasswordForm extends React.Component {
     } else {
       callback();
     };
+  }
+  handleSubmit = (e) => {
+    e.preventDefault();
+    this.props.form.validateFields((err, data) => {
+      if (!err) this.send(data);
+    });
+  }
+  componentWillUnmount() {
+    source.cancel();
   }
   render() {
     const form = this.props.form;

@@ -31,11 +31,13 @@ class AddAnswerDrawer extends React.Component {
         } else if (res.data.answer) {
           this.props.list.addOne(res.data.answer);
           this.props.close();
+          setTimeout(() => {
+            this.props.form.resetFields();
+          }, 1000);
         };
       })
       .catch((err) => {
-        console.log('Error', err);
-        Modal.error({ title: 'Ошибка при отправке запроса' });
+        Modal.error({ title: 'Ошибка при отправке запроса', content: err.message });
       })
       .finally(() => this.hideSending());
   }
