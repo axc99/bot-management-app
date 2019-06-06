@@ -24,11 +24,10 @@ class DialogItem extends React.Component {
           <Button onClick={() => this.props.openModal(dialog.id)}>Открыть</Button>
         ]}>
         <List.Item.Meta
-            avatar={<Avatar size="large" icon="user" />}
+            avatar={<Avatar size="large" icon="user" src={(dialog.profile && dialog.profile.avatarUrls) ? dialog.profile.avatarUrls.sm : null} />}
             title={<b>{dialog.fullName ? dialog.fullName : 'Без имени'}</b>}
             description={
               <div>
-                {dialog.messageCountStr} <br />
                 <div className="app-list-item-info">
                   <TimeAgo date={dialog.createdAt} formatter={formatter} /> {dialog.source ? '('+dialog.source.typeStr+')' : null}
                 </div>

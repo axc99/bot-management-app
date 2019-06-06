@@ -46,23 +46,33 @@ class Integrations extends React.Component {
           <Tabs
             className="app-main-view-tabs"
             defaultActiveKey="1" >
-            <Tabs.TabPane tab="Боты" key="1">
+            <Tabs.TabPane tab="Боты" key="vk">
               <div className="app-main-view-tab-content">
                 <Collapse
                   accordion
                   expandIconPosition="right"
                   className="app-main-view-collapse" >
-                  <Collapse.Panel header={<b>Вконтакте</b>} key="1">
+                  <Collapse.Panel header={<b>Вконтакте</b>} key="vk">
                     <div className="app-main-view-collapse-panel-content">
                       <EditVkIntegrationForm project={this.state.project} />
                     </div>
                   </Collapse.Panel>
-                  <Collapse.Panel header={<b>Telegram</b>} key="2">
+                  <Collapse.Panel header={<b>Facebook</b>} key="facebook" disabled>
                     <div className="app-main-view-collapse-panel-content">
                       <EditTelegramIntegrationForm project={this.state.project} />
                     </div>
                   </Collapse.Panel>
-                  <Collapse.Panel header={<b>Skype</b>} key="3">
+                  <Collapse.Panel header={<b>Viber</b>} key="viber" disabled>
+                    <div className="app-main-view-collapse-panel-content">
+                      <EditTelegramIntegrationForm project={this.state.project} />
+                    </div>
+                  </Collapse.Panel>
+                  <Collapse.Panel header={<b>Telegram</b>} key="telegram" disabled>
+                    <div className="app-main-view-collapse-panel-content">
+                      <EditTelegramIntegrationForm project={this.state.project} />
+                    </div>
+                  </Collapse.Panel>
+                  <Collapse.Panel header={<b>Skype</b>} key="skype">
                     <div className="app-main-view-collapse-panel-content">
                       <EditSkypeIntegrationForm project={this.state.project} />
                     </div>
@@ -70,18 +80,23 @@ class Integrations extends React.Component {
                 </Collapse>
               </div>
             </Tabs.TabPane>
-            <Tabs.TabPane tab="CRM системы" key="2">
+            <Tabs.TabPane tab="CRM системы" key="bitrix24">
               <div className="app-main-view-tab-content">
                 <Collapse
                   accordion
                   expandIconPosition="right"
                   className="app-main-view-collapse" >
-                  <Collapse.Panel header={<b>Битрикс 24</b>} key="1">
+                  <Collapse.Panel header={<b>Битрикс 24</b>} key="bitrix24">
                     <div className="app-main-view-collapse-panel-content">
                       <EditBitrix24IntegrationForm project={this.state.project} />
                     </div>
                   </Collapse.Panel>
-                  <Collapse.Panel header={<b>amoCRM (недоступно)</b>} key="2" disabled></Collapse.Panel>
+                  <Collapse.Panel header={<b>Мегаплан</b>} key="megaplan">
+                    <div className="app-main-view-collapse-panel-content">
+                      <EditBitrix24IntegrationForm project={this.state.project} />
+                    </div>
+                  </Collapse.Panel>
+                  <Collapse.Panel header={<b>amoCRM (недоступно)</b>} key="amocrm" disabled></Collapse.Panel>
                 </Collapse>
               </div>
             </Tabs.TabPane>
