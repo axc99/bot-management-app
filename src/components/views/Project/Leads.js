@@ -161,7 +161,7 @@ class Leads extends React.Component {
   // Загрузка
   load = () => {
     const { search, page, filter } = this.state;
-    const offset = Math.abs(page-1) * 20;
+    const offset = Math.abs(page-1) * 50;
 
     if (source.token) source.token = null;
     else source.cancel();
@@ -252,7 +252,7 @@ class Leads extends React.Component {
               loading={!this.state.leads ? true : false}
               pagination={this.state.leads && (this.state.leadTotalCount > this.state.leads.length) ? {
                 size: 'large',
-                pageSize: 20,
+                pageSize: 50,
                 total: this.state.leadTotalCount,
                 onChange: (page, pageSize) => {
                   this.setPage(page);
