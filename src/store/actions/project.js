@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { SET_PROJECT, UNSET_PROJECT } from './types';
+import axios from 'axios'
+import { SET_PROJECT, UNSET_PROJECT } from './types'
 
 export const setProject = data => {
   return dispatch => {
@@ -8,8 +8,8 @@ export const setProject = data => {
       payload: {
         id: data.id
       }
-    });
-  };
+    })
+  }
 }
 
 export const unsetProject = data => {
@@ -17,6 +17,6 @@ export const unsetProject = data => {
     dispatch({
       type: UNSET_PROJECT,
       payload: {}
-    });
-  };
+    })
+  }
 }

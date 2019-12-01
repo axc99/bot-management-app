@@ -1,23 +1,23 @@
-import React from 'react';
-import { Redirect } from 'react-router';
-import { Switch, Route } from 'react-router-dom';
-import './App.css';
+import React from 'react'
+import { Redirect } from 'react-router'
+import { Switch, Route } from 'react-router-dom'
+import './App.css'
 
-import Auth from './AppAuth';
-import Main from './AppMain';
+import Auth from './AppAuth'
+import Main from './AppMain'
 
-import accessGuard from './HOCs/accessGuard';
+import accessGuard from './HOCs/accessGuard'
 
-function App() {
+function App () {
   return (
-    <div className="app">
+    <div className='app'>
       <Switch>
-        <Route path="/auth/" component={Auth} />
-        <Route exact path='/' render={() => { return <Redirect to="/auth/sign-in/" /> }} />
+        <Route path='/auth/' component={Auth} />
+        <Route exact path='/' render={() => { return <Redirect to='/auth/sign-in/' /> }} />
         <Route component={accessGuard(Main)} />
       </Switch>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

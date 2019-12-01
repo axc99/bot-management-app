@@ -1,21 +1,22 @@
-import React from 'react';
-import { Divider, Row } from 'antd';
+import React from 'react'
+import { Divider, Row } from 'antd'
 
-import { setTitle } from '../../helpers';
+import { setTitle } from '../../helpers'
 
 class Information extends React.Component {
-  componentDidMount() {
-    setTitle('Информация');
+  componentDidMount () {
+    setTitle('Информация')
   }
-  render() {
+
+  render () {
     return (
       <div>
-        <div className="app-main-view-header">
-          <div className="app-main-view-header-title">Информация</div>
+        <div className='app-main-view-header'>
+          <div className='app-main-view-header-title'>Информация по дипломному проекту</div>
         </div>
-        <div className="app-main-view-content">
-          <div className="app-information">
-            <div className="app-information-content">
+        <div className='app-main-view-content'>
+          <div className='app-information'>
+            <div className='app-information-content'>
               <p>
                 Онлайн-сервис для автоматизированного взаимодействия с клиентами через чат-ботов в мессенджерах и социальных сетях. Отвечайте на вопросы, принимайте заявки и общайтесь с клиентами автоматически.
               </p>
@@ -47,8 +48,8 @@ class Information extends React.Component {
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default Information;
+export default Information
